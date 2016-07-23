@@ -7,7 +7,9 @@ Local settings
 - Add Django Debug Toolbar
 - Add django-extensions as app
 """
+import environ as environ
 
+environ.Env.read_env('.env')
 from .common import *  # noqa
 import socket
 import os

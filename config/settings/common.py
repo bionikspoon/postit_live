@@ -16,7 +16,6 @@ ROOT_DIR = environ.Path(__file__) - 3  # (postit_live/config/settings/common.py 
 APPS_DIR = ROOT_DIR.path('postit_live')
 
 env = environ.Env()
-env.read_env('.env')
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
