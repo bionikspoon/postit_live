@@ -100,11 +100,7 @@ AWS_HEADERS = {
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
 
-#  See:http://stackoverflow.com/questions/10390244/
-# from storages.backends.s3boto import S3BotoStorage
-# StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
-# MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
-DEFAULT_FILE_STORAGE = 'config.storage.MediaRootCachedS3BotoStorage'
+DEFAULT_FILE_STORAGE = 'config.storage.MediaRootS3BotoStorage'
 
 MEDIA_URL = 'https://s3.amazonaws.com:443/%s/media/' % AWS_STORAGE_BUCKET_NAME
 
@@ -112,7 +108,8 @@ MEDIA_URL = 'https://s3.amazonaws.com:443/%s/media/' % AWS_STORAGE_BUCKET_NAME
 # ------------------------
 
 STATIC_URL = 'https://s3.amazonaws.com:443/%s/static/' % AWS_STORAGE_BUCKET_NAME
-STATICFILES_STORAGE = 'config.storage.StaticRootCachedS3BotoStorage'
+STATICFILES_STORAGE = 'config.storage.StaticRootS3BotoStorage'
+
 # See: https://github.com/antonagestam/collectfast
 # For Django 1.7+, 'collectfast' should come before
 # 'django.contrib.staticfiles'
