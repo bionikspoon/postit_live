@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Django live threads.",
   "engines": {
-    "node": ">=4"
+    "node": "5.12.0",
+    "npm": "3.8.6"
   },
   "main": "postit_live/static/postit_live/index.js",
   "scripts": {
@@ -14,7 +15,8 @@
     "build": "NODE_ENV=production npm run webpack",
     "dev": "NODE_ENV=local npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot",
     "python": "python manage.py runserver",
-    "start": "npm run dev & npm run python"
+    "start": "npm run dev & npm run python",
+    "heroku-postbuild": "npm run build"
   },
   "author": "Manu Phatak",
   "license": "MIT",
