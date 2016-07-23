@@ -100,7 +100,7 @@ AWS_HEADERS = {
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
 
-DEFAULT_FILE_STORAGE = 'config.storage.MediaRootS3BotoStorage'
+DEFAULT_FILE_STORAGE = 'config.storage.MediaRootCachedS3BotoStorage'
 
 MEDIA_URL = 'https://s3.amazonaws.com:443/%s/media/' % AWS_STORAGE_BUCKET_NAME
 
@@ -108,7 +108,7 @@ MEDIA_URL = 'https://s3.amazonaws.com:443/%s/media/' % AWS_STORAGE_BUCKET_NAME
 # ------------------------
 
 STATIC_URL = 'https://s3.amazonaws.com:443/%s/static/' % AWS_STORAGE_BUCKET_NAME
-STATICFILES_STORAGE = 'config.storage.StaticRootS3BotoStorage'
+STATICFILES_STORAGE = 'config.storage.StaticRootCachedS3BotoStorage'
 
 # See: https://github.com/antonagestam/collectfast
 # For Django 1.7+, 'collectfast' should come before
@@ -117,7 +117,7 @@ AWS_PRELOAD_METADATA = True
 INSTALLED_APPS = ('collectfast', ) + INSTALLED_APPS
 # COMPRESSOR
 # ------------------------------------------------------------------------------
-COMPRESS_ROOT = STATIC_ROOT
+# COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_STORAGE = STATICFILES_STORAGE
 COMPRESS_URL = STATIC_URL
 COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
@@ -161,9 +161,18 @@ CACHES = {
             'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
                                         # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
         }
+    },
+    'collectfast': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 1),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
+                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+        }
     }
 }
-
+COLLECTFAST_CACHE = 'collectfast'
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
