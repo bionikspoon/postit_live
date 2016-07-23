@@ -16,6 +16,7 @@ ROOT_DIR = environ.Path(__file__) - 3  # (postit_live/config/settings/common.py 
 APPS_DIR = ROOT_DIR.path('postit_live')
 
 env = environ.Env()
+env.read_env('.env')
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -100,10 +101,9 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db('DATABASE_URL', default='postgres:///postit_live'),
+    'default': env.db('DATABASE_URL'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -226,11 +226,10 @@ LOGIN_URL = 'account_login'
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
-
 # django-compressor
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ("compressor", )
-STATICFILES_FINDERS += ("compressor.finders.CompressorFinder", )
+INSTALLED_APPS += ("compressor",)
+STATICFILES_FINDERS += ("compressor.finders.CompressorFinder",)
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
