@@ -7,7 +7,7 @@ import baseConfig from './webpack.base.config.js';
 module.exports = (opts) => {
 
   const
-    {CDN_PATH, PROJECT_ROOT} = opts,
+    {PROJECT_ROOT} = opts,
     config = baseConfig(opts);
 
   return {
@@ -16,7 +16,7 @@ module.exports = (opts) => {
       ...config.output,
       path: path.resolve(PROJECT_ROOT, 'postit_live/static/postit_live/dist/'),
       // set CDN_PATH to your cdn static file directory
-      publicPath: CDN_PATH || '/',
+      // publicPath: CDN_PATH || '/',
     },
     plugins: [
       ...config.plugins,
