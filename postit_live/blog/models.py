@@ -19,7 +19,10 @@ class Post(TimeStampedModel, StatusModel):
         self.STATUS = PostClass.STATUS.published
         self.save()
 
-    def __str__(self):
+    def __repr__(self):
         PostClass = self.__class__
 
-        return '<%s:%s>' % (PostClass.__name__, self.title)
+        return '<%s:%r>' % (PostClass.__name__, self.title)
+
+    def __str__(self):
+        return self.title
