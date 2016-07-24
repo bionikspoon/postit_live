@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = (
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+    'channels',
 )
 
 # Apps specific for this project go here.
@@ -47,6 +48,7 @@ LOCAL_APPS = (
     'postit_live.users.apps.UsersConfig',
     # Your stuff: custom apps go here
     'postit_live.blog',
+    'postit_live.chat',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -248,3 +250,12 @@ WEBPACK_LOADER = {
 
 
 # Your common stuff: Below this line define 3rd party library settings
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts':['{0}/{1}'.format(env('REDIS_URL'), 3)]
+        },
+        'ROUTING': 'config.routes.channel_routing'
+    }
+}

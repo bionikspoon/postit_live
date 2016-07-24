@@ -43,6 +43,7 @@ module.exports = (opts) => {
 
     entry: {
       main: path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live/index'),
+      chat: path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live/chat'),
       vendor: ['react', 'redux', 'react-router', 'react-redux', 'react-dom'],
     },
 
