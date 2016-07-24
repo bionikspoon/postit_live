@@ -43,7 +43,7 @@ htmlcov
 # Provided default Pycharm Run/Debug Configurations should be tracked by git
 # In case of local modifications made by Pycharm, use update-index command
 # for each changed file, like this:
-# git update-index --assume-unchanged .idea/postit_live.iml
+# git update-index --assume-unchanged .idea/ostit_live.iml
 !.idea/runConfigurations/
 !.idea/postit_live.iml
 !.idea/vcs.xml
@@ -66,7 +66,7 @@ node_modules/
 .env
 
 # User-uploaded media
-postit_live/media/
+postit-live/media/
 
 # Hitch directory
 tests/.hitch
@@ -76,6 +76,6 @@ mailhog
 
 
 # Webpack
-postit_live/static/postit_live/dist/
+postit_live/static/postit-live/dist/
 webpack-stats.json
 webpack-stats-production.json

@@ -14,7 +14,7 @@ module.exports = (opts) => {
     ...config,
     output: {
       ...config.output,
-      path: path.resolve(PROJECT_ROOT, 'postit_live/static/postit_live/dist/'),
+      path: path.resolve(PROJECT_ROOT, 'postit-live/static/postit-live/dist/'),
     },
     plugins: [
       ...config.plugins,

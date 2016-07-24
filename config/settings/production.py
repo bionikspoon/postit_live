@@ -125,7 +125,7 @@ COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
                          default='Admin <callback@postit-live.manuphatak.com>')
-EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[postit_live] ')
+EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[postit-live] ')
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
 # Anymail with Mailgun
@@ -234,7 +234,7 @@ STATS_FILE = ROOT_DIR('webpack-stats-production.json')
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'postit_live/dist/',
+        'BUNDLE_DIR_NAME': 'postit-live/dist/',
         'STATS_FILE': STATS_FILE
     }
 }
