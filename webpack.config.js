@@ -13,7 +13,9 @@
 const OPTIONS = {
   PROJECT_ROOT: __dirname,
   NODE_ENV: process.env.NODE_ENV,
-  CDN_PATH: process.env.CDN_PATH,
+  CDN_PATH: process.env.DJANGO_AWS_STORAGE_BUCKET_NAME
+    ? `https://s3.amazonaws.com:443/${process.env.DJANGO_AWS_STORAGE_BUCKET_NAME}/static/`
+    : undefined,
 };
 
 module.exports = (() => {
