@@ -1,20 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-   <div>
-      <h1>
-         <a href="#">postit-live blog</a>
-      </h1>
-   </div>
-
    {% for post in posts %}
-      <div>
-         <p>published: {{ post.published_on }}</p>
+      <div class="post">
+         <div class="date">
+            <p>published: {{ post.published_on }}</p>
+         </div>
          <h2>
             <a href="#">{{ post.title }}</a>
          </h2>
          <p>{{ post.text | linebreaksbr }}</p>
       </div>
    {% endfor %}
-
 {% endblock %}
