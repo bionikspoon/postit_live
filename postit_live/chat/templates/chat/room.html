@@ -14,7 +14,7 @@
          <tbody>
             {% for message in messages %}
                <tr>
-                  <td>{{ message.created }}</td>
+                  <td class="timestamp cloak">{{ message.timestamp }}</td>
                   <td>{{ message.handle }}</td>
                   <td>{{ message.message }}</td>
                </tr>
