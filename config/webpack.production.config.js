@@ -15,8 +15,6 @@ module.exports = (opts) => {
     output: {
       ...config.output,
       path: path.resolve(PROJECT_ROOT, 'postit_live/static/postit_live/dist/'),
-      // set CDN_PATH to your cdn static file directory
-      // publicPath: CDN_PATH || '/',
     },
     plugins: [
       ...config.plugins,

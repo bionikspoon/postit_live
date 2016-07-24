@@ -13,13 +13,10 @@
 const OPTIONS = {
   PROJECT_ROOT: __dirname,
   NODE_ENV: process.env.NODE_ENV,
-  CDN_PATH: process.env.DJANGO_AWS_STORAGE_BUCKET_NAME
-    ? `https://s3.amazonaws.com:443/${process.env.DJANGO_AWS_STORAGE_BUCKET_NAME}/static/postit_live/dist/`
-    : undefined,
 };
 
 module.exports = (() => {
-  switch (process.env.NODE_ENV) {
+  switch (OPTIONS.NODE_ENV) {
     case 'production':
       return require('./config/webpack.production.config.js');
     case 'local':
