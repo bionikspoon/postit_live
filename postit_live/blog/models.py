@@ -16,7 +16,7 @@ class Post(TimeStampedModel, StatusModel):
     def publish(self):
         PostClass = self.__class__
         self.published_on = timezone.now()
-        self.STATUS = PostClass.STATUS.published
+        self.status = PostClass.STATUS.published
         self.save()
 
     def __repr__(self):

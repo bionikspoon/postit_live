@@ -7,21 +7,14 @@
       </h1>
    </div>
 
-   <div>
-      <p>published: 14.06.2016 12.14</p>
-      <h2>
-         <a href="#">My first post</a>
-      </h2>
-      <p>Magisters potus in lutetia! Sectam, lacta, et lumen. Est salvus ionicis tormento, cesaris.</p>
-   </div>
+   {% for post in posts %}
+      <div>
+         <p>published: {{ post.published_on }}</p>
+         <h2>
+            <a href="#">{{ post.title }}</a>
+         </h2>
+         <p>{{ post.text | linebreaksbr }}</p>
+      </div>
+   {% endfor %}
 
-
-
-   <div>
-      <p>published: 14.06.2016 12.14</p>
-      <h2>
-         <a href="#">My second post</a>
-      </h2>
-      <p>Never hurt the seeker, for you cannot capture it. The faith of your relativities will balance earthly when you respect that affirmation is the guru. One must experience the thing in order to receive the karma of crystal density.</p>
-   </div>
 {% endblock %}
