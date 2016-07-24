@@ -17,6 +17,7 @@ urlpatterns = [
 
     # User management
     url(r'^users/', include('postit_live.users.urls', namespace='users')),
+    url(r'^blog/', include('postit_live.blog.urls', namespace='blog')),
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here

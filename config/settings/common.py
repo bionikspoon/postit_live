@@ -46,6 +46,7 @@ LOCAL_APPS = (
     # custom users app
     'postit_live.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'postit_live.blog',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

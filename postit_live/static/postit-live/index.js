@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, browserHistory} from 'react-router';
 import {Provider} from 'react-redux';
+import './styles.scss';
 
 import routes from './routes';
 import configureStore from './store/configureStore';
@@ -35,10 +36,10 @@ if (process.env.NODE_ENV !== 'production') {
 // handle client side rendering
 if (typeof document !== 'undefined') {
 
-  ReactDOM.render(
-    <Provider store={STORE}>
-      {ProjectElement}
-    </Provider>,
-    document.getElementById(ROOT_ELEMENT)
-  );
+  // ReactDOM.render(
+  //   <Provider store={STORE}>
+  //     {ProjectElement}
+  //   </Provider>,
+  //   document.getElementById(ROOT_ELEMENT)
+  // );
 }

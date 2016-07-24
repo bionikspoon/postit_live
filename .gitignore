@@ -79,3 +79,6 @@ mailhog
 postit_live/static/postit-live/dist/
 webpack-stats.json
 webpack-stats-production.json
+
+shell.ipynb
+.ipynb_checkpoints/
