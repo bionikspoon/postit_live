@@ -63,7 +63,11 @@
   "devDependencies": {
     "babel-plugin-__coverage__": "11.0.0",
     "eslint": "3.1.1",
+    "eslint-config-airbnb": "9.0.1",
     "eslint-loader": "1.4.1",
+    "eslint-plugin-import": "1.11.1",
+    "eslint-plugin-jsx-a11y": "2.0.1",
+    "eslint-plugin-react": "6.0.0-alpha.1",
     "expect": "1.20.2",
     "force-case-sensitivity-webpack-plugin": "0.1.1",
     "karma": "1.1.1",

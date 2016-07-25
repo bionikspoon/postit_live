@@ -1,3 +1,4 @@
+const makeConfig = require('./config/make.webpack.config');
 /**
  * The main webpack configuration.
  *
@@ -12,18 +13,7 @@
  */
 const OPTIONS = {
   PROJECT_ROOT: __dirname,
-  NODE_ENV: process.env.NODE_ENV,
+  ENV: process.env.NODE_ENV || 'local',
 };
 
-module.exports = (() => {
-  switch (OPTIONS.NODE_ENV) {
-    case 'production':
-      return require('./config/webpack.production.config.js');
-    case 'local':
-      return require('./config/webpack.local.config.js');
-    case 'test':
-      return require('./config/webpack.test.config.js');
-    default:
-      return require('./config/webpack.local.config.js');
-  }
-})()(OPTIONS);
+module.exports = makeConfig(OPTIONS);
