@@ -17,7 +17,7 @@ const TEST = 'test';
 module.exports = ({ PROJECT_ROOT, ENV }) => ({
   context: PROJECT_ROOT,
 
-  entry: getEntry({ PROJECT_ROOT }),
+  entry: getEntry({ PROJECT_ROOT, ENV }),
 
   output: getOutput({ PROJECT_ROOT, ENV }),
 
@@ -35,7 +35,7 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
 
   devtool: ENV === TEST ? 'inline-source-map' : undefined,
   watch: ENV !== PRODUCTION,
-  devServer: getDevServer({ ENV }),
+  devServer: getDevServer(),
 
   postcss() {
     return [
@@ -44,12 +44,25 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
   },
 });
 
-function getEntry({ PROJECT_ROOT }) {
+function getEntry({ PROJECT_ROOT, ENV }) {
   const entry = {
-    main: path.resolve(PROJECT_ROOT, 'client/src/index'),
-    chat: path.resolve(PROJECT_ROOT, 'client/src/chat'),
+    main: [path.resolve(PROJECT_ROOT, 'client/src/index')],
+    chat: [path.resolve(PROJECT_ROOT, 'client/src/chat')],
     vendor: getVendor(),
   };
+
+  switch (ENV) {
+    case PRODUCTION:
+      entry.main.unshift(path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap'));
+      break;
+
+    case LOCAL:
+      entry.main.unshift(path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap'));
+      break;
+
+    case TEST:
+      break;
+  }
   return entry;
 }
 
@@ -187,14 +200,10 @@ function getPlugins({ ENV }) {
   return plugins;
 }
 
-function getDevServer({ ENV }) {
-  if (ENV !== LOCAL) return undefined;
+function getDevServer() {
   return {
     noInfo: true,
     colors: true,
-    inline: true,
-    hot: true,
-    hotInline: true,
     historyApiFallback: true,
   };
 }

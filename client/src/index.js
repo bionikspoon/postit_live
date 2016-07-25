@@ -2,10 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
-import './styles.scss';
-import 'tether';
-import 'jquery';
-import 'bootstrap';
 
 import routes from './routes';
 import configureStore from './store/configureStore';

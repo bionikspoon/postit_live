@@ -28,6 +28,7 @@ module.exports = config => config.set({
   plugins: [
     'karma-webpack',
     'karma-sourcemap-loader',
+    'karma-phantomjs-launcher',
     'karma-chrome-launcher',
     'karma-mocha',
     'karma-coverage',
@@ -45,7 +46,7 @@ module.exports = config => config.set({
   colors: true,
   logLevel: config.LOG_INFO,
   autoWatch: true,
-  browsers: ['Chrome'],
+  browsers: ['PhantomJS','Chrome'],
   singleRun: true,
   concurrency: Infinity,
 });
