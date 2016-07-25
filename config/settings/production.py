@@ -234,7 +234,7 @@ STATS_FILE = ROOT_DIR('webpack-stats-production.json')
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'postit-live/dist/',
+        'BUNDLE_DIR_NAME': '',
         'STATS_FILE': STATS_FILE
     }
 }

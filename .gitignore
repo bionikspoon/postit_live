@@ -76,7 +76,8 @@ mailhog
 
 
 # Webpack
-postit_live/static/postit-live/dist/
+!client/dist/.gitkeep
+client/dist/*
 webpack-stats.json
 webpack-stats-production.json
 

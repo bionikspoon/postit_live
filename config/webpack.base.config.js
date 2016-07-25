@@ -42,13 +42,13 @@ module.exports = (opts) => {
     context: PROJECT_ROOT,
 
     entry: {
-      main: path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live/index'),
-      chat: path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live/chat'),
+      main: path.resolve(PROJECT_ROOT, 'client/src/index'),
+      chat: path.resolve(PROJECT_ROOT, 'client/src/chat'),
       vendor: ['react', 'redux', 'react-router', 'react-redux', 'react-dom'],
     },
 
     output: {
-      path: path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live/bundles'),
+      path: path.resolve(PROJECT_ROOT, 'client/dist/bundles'),
       filename: '[name]-[hash].js',
     },
 
@@ -71,7 +71,7 @@ module.exports = (opts) => {
     resolve: {
       extensions: ['', '.js', '.jsx'],
       modules: [
-        path.resolve(PROJECT_ROOT, 'postit_live/static/postit-live'),
+        path.resolve(PROJECT_ROOT, 'client/src'),
         'node_modules',
       ],
     },
