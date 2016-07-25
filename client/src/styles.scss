@@ -1,5 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Lobster);
 @import "bootstrap-custom";
+// Alert colors
+
+$white: #fff;
+$mint-green: #d6e9c6;
+$black: #000;
+$pink: #f2dede;
+$dark-pink: #eed3d7;
+$red: #b94a48;
 
 body {
 }
@@ -69,21 +77,6 @@ h1, h2 {
   opacity: 0;
 }
 
-// project specific CSS goes here
-
-////////////////////////////////
-//Variables//
-////////////////////////////////
-
-// Alert colors
-
-$white: #fff;
-$mint-green: #d6e9c6;
-$black: #000;
-$pink: #f2dede;
-$dark-pink: #eed3d7;
-$red: #b94a48;
-
 ////////////////////////////////
 //Alerts//
 ////////////////////////////////
@@ -93,14 +86,14 @@ $red: #b94a48;
 
 .alert-debug {
   background-color: $white;
-  border-color: $mint-green;
-  color: $black;
+  border-color:     $mint-green;
+  color:            $black;
 }
 
 .alert-error {
   background-color: $pink;
-  border-color: $dark-pink;
-  color: $red;
+  border-color:     $dark-pink;
+  color:            $red;
 }
 
 ////////////////////////////////
@@ -116,8 +109,8 @@ $red: #b94a48;
 @media (max-width: 47.9em) {
   .navbar-nav .nav-item {
     display: inline-block;
-    float: none;
-    width: 100%;
+    float:   none;
+    width:   100%;
   }
 
   .navbar-nav .nav-item + .nav-item {

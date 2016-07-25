@@ -5,6 +5,7 @@ const webpack = require('webpack');
 
 const ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 const npmPackage = require('../package.json');
@@ -54,7 +55,7 @@ function getEntry({ PROJECT_ROOT }) {
 
 function getOutput({ PROJECT_ROOT, ENV }) {
   const output = {
-    filename: '[name].[hash].js',
+    filename: '[name].[chunkhash].js',
     sourcePrefix: '  ',
   };
 
@@ -102,17 +103,18 @@ function getLoaders({ ENV }) {
     },
     { test: /\.json$/, loader: 'json-loader' },
   ];
-  const scssLoader = { test: /\.sc?ss$/, loader: 'style!css!postcss!sass' };
   const urlLoader = { test: /\.(png|jpg|gif|woff|woff2)$/, loader: 'url', query: { limit: 8192 } };
   const fileLoader = { test: /\.(ttf|eot|svg|mp4|ogg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' };
 
   switch (ENV) {
     case PRODUCTION:
-      loaders.push(scssLoader, urlLoader, fileLoader);
+      loaders.push(urlLoader, fileLoader);
+      loaders.push({ test: /\.sc?ss$/, loader: ExtractTextPlugin.extract('style', 'css!postcss!sass') });
       break;
 
     case LOCAL:
-      loaders.push(scssLoader, urlLoader, fileLoader);
+      loaders.push(urlLoader, fileLoader);
+      loaders.push({ test: /\.sc?ss$/, loader: 'style!css!postcss!sass' });
       break;
 
     case TEST:
@@ -150,14 +152,12 @@ function getPlugins({ ENV }) {
     case PRODUCTION:
       plugins.push(chunkVendor, chunkCommon);
 
+      plugins.push(new ExtractTextPlugin('[name].[chunkhash].css'));
       // production bundle stats file
       plugins.push(new BundleTracker({ filename: './webpack-stats-production.json' }));
 
       // removes duplicate modules
       plugins.push(new webpack.optimize.DedupePlugin());
-
-      // pass options to uglify
-      plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true, debug: false }));
 
       // minifies your code
       plugins.push(new webpack.optimize.UglifyJsPlugin({
