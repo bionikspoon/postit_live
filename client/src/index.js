@@ -1,36 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, browserHistory} from 'react-router';
-import {Provider} from 'react-redux';
+import { Router, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
 import './styles.scss';
+import 'tether';
+import 'jquery';
+import 'bootstrap';
 
 import routes from './routes';
 import configureStore from './store/configureStore';
 
-
-const
-  STORE = configureStore(),
-  ROOT_ELEMENT = 'main';
+const STORE = configureStore();
+const ROOT_ELEMENT = 'main';
 
 let ProjectElement;
 
 if (process.env.NODE_ENV !== 'production') {
-
   // development
   const DevTools = require('./containers/DevTools').default;
 
   ProjectElement = (
     <div>
-      <Router history={browserHistory} routes={routes} />
-      <DevTools />
+      <Router history={browserHistory} routes={routes} /> <DevTools />
     </div>
   );
-
-} else {
-
+}
+else {
   // production
   ProjectElement = <Router history={browserHistory} routes={routes} />;
-
 }
 
 // handle client side rendering

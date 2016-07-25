@@ -1,5 +1,5 @@
 const moment = require('moment');
-const $ = window.jQuery;
+const $ = require('jquery');
 
 $(() => {
   const scheme = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -29,7 +29,7 @@ $(() => {
   };
 
   $form.submit(() => {
-    const message = {handle: $handle.val(), message: $message.val()};
+    const message = { handle: $handle.val(), message: $message.val() };
     socket.send(JSON.stringify(message));
     $message.val('').focus();
     return false;
@@ -39,7 +39,7 @@ $(() => {
 function init($chat) {
   $chat
     .find('> tbody > tr > td.timestamp')
-    .each(function() {
+    .each(function () {
       const $self = $(this);
       const timestamp = moment($self.text());
       $self.data('timestamp', timestamp).text(timestamp.fromNow()).removeClass('cloak');
@@ -50,7 +50,7 @@ function update($chat) {
   return () => {
     $chat
       .find('> tbody > tr > td.timestamp')
-      .each(function() {
+      .each(function () {
         const $self = $(this);
         const timestamp = $self.data('timestamp');
         $self.text(timestamp.fromNow());

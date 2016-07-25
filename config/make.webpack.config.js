@@ -102,18 +102,17 @@ function getLoaders({ ENV }) {
     },
     { test: /\.json$/, loader: 'json-loader' },
   ];
-  const scssLoader = { test: /\.scss$/, loader: 'style!css!postcss!sass' };
-  const cssLoader = { test: /\.css$/, loader: 'style!css!postcss' };
+  const scssLoader = { test: /\.sc?ss$/, loader: 'style!css!postcss!sass' };
   const urlLoader = { test: /\.(png|jpg|gif|woff|woff2)$/, loader: 'url', query: { limit: 8192 } };
   const fileLoader = { test: /\.(ttf|eot|svg|mp4|ogg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' };
 
   switch (ENV) {
     case PRODUCTION:
-      loaders.push(scssLoader, cssLoader, urlLoader, fileLoader);
+      loaders.push(scssLoader, urlLoader, fileLoader);
       break;
 
     case LOCAL:
-      loaders.push(scssLoader, cssLoader, urlLoader, fileLoader);
+      loaders.push(scssLoader, urlLoader, fileLoader);
       break;
 
     case TEST:
@@ -132,6 +131,8 @@ function getPlugins({ ENV }) {
     new webpack.ProvidePlugin({
       Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
       fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
+      jQuery: 'jquery',
+      'window.Tether': 'tether',
     }),
   ];
 
