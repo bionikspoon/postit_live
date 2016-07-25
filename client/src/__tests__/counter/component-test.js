@@ -5,14 +5,13 @@ import TestUtils from 'react-addons-test-utils';
 
 import Counter from '../../components/Counter';
 
-
 describe('<Counter />', () => {
 
   it('should incrment or decrement count after click', () => {
 
     let count = 0;
     const counter = TestUtils.renderIntoDocument(
-      <Counter incrementCounter={() => count++} decrementCounter={() => count--} value={count}/>
+      <Counter incrementCounter={() => count++} decrementCounter={() => count--} value={count} />
     );
     const counterNode = ReactDOM.findDOMNode(counter);
 

@@ -169,7 +169,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'postit_livedoc'
 
-
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {

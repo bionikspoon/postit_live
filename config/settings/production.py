@@ -16,7 +16,6 @@ from __future__ import absolute_import, unicode_literals
 from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
 
-
 from .common import *  # noqa
 
 # SECRET CONFIGURATION
@@ -25,10 +24,9 @@ from .common import *  # noqa
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')# opbeat integration
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # opbeat integration
 # See https://opbeat.com/languages/django/
 INSTALLED_APPS += ('opbeat.contrib.django',)
 OPBEAT = {
@@ -36,10 +34,7 @@ OPBEAT = {
     'APP_ID': env('DJANGO_OPBEAT_APP_ID'),
     'SECRET_TOKEN': env('DJANGO_OPBEAT_SECRET_TOKEN')
 }
-MIDDLEWARE_CLASSES = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-) + MIDDLEWARE_CLASSES
-
+MIDDLEWARE_CLASSES = ('opbeat.contrib.django.middleware.OpbeatAPMMiddleware',) + MIDDLEWARE_CLASSES
 
 # SECURITY CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -67,8 +62,7 @@ X_FRAME_OPTIONS = 'DENY'
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['.herokuapp.com'])
 # END SITE CONFIGURATION
 
-INSTALLED_APPS += ('gunicorn', )
-
+INSTALLED_APPS += ('gunicorn',)
 
 # STORAGE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -114,7 +108,7 @@ STATICFILES_STORAGE = 'config.storage.StaticRootCachedS3BotoStorage'
 # For Django 1.7+, 'collectfast' should come before
 # 'django.contrib.staticfiles'
 AWS_PRELOAD_METADATA = True
-INSTALLED_APPS = ('collectfast', ) + INSTALLED_APPS
+INSTALLED_APPS = ('collectfast',) + INSTALLED_APPS
 # COMPRESSOR
 # ------------------------------------------------------------------------------
 # COMPRESS_ROOT = STATIC_ROOT
@@ -129,7 +123,7 @@ EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[postit-live]
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
 # Anymail with Mailgun
-INSTALLED_APPS += ("anymail", )
+INSTALLED_APPS += ("anymail",)
 ANYMAIL = {
     "MAILGUN_API_KEY": env('DJANGO_MAILGUN_API_KEY'),
 }
@@ -159,7 +153,7 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
-                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            #                           # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
         }
     },
     'collectfast': {
@@ -168,7 +162,7 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
-                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            #                           # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
         }
     }
 }
@@ -224,7 +218,6 @@ LOGGING = {
 
 # Custom Admin URL, use {% url 'admin:index' %}
 ADMIN_URL = env('DJANGO_ADMIN_URL')
-
 
 # WEBPACK
 # ------------------------------------------------------------------------------

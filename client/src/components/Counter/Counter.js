@@ -1,7 +1,6 @@
 import './Counter.scss';
 
-import React, {PropTypes, Component} from 'react';
-
+import React, { PropTypes, Component } from 'react';
 
 export default class Counter extends Component {
 
@@ -12,7 +11,7 @@ export default class Counter extends Component {
   }
 
   render() {
-    const {value, incrementCounter, decrementCounter} = this.props;
+    const { value, incrementCounter, decrementCounter } = this.props;
 
     return (
       <div className="counter">

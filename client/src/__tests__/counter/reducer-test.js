@@ -1,6 +1,5 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 
-
 const dummyReducer = (state, action) => {
   switch (action.type) {
     case 'INCREASE':

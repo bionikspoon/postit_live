@@ -249,13 +249,12 @@ WEBPACK_LOADER = {
     }
 }
 
-
 # Your common stuff: Below this line define 3rd party library settings
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
-            'hosts':['{0}/{1}'.format(env('REDIS_URL'), 3)]
+            'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 3)]
         },
         'ROUTING': 'config.routes.channel_routing'
     }

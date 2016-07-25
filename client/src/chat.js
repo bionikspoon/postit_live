@@ -19,7 +19,10 @@ $(() => {
 
     const timestamp = moment(data.timestamp);
 
-    const $temp = $td.clone().addClass('timestamp').data('timestamp', timestamp).text(timestamp.fromNow());
+    const $temp = $td.clone()
+                     .addClass('timestamp')
+                     .data('timestamp', timestamp)
+                     .text(timestamp.fromNow());
     window.$td = $temp;
     $tr.append($temp);
     $tr.append($td.clone().text(data.handle));
@@ -39,7 +42,7 @@ $(() => {
 function init($chat) {
   $chat
     .find('> tbody > tr > td.timestamp')
-    .each(function () {
+    .each(function each() {
       const $self = $(this);
       const timestamp = moment($self.text());
       $self.data('timestamp', timestamp).text(timestamp.fromNow()).removeClass('cloak');
@@ -50,7 +53,7 @@ function update($chat) {
   return () => {
     $chat
       .find('> tbody > tr > td.timestamp')
-      .each(function () {
+      .each(function each() {
         const $self = $(this);
         const timestamp = $self.data('timestamp');
         $self.text(timestamp.fromNow());

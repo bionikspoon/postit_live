@@ -10,8 +10,6 @@ django==1.9.8
 # Configuration
 django-environ==0.4.0
 
-
-
 # Forms
 django-braces==1.9.0
 django-crispy-forms==1.6.0
@@ -27,7 +25,6 @@ Pillow==3.3.0
 # Well-built with regular release cycles!
 django-allauth==0.25.2
 
-
 # Python-PostgreSQL Database Adapter
 psycopg2==2.6.2
 
@@ -42,11 +39,8 @@ pytz==2016.6.1
 django-redis==4.4.3
 redis>=2.10.0
 
-
-
-
+# Compressor
 django_compressor==2.0
-
 
 # Webpack
 django-webpack-loader==0.3.0

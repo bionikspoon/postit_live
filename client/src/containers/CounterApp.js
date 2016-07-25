@@ -1,10 +1,9 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import * as CounterActions from '../actions/counterActions';
 import Counter from '../components/Counter';
-
 
 class CounterApp extends Component {
 
@@ -16,10 +15,7 @@ class CounterApp extends Component {
   render() {
     return (
       <div>
-        <Counter
-          value={this.props.value}
-          {...this.props.actions}
-        />
+        <Counter value={this.props.value} {...this.props.actions} />
         <ProcessEnv {...process.env} />
       </div>
     );
@@ -41,10 +37,9 @@ export default connect(
   mapDispatchToProps,
 )(CounterApp);
 
-
 // Dev tools controls and process.env info
 function ProcessEnv({
-    NODE_ENV,
+  NODE_ENV,
 }) {
   return (
     <ul>

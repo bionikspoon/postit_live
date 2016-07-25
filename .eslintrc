@@ -3,6 +3,8 @@
   "rules": {
     "no-use-before-define": [ 2, { "functions": false } ],
     "no-unused-vars": 1,
-    "max-len": [ 2, 120 ]
+    "max-len": [ 2, 120, { "ignoreTrailingComments": true } ],
+    "brace-style": [ 2, "stroustrup", { "allowSingleLine": true } ],
+    "space-before-function-paren": [ 2, "never" ]
   }
 }

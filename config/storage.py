@@ -2,11 +2,8 @@
 from django.core.files.storage import get_storage_class
 from storages.backends.s3boto import S3BotoStorage
 
-
 #  See:http://stackoverflow.com/questions/10390244/
 from storages.backends.s3boto import S3BotoStorage
-StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
-MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
 
 
 class CachedS3BotoStorage(S3BotoStorage):
@@ -20,13 +17,5 @@ class CachedS3BotoStorage(S3BotoStorage):
         return super(CachedS3BotoStorage, self).save(name, self.local_storage._open(name), max_length)
 
 
-class StaticRootCachedS3BotoStorage(CachedS3BotoStorage):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('location', 'static')
-        super(StaticRootCachedS3BotoStorage, self).__init__(*args, **kwargs)
-
-
-class MediaRootCachedS3BotoStorage(CachedS3BotoStorage):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('location', 'media')
-        super(MediaRootCachedS3BotoStorage, self).__init__(*args, **kwargs)
+StaticRootCachedS3BotoStorage = lambda: CachedS3BotoStorage(location='static')
+MediaRootCachedS3BotoStorage = lambda: CachedS3BotoStorage(location='media')
