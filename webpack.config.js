@@ -1,3 +1,4 @@
+require('babel-register');
 const makeConfig = require('./config/make.webpack.config');
 /**
  * The main webpack configuration.

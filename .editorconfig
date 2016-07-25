@@ -3,6 +3,10 @@
 root = true
 
 [*]
+line_length = 120
+indent_style = space
+indent_size = 2
+
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
@@ -13,14 +17,14 @@ indent_style = space
 indent_size = 4
 
 [*.py]
-line_length=120
-known_first_party=postit_live
-multi_line_output=3
-default_section=THIRDPARTY
+known_first_party = postit_live
+multi_line_output = 3
+default_section = THIRDPARTY
 
-[*.{html,css,scss,json,yml}]
-indent_style = space
-indent_size = 2
+[*.{css,scss,json,yml,yaml}]
+
+[*.{html}]
+indent_size = 3
 
 [*.md]
 trim_trailing_whitespace = false

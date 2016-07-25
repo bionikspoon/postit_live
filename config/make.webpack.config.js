@@ -1,8 +1,17 @@
 /* eslint default-case:0 */
+
 const path = require('path');
 const webpack = require('webpack');
+
 const ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
+const autoprefixer = require('autoprefixer');
+
+const npmPackage = require('../package.json');
+
+const PRODUCTION = 'production';
+const LOCAL = 'local';
+const TEST = 'test';
 
 module.exports = ({ PROJECT_ROOT, ENV }) => ({
   context: PROJECT_ROOT,
@@ -13,7 +22,7 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
 
   module: {
     preLoaders: getPreLoaders({ ENV }),
-    loaders: getLoaders(),
+    loaders: getLoaders({ ENV }),
   },
 
   plugins: getPlugins({ ENV }),
@@ -23,14 +32,22 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
     modules: [path.resolve(PROJECT_ROOT, 'client/src'), 'node_modules'],
   },
 
-  devtool: ENV === 'test' ? 'inline-source-map' : undefined,
+  devtool: ENV === TEST ? 'inline-source-map' : undefined,
+  watch: ENV !== PRODUCTION,
+  devServer: getDevServer({ ENV }),
+
+  postcss() {
+    return [
+      autoprefixer({ browsers: ['last 2 versions', 'ie >= 8'] }),
+    ];
+  },
 });
 
 function getEntry({ PROJECT_ROOT }) {
   const entry = {
     main: path.resolve(PROJECT_ROOT, 'client/src/index'),
     chat: path.resolve(PROJECT_ROOT, 'client/src/chat'),
-    vendor: ['react', 'redux', 'react-router', 'react-redux', 'react-dom'],
+    vendor: getVendor(),
   };
   return entry;
 }
@@ -38,19 +55,20 @@ function getEntry({ PROJECT_ROOT }) {
 function getOutput({ PROJECT_ROOT, ENV }) {
   const output = {
     filename: '[name].[hash].js',
+    sourcePrefix: '  ',
   };
 
   switch (ENV) {
-    case 'production':
+    case PRODUCTION:
       output.path = path.resolve(PROJECT_ROOT, 'client/dist');
       break;
 
-    case 'local':
+    case LOCAL:
       output.path = path.resolve(PROJECT_ROOT, 'client/dist/bundles');
       output.publicPath = 'http://localhost:8080/bundles/';
       break;
 
-    case 'test':
+    case TEST:
       break;
   }
   return output;
@@ -61,20 +79,20 @@ function getPreLoaders({ ENV }) {
   const eslint = { test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint' };
 
   switch (ENV) {
-    case 'production':
+    case PRODUCTION:
       break;
 
-    case 'local':
+    case LOCAL:
       preLoaders.push(eslint);
       break;
 
-    case 'test':
+    case TEST:
       preLoaders.push(eslint);
       break;
   }
 }
 
-function getLoaders() {
+function getLoaders({ ENV }) {
   const loaders = [
     {
       test: /\.jsx?$/,
@@ -82,11 +100,26 @@ function getLoaders() {
       loader: 'babel',
       query: { cacheDirectory: true },
     },
-    { test: /\.scss$/, loader: 'style!css!sass' },
-    { test: /\.css$/, loader: 'style!css' },
-    { test: /\.(png|jpg|gif)$/, loader: 'url', query: { limit: 8192 } },  // inline base64 URLs <=8k
-    { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
+    { test: /\.json$/, loader: 'json-loader' },
   ];
+  const scssLoader = { test: /\.scss$/, loader: 'style!css!postcss!sass' };
+  const cssLoader = { test: /\.css$/, loader: 'style!css!postcss' };
+  const urlLoader = { test: /\.(png|jpg|gif|woff|woff2)$/, loader: 'url', query: { limit: 8192 } };
+  const fileLoader = { test: /\.(ttf|eot|svg|mp4|ogg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' };
+
+  switch (ENV) {
+    case PRODUCTION:
+      loaders.push(scssLoader, cssLoader, urlLoader, fileLoader);
+      break;
+
+    case LOCAL:
+      loaders.push(scssLoader, cssLoader, urlLoader, fileLoader);
+      break;
+
+    case TEST:
+      loaders.push({ test: /\.(png|jpg|gif|woff|woff2|scss|ttf|eot|svg|mp4|ogg)$/, loader: 'null' });
+      break;
+  }
   return loaders;
 }
 
@@ -113,11 +146,14 @@ function getPlugins({ ENV }) {
   });
 
   switch (ENV) {
-    case 'production':
+    case PRODUCTION:
       plugins.push(chunkVendor, chunkCommon);
 
       // production bundle stats file
       plugins.push(new BundleTracker({ filename: './webpack-stats-production.json' }));
+
+      // removes duplicate modules
+      plugins.push(new webpack.optimize.DedupePlugin());
 
       // pass options to uglify
       plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true, debug: false }));
@@ -129,11 +165,11 @@ function getPlugins({ ENV }) {
         sourceMap: false,
       }));
 
-      // removes duplicate modules
-      plugins.push(new webpack.optimize.DedupePlugin());
+      plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
+      plugins.push(new webpack.optimize.AggressiveMergingPlugin());
       break;
 
-    case 'local':
+    case LOCAL:
       plugins.push(chunkVendor, chunkCommon);
 
       // local bundle stats file
@@ -144,8 +180,24 @@ function getPlugins({ ENV }) {
       plugins.push(new webpack.NoErrorsPlugin());
       break;
 
-    case 'test':
+    case TEST:
       break;
   }
   return plugins;
+}
+
+function getDevServer({ ENV }) {
+  if (ENV !== LOCAL) return undefined;
+  return {
+    noInfo: true,
+    colors: true,
+    inline: true,
+    hot: true,
+    hotInline: true,
+    historyApiFallback: true,
+  };
+}
+
+function getVendor() {
+  return Object.keys(npmPackage.dependencies);
 }
