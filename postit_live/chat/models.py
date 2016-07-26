@@ -6,6 +6,9 @@ class Room(models.Model):
     name = models.TextField()
     label = models.SlugField(unique=True)
 
+    def __repr__(self):
+        return '<%s name=name label=label>' % (self.name, self.label)
+
 
 class Message(TimeStampedModel):
     room = models.ForeignKey(Room, related_name='messages')

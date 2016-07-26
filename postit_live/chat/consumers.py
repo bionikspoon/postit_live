@@ -11,15 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @channel_session
-def ws_connect(message):
-    try:
-        prefix, label = message['path'].strip('/').split('/')
-        if prefix != 'chat':
-            raise ValueError
-    except ValueError:
-        logger.error('invalid ws path=%s', message['path'])
-        return
-
+def ws_connect(message, label):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -29,7 +21,7 @@ def ws_connect(message):
     logger.debug('chat connect room=%s client=%s:%s', room.label, message['client'][0], message['client'][1])
     Group('chat-%s' % label, channel_layer=message.channel_layer).add(message.reply_channel)
 
-    message.channel_session['room'] = room.label
+    message.channel_session['room'] = label
 
 
 @channel_session
@@ -37,8 +29,9 @@ def ws_receive(message):
     try:
         label = message.channel_session['room']
     except KeyError:
-        logger.debug('no room in channel_session')
+        logger.error('no room in channel_session')
         return
+
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -48,11 +41,11 @@ def ws_receive(message):
     try:
         data = json.loads(message['text'])
     except ValueError:
-        logger.debug('ws message isn\'t json text=%s', message['text'])
+        logger.error('ws message isn\'t json text=%s', message['text'])
         return
 
     if set(data.keys()) != {'handle', 'message'}:
-        logger.debug('ws message unexpected format data=%s', data)
+        logger.error('ws message unexpected format data=%s', data)
         return
 
     if not data: return
@@ -64,10 +57,12 @@ def ws_receive(message):
 
 
 @channel_session
-def ws_disconnect(message):
+def ws_disconnect(message, label):
     try:
-        label = message.channel_session['room']
-        Room.objects.get(label=label)
-        Group('chat-%s' % label, channel_layer=message.channel_layer).discard(message.reply_channel)
+        room = Room.objects.get(label=label)
     except (KeyError, Room.DoesNotExist):
-        pass
+        logger.error('chat disconnect failed, room does not exist label=%s', label)
+        return
+
+    logger.debug('chat disconnect room=%s', room)
+    Group('chat-%s' % label, channel_layer=message.channel_layer).discard(message.reply_channel)

@@ -256,6 +256,6 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 3)]
         },
-        'ROUTING': 'config.routes.channel_routing'
+        'ROUTING': 'config.routing.channel_routing'
     }
 }
