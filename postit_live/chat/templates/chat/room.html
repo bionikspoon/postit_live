@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'chat/base.html' %}
 {% load render_bundle from webpack_loader %}
 
 {% block content %}
@@ -12,7 +12,7 @@
    <form id="chatform">
       <table id="chat">
          <tbody>
-            {% for message in messages %}
+            {% for message in chat_messages %}
                <tr>
                   <td class="timestamp cloak">{{ message.timestamp }}</td>
                   <td>{{ message.handle }}</td>

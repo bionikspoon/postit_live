@@ -1,49 +1,33 @@
+{% extends 'app-base.html' %}
 {% load staticfiles i18n compress %}
 {% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="utf-8">
-   <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <title>{% block title %}postit-live{% endblock title %}</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta name="description" content="">
-   <meta name="author" content="">
-   <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
-   {% block css %}
-      {% compress css %}
-      {% endcompress %}
-      {% render_bundle 'bootstrap' 'css' %}
-   {% endblock %}
+{% block title %}postit-live{% endblock title %}
 
-</head>
+{% block css %}
+   {% render_bundle 'bootstrap' 'css' %}
+{% endblock %}
 
-<body>
+{% block nav %}{% include '_partials/nav.html' %}{% endblock nav %}
 
-{% include '_partials/nav.html' %}
-
-<div>
-   {#      {% if messages %}#} {#          {% for message in messages %}#}
-   {#              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>#}
-   {#          {% endfor %}#} {#      {% endif %}#}
-   {#      {% block content %}#} {#      {% endblock content %}#}
-</div>
-<div class="page-header">
-   {% if user.is_authenticated %}
-      <a href="{% url 'blog:post_new' %}" class="top-menu">+</a>
-   {% endif %}
-   <h1>
-      <a href="#">postit-live blog</a>
-   </h1>
-</div>ssss
-      <div class="col-md-8">
-         {% block content %}{% endblock %}
-      </div>
+{% block messages %}
+   <div>
+      {% if messages %}
+         {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+         {% endfor %}
+      {% endif %}
    </div>
-</div>
+{% endblock messages %}
+
+{% block page-header %}{% endblock page-header %}
+
+{% block container %}
+   <div class="container-fluid">
+      {% block content %}{% endblock %}
+   </div>
+{% endblock container %}
+
 {% block modal %}{% endblock modal %}
 
 {% block javascript %}
@@ -51,6 +35,3 @@
    {% render_bundle 'bootstrap' 'js' %}
    {% render_bundle 'common' %}
 {% endblock javascript %}
-</body>
-</html>
-
