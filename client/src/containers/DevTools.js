@@ -16,7 +16,6 @@ export default createDevTools(
     toggleVisibilityKey="ctrl-h"
     changePositionKey="ctrl-q"
     changeMonitorKey="ctrl-m"
-    defaultPosition="right"
     defaultIsVisible={REDUX_DEV_TOOLS_VISIBLE}
   >
     <MultipleMonitors>

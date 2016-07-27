@@ -12,10 +12,10 @@ export default function configureStore(initialState) {
     const matches = window.location.href.match(/[?&]debug_session=([^&]+)\b/);
     return (matches && matches.length) ? matches[1] : null;
   };
-
   const enhancer = compose(
     middleware,
-    window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
+    // window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
+    DevTools.instrument(),
     persistState(getDebugSessionKey())
   );
 
