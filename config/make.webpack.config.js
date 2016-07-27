@@ -53,11 +53,11 @@ function getEntry({ PROJECT_ROOT, ENV }) {
 
   switch (ENV) {
     case PRODUCTION:
-      entry.main.unshift(path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap'));
+      entry.bootstrap = path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap');
       break;
 
     case LOCAL:
-      entry.main.unshift(path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap'));
+      entry.bootstrap = path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap');
       break;
 
     case TEST:
@@ -153,7 +153,7 @@ function getPlugins({ ENV }) {
 
   // karma webpack can't use these
   const chunkVendor = new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor', minChunks: Infinity, filename: '[name].[hash].js',
+    names: ['vendor'], minChunks: Infinity, filename: '[name].[hash].js',
   });
 
   // add common modules here

@@ -1,5 +1,6 @@
 {% load staticfiles i18n compress %}
-{% load render_bundle from webpack_loader %}<!DOCTYPE html>
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="utf-8">
@@ -15,69 +16,19 @@
    {% block css %}
       {% compress css %}
       {% endcompress %}
-      {% render_bundle 'main' 'css' %}
+      {% render_bundle 'bootstrap' 'css' %}
    {% endblock %}
 
 </head>
 
 <body>
 
-<div class="m-b">
-   <nav class="navbar navbar-dark navbar-static-top bg-inverse">
-      <div class="container">
-         <a class="navbar-brand" href="/">postit-live</a>
-         <button type="button"
-                 class="navbar-toggler hidden-sm-up pull-xs-right"
-                 data-toggle="collapse"
-                 data-target="#bs-navbar-collapse-1">
-            &#9776;
-         </button>
-
-         <!-- Collect the nav links, forms, and other content for toggling -->
-         <div class="collapse navbar-toggleable-xs" id="bs-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'home' %}">Home</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'about' %}">About</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'blog:post_list' %}">Blog</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'chat:about' %}">Chat</a>
-               </li>
-            </ul>
-
-            <ul class="nav navbar-nav pull-xs-right">
-               {% if request.user.is_authenticated %}
-                  <li class="nav-item">
-                     <a class="nav-link"
-                        href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
-                  </li>
-               {% else %}
-                  <li class="nav-item">
-                     <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                  </li>
-                  <li class="nav-item">
-                     <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                  </li>
-               {% endif %}
-            </ul>
-         </div>
-      </div>
-   </nav>
-</div>
+{% include '_partials/nav.html' %}
 
 <div>
    {#      {% if messages %}#} {#          {% for message in messages %}#}
    {#              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>#}
    {#          {% endfor %}#} {#      {% endif %}#}
-   <div id="main"></div>
    {#      {% block content %}#} {#      {% endblock content %}#}
 </div>
 <div class="page-header">
@@ -87,9 +38,7 @@
    <h1>
       <a href="#">postit-live blog</a>
    </h1>
-</div>
-<div class="content container">
-   <div class="row">
+</div>ssss
       <div class="col-md-8">
          {% block content %}{% endblock %}
       </div>
@@ -99,8 +48,8 @@
 
 {% block javascript %}
    {% render_bundle 'vendor' %}
+   {% render_bundle 'bootstrap' 'js' %}
    {% render_bundle 'common' %}
-   {% render_bundle 'main' 'js' %}
 {% endblock javascript %}
 </body>
 </html>

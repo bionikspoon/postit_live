@@ -28,11 +28,10 @@ else {
 
 // handle client side rendering
 if (typeof document !== 'undefined') {
-
-  // ReactDOM.render(
-  //   <Provider store={STORE}>
-  //     {ProjectElement}
-  //   </Provider>,
-  //   document.getElementById(ROOT_ELEMENT)
-  // );
+  ReactDOM.render(
+    <Provider store={STORE}>
+      {ProjectElement}
+    </Provider>,
+    document.getElementById(ROOT_ELEMENT)
+  );
 }
