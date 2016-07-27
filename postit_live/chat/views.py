@@ -11,8 +11,8 @@ def about(request):
 
 def chat_room(request, label):
     room, create = Room.objects.get_or_create(label=label)
-    messages = reversed(room.messages.order_by('-created')[:50])
-    return render(request, 'chat/room.html', {'room': room, 'messages': messages})
+    chat_messages = reversed(room.messages.order_by('-created')[:50])
+    return render(request, 'chat/room.html', {'room': room, 'chat_messages': chat_messages})
 
 
 def new_room(request):

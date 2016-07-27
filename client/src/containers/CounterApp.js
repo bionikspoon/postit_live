@@ -1,18 +1,16 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as CounterActions from '../actions/counterActions';
 import Counter from '../components/Counter';
 
-class CounterApp extends Component {
-  render() {
-    return (
-      <div>
-        <Counter value={this.props.value} {...this.props.actions} />
-        <ProcessEnv {...process.env} />
-      </div>
-    );
-  }
+function CounterApp({ value, actions }) {
+  return (
+    <div>
+      <Counter value={value} {...actions} />
+      <ProcessEnv {...process.env} />
+    </div>
+  );
 }
 
 CounterApp.propTypes = {
