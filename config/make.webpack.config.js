@@ -161,9 +161,11 @@ function getPlugins({ ENV }) {
     name: 'common', filename: '[name].[hash].js', chunks: [],
   });
 
+  const occurrenceOrder = new webpack.optimize.OccurrenceOrderPlugin(true);
+
   switch (ENV) {
     case PRODUCTION:
-      plugins.push(chunkVendor, chunkCommon);
+      plugins.push(chunkVendor, chunkCommon, occurrenceOrder);
 
       plugins.push(new ExtractTextPlugin('[name].[chunkhash].css'));
       // production bundle stats file
@@ -179,12 +181,11 @@ function getPlugins({ ENV }) {
         sourceMap: false,
       }));
 
-      plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
       plugins.push(new webpack.optimize.AggressiveMergingPlugin());
       break;
 
     case LOCAL:
-      plugins.push(chunkVendor, chunkCommon);
+      plugins.push(chunkVendor, chunkCommon, occurrenceOrder);
 
       // local bundle stats file
       plugins.push(new BundleTracker({ filename: './webpack-stats.json' }));

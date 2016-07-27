@@ -1,17 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import * as CounterActions from '../actions/counterActions';
 import Counter from '../components/Counter';
 
 class CounterApp extends Component {
-
-  static propTypes = {
-    value: PropTypes.number.isRequired,
-    actions: PropTypes.object.isRequired,
-  }
-
   render() {
     return (
       <div>
@@ -21,6 +14,12 @@ class CounterApp extends Component {
     );
   }
 }
+
+CounterApp.propTypes = {
+  value: PropTypes.number.isRequired,
+  actions: PropTypes.object.isRequired,
+};
+
 function mapStateToProps(state) {
   return {
     value: state.counter,
@@ -32,15 +31,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CounterApp);
+export default connect(mapStateToProps, mapDispatchToProps)(CounterApp);
 
 // Dev tools controls and process.env info
-function ProcessEnv({
-  NODE_ENV,
-}) {
+function ProcessEnv({ NODE_ENV }) {
   return (
     <ul>
       <li><strong>{'process.env:'}</strong></li>
@@ -52,6 +46,7 @@ function ProcessEnv({
     </ul>
   );
 }
+
 ProcessEnv.propTypes = {
   NODE_ENV: PropTypes.string.isRequired,
 };

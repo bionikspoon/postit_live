@@ -9,28 +9,11 @@ import configureStore from './store/configureStore';
 const STORE = configureStore();
 const ROOT_ELEMENT = 'main';
 
-let ProjectElement;
-
-if (process.env.NODE_ENV !== 'production') {
-  // development
-  const DevTools = require('./containers/DevTools').default;
-
-  ProjectElement = (
-    <div>
-      <Router history={browserHistory} routes={routes} /> <DevTools />
-    </div>
-  );
-}
-else {
-  // production
-  ProjectElement = <Router history={browserHistory} routes={routes} />;
-}
-
 // handle client side rendering
 if (typeof document !== 'undefined') {
   ReactDOM.render(
     <Provider store={STORE}>
-      {ProjectElement}
+      <Router history={browserHistory} routes={routes} />
     </Provider>,
     document.getElementById(ROOT_ELEMENT)
   );
