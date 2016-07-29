@@ -37,6 +37,62 @@ describe('live reducer', () => {
     });
   });
 
+  describe('STRIKE', () => {
+    describe('valid index', () => {
+      let subject;
+
+      beforeEach(() => {
+        const action = { type: types.STRIKE, payload: { id: '0' } };
+        subject = liveReducer(undefined, action);
+      });
+
+      it('should set message stricken to true', () => {
+        expect(subject.messages[0].stricken).toBe(true);
+      });
+    });
+
+    describe('invalid index', () => {
+      let subject;
+
+      beforeEach(() => {
+        const action = { type: types.STRIKE, payload: { id: '1' } };
+        subject = liveReducer(undefined, action);
+      });
+
+      it('should not meltdown if message is not found', () => {
+        expect(subject.messages[0].stricken).toBe(false);
+      });
+    });
+  });
+
+  describe('DELETE', () => {
+    describe('valid index', () => {
+      let subject;
+
+      beforeEach(() => {
+        const action = { type: types.DELETE, payload: { id: '0' } };
+        subject = liveReducer(undefined, action);
+      });
+
+      it('should remove message', () => {
+        expect(subject.messages.length).toBe(0);
+      });
+    });
+
+    describe('invalid index', () => {
+      let subject;
+
+      beforeEach(() => {
+        const action = { type: types.DELETE, payload: { id: '1' } };
+        subject = liveReducer(undefined, action);
+      });
+
+      it('should not remove any messages', () => {
+        expect(subject.messages.length).toBe(1);
+      });
+    });
+
+  });
 });
 
 function messageFactory(id = 0, created = 1469766549, body = 'I like turtles', stricken = false) {
