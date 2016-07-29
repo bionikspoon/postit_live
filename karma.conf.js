@@ -1,29 +1,18 @@
-/**
- * Testing configuration
- *
- * Setup:
- *  - test runner: karma
- *  - assertions: expect (https://github.com/mjackson/expect)
- */
 const webpackConfig = require('./webpack.config');
-const testGlob = 'client/src/**/__tests__/**/*.js';
-const srcGlob = 'client/src/@(actions|components|containers|reducers)/**/*.js';
 
 module.exports = config => config.set({
   basePath: '',
   frameworks: ['mocha'],
   files: [
-    testGlob,
-    srcGlob,
+    'webpack.tests.js',
   ],
   preprocessors: {
-    // add webpack as a preprocessor
-    [testGlob]: ['webpack', 'sourcemap'],
-    [srcGlob]: ['webpack', 'sourcemap'],
+    'webpack.tests.js': ['webpack', 'sourcemap'],
   },
   webpack: webpackConfig,
   webpackMiddleware: {
     noInfo: true,
+    stats: 'errors-only',
   },
   plugins: [
     'karma-webpack',
@@ -46,7 +35,7 @@ module.exports = config => config.set({
   colors: true,
   logLevel: config.LOG_INFO,
   autoWatch: true,
-  browsers: ['PhantomJS','Chrome'],
+  browsers: ['PhantomJS', 'Chrome'],
   singleRun: true,
   concurrency: Infinity,
 });

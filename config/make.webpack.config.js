@@ -1,6 +1,4 @@
 /* eslint default-case:0 */
-
-const path = require('path');
 const webpack = require('webpack');
 
 const ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin');
@@ -14,12 +12,12 @@ const PRODUCTION = 'production';
 const LOCAL = 'local';
 const TEST = 'test';
 
-module.exports = ({ PROJECT_ROOT, ENV }) => ({
-  context: PROJECT_ROOT,
+module.exports = ({ ENV, PATH }) => ({
+  context: PATH.root(),
 
-  entry: getEntry({ PROJECT_ROOT, ENV }),
+  entry: getEntry({ PATH, ENV }),
 
-  output: getOutput({ PROJECT_ROOT, ENV }),
+  output: getOutput({ PATH, ENV }),
 
   module: {
     preLoaders: getPreLoaders({ ENV }),
@@ -30,12 +28,14 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
 
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    modules: [path.resolve(PROJECT_ROOT, 'client/src'), 'node_modules'],
+    root: PATH.root(),
+    modulesDirectories: [PATH.src(), 'node_modules'],
   },
 
   devtool: ENV === TEST ? 'inline-source-map' : undefined,
   watch: ENV !== PRODUCTION,
   devServer: getDevServer(),
+  externals: getExternals({ ENV }),
 
   postcss() {
     return [
@@ -44,20 +44,20 @@ module.exports = ({ PROJECT_ROOT, ENV }) => ({
   },
 });
 
-function getEntry({ PROJECT_ROOT, ENV }) {
+function getEntry({ PATH, ENV }) {
   const entry = {
-    main: [path.resolve(PROJECT_ROOT, 'client/src/index')],
-    chat: [path.resolve(PROJECT_ROOT, 'client/src/chat')],
+    main: [PATH.src('index')],
+    chat: [PATH.src('chat')],
     vendor: getVendor(),
   };
 
   switch (ENV) {
     case PRODUCTION:
-      entry.bootstrap = path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap');
+      entry.bootstrap = PATH.src('index.bootstrap');
       break;
 
     case LOCAL:
-      entry.bootstrap = path.resolve(PROJECT_ROOT, 'client/src/index.bootstrap');
+      entry.bootstrap = PATH.src('index.bootstrap');
       break;
 
     case TEST:
@@ -66,7 +66,7 @@ function getEntry({ PROJECT_ROOT, ENV }) {
   return entry;
 }
 
-function getOutput({ PROJECT_ROOT, ENV }) {
+function getOutput({ PATH, ENV }) {
   const output = {
     filename: '[name].[chunkhash].js',
     sourcePrefix: '  ',
@@ -74,11 +74,11 @@ function getOutput({ PROJECT_ROOT, ENV }) {
 
   switch (ENV) {
     case PRODUCTION:
-      output.path = path.resolve(PROJECT_ROOT, 'client/dist');
+      output.path = PATH.dist();
       break;
 
     case LOCAL:
-      output.path = path.resolve(PROJECT_ROOT, 'client/dist/bundles');
+      output.path = PATH.dist('bundles');
       output.publicPath = 'http://localhost:8080/bundles/';
       break;
 
@@ -199,6 +199,17 @@ function getPlugins({ ENV }) {
       break;
   }
   return plugins;
+}
+
+function getExternals({ ENV }) {
+  if (ENV !== TEST) return {};
+
+  return {
+    cheerio: 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+  };
 }
 
 function getDevServer() {

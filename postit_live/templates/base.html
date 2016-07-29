@@ -22,11 +22,7 @@
 
 {% block page-header %}{% endblock page-header %}
 
-{% block container %}
-   <div class="container-fluid">
-      {% block content %}{% endblock %}
-   </div>
-{% endblock container %}
+{% block container %}{% block content %}{% endblock %}{% endblock container %}
 
 {% block modal %}{% endblock modal %}
 
