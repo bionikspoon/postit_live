@@ -1,4 +1,9 @@
 $enable-flex: true;
+$enable-rounded: false;
+$enable-shadows: true;
+$enable-gradients: true;
+$enable-transitions: true;
+$enable-hover-media-query: true;
 
 // Core variables and mixins
 @import "~bootstrap/scss/custom";
