@@ -31,7 +31,7 @@ export class LiveApp extends Component {
   }
 
   render() {
-    const { room, messages } = this.props;
+    const { room, messages, actions } = this.props;
 
     return (
       <div className="container-fluid" role="main">
@@ -44,48 +44,40 @@ export class LiveApp extends Component {
 
         <div className="row">
 
-          <div className="col-md-9">
+          <div className="col-xs-12 col-md-9">
             <LiveStatus {...room} />
 
             <LiveNewMessage makeUpdate={this.makeUpdate} />
 
-            {messages.map(message => (<LiveMessage key={message.id} {...message} />))}
+            {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
           </div>
 
-          <div className="col-md-3">
+          <div className="col-xs-9 col-md-3">
 
-            <div className="row">
+            <LiveAside>
               <label><input type="checkbox" />popup notifications</label>
-            </div>
+            </LiveAside>
 
-            <div className="row">
-              <LiveAside title="resources">
-                <p>asdfasdfasf</p>
-              </LiveAside>
-            </div>
+            <LiveAside title="resources">
+              <p>asdfasdfasf</p>
+            </LiveAside>
 
-            <div className="row">
-              <LiveAside title="discussions"> no discussions yet.
-                <a href="#">start one</a>
-              </LiveAside>
-            </div>
+            <LiveAside title="discussions"> no discussions yet.
+              <a href="#">start one</a>
+            </LiveAside>
 
-            <div className="row">
-              <LiveAside title="updated by">
-                <ul>
-                  <li>
-                    <a href="#">/u/admin</a>
-                  </li>
-                </ul>
-              </LiveAside>
-            </div>
+            <LiveAside title="updated by">
+              <ul>
+                <li>
+                  <a href="#">/u/admin</a>
+                </li>
+              </ul>
+            </LiveAside>
 
-            <div className="row">
-              <button className="btn btn-default">report a rule violatin</button>
-            </div>
-
+            <LiveAside>
+              <button className="btn btn-secondary btn-sm">report a rule violation</button>
+            </LiveAside>
           </div>
-
         </div>
       </div>
     );

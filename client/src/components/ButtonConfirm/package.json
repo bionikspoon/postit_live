@@ -1,0 +1,6 @@
+{
+  "name": "ButtonConfirm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ButtonConfirm.js"
+}
