@@ -12,15 +12,15 @@ export default class LiveMessage extends Component {
     this.deleteMessage = actions.deleteMessage.bind(this, { id });
   }
 
-  renderStrikeButton(className = 'btn btn-secondary btn-sm') {
+  renderStrikeButton() {
     const { stricken } = this.props;
     return stricken
       ? <span>stricken</span>
-      : <ButtonConfirm onClick={this.strikeMessage} value="strike" className={className} />;
+      : <ButtonConfirm onClick={this.strikeMessage} value="strike" />;
   }
 
-  renderDeleteButton(className = 'btn btn-secondary btn-sm') {
-    return <ButtonConfirm onClick={this.deleteMessage} value="delete" className={className} />;
+  renderDeleteButton() {
+    return <ButtonConfirm onClick={this.deleteMessage} value="delete" />;
   }
 
   render() {

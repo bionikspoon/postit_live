@@ -1,5 +1,6 @@
 import './ButtonConfirm.scss';
 import React, { PropTypes, Component } from 'react';
+const CLASS = 'btn btn-secondary btn-sm';
 
 export default class ButtonConfirm extends Component {
   constructor(props) {
@@ -7,11 +8,11 @@ export default class ButtonConfirm extends Component {
     this.openConfirmation = this.openConfirmation.bind(this);
     this.closeConfirmation = this.closeConfirmation.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.state = { showDialogue: false }
+    this.state = { showDialogue: false };
   }
 
   openConfirmation() {
-    this.setState({ showDialogue: true })
+    this.setState({ showDialogue: true });
   }
 
   closeConfirmation() {
@@ -23,32 +24,30 @@ export default class ButtonConfirm extends Component {
     this.props.onClick(event);
   }
 
-  render() {
-    return this.state.showDialogue ? this.renderConfirm() : this.renderButton();
-  }
-
   renderConfirm() {
-    const { className } = this.props;
     return (
       <span className="confirmation">
-        <span>are you sure?</span>
-        <button onClick={this.handleClick} className={className}>yes</button>
+        <span>are you sure? </span>
+        <button onClick={this.handleClick} className={CLASS}>yes</button>
         <span> / </span>
-        <button onClick={this.closeConfirmation} className={className}>no</button>
+        <button onClick={this.closeConfirmation} className={CLASS}>no</button>
       </span>
-    )
+    );
   }
 
   renderButton() {
-    const { className, value } = this.props;
+    const { value } = this.props;
     return (
-      <button onClick={this.openConfirmation} className={className}>{value}</button>
+      <button onClick={this.openConfirmation} className={CLASS}>{value}</button>
     );
+  }
+
+  render() {
+    return this.state.showDialogue ? this.renderConfirm() : this.renderButton();
   }
 
 }
 ButtonConfirm.propTypes = {
   value: PropTypes.string.isRequired,
-  className: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
