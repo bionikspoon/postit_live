@@ -1,0 +1,6 @@
+{
+  "name": "LiveNewMessage",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./LiveNewMessage.js"
+}

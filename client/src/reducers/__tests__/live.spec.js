@@ -11,7 +11,7 @@ describe('live reducer', () => {
     beforeEach(() => {subject = liveReducer()});
 
     it('should return the initial state', () => {
-      expect(Object.keys(subject)).toEqual(['messages']);
+      expect(Object.keys(subject)).toEqual(['room', 'messages']);
     });
 
     it('should include messages', () => {

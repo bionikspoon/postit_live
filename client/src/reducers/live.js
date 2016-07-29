@@ -1,8 +1,14 @@
 import * as types from '../constants/LiveActionTypes';
+import { CONNECTED } from '../constants/LiveStatusTypes';
 import update from 'react-addons-update';
 import findIndex from 'lodash/findIndex';
 
 const initialState = {
+  room: {
+    title: 'ninja watchers',
+    viewers: 5,
+    status: CONNECTED,
+  },
   messages: [
     {
       author: 'admin',
