@@ -48,7 +48,7 @@ function getEntry({ PATH, ENV }) {
   const entry = {
     main: [PATH.src('index')],
     chat: [PATH.src('chat')],
-    vendor: getVendor(),
+    vendor: getVendor(['bootstrap/dist/js/bootstrap']),
   };
 
   switch (ENV) {
@@ -220,6 +220,6 @@ function getDevServer() {
   };
 }
 
-function getVendor() {
-  return Object.keys(npmPackage.dependencies);
+function getVendor(packages = []) {
+  return Object.keys(npmPackage.dependencies).concat(packages);
 }

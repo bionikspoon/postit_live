@@ -1,4 +1,7 @@
+$enable-flex: true;
+
 // Core variables and mixins
+@import "~bootstrap/scss/custom";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
@@ -27,8 +30,7 @@
 @import "~bootstrap/scss/card";
 @import "~bootstrap/scss/breadcrumb";
 @import "~bootstrap/scss/pagination";
-@import "~bootstrap/scss/pager";
-@import "~bootstrap/scss/labels";
+@import "~bootstrap/scss/tags";
 @import "~bootstrap/scss/jumbotron";
 @import "~bootstrap/scss/alert";
 @import "~bootstrap/scss/progress";
@@ -45,6 +47,3 @@
 
 // Utility classes
 @import "~bootstrap/scss/utilities";
-@import "~bootstrap/scss/utilities-background";
-@import "~bootstrap/scss/utilities-spacing";
-@import "~bootstrap/scss/utilities-responsive";

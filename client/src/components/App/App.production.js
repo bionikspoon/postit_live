@@ -1,11 +1,13 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { Router, browserHistory } from 'react-router';
+import routes from '../../routes';
 
-export default function App({ children }) {
+export default function App() {
   return (
     <main>
-      {children}
+      <Router history={browserHistory} routes={routes} />
     </main>
   );
 }
 
-App.propTypes = { children: PropTypes.element.isRequired };
+App.propTypes = {};

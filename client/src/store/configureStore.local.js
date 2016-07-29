@@ -14,8 +14,8 @@ export default function configureStore(initialState) {
   };
   const enhancer = compose(
     middleware,
-    // window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
-    DevTools.instrument(),
+    window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
+    // DevTools.instrument(),
     persistState(getDebugSessionKey())
   );
 

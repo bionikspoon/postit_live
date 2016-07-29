@@ -3,8 +3,8 @@ import React, { PropTypes, Component } from 'react';
 
 export default function LiveTitle({ title }) {
   return (
-    <div className="row">
-      <div className="col-md-10 col-md-offset-2">
+    <div className="row flex-items-xs-right">
+      <div className="col-xs-10">
         <h1>{title}</h1>
       </div>
     </div>

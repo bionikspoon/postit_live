@@ -1,13 +1,15 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { Router, browserHistory } from 'react-router';
 import DevTools from '../../containers/DevTools';
+import routes from '../../routes';
 
-export default function App({ children }) {
+export default function App() {
   return (
     <main>
-      {children}
-      <DevTools />
+      <Router history={browserHistory} routes={routes} />
+      {window.devToolsExtension ? null : <DevTools />}
     </main>
   );
 }
 
-App.propTypes = { children: PropTypes.element.isRequired };
+App.propTypes = {};
