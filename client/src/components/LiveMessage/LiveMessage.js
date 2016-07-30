@@ -24,7 +24,7 @@ export default class LiveMessage extends Component {
   }
 
   render() {
-    const { created, body, author, stricken } = this.props;
+    const { created, body_html, author, stricken } = this.props;
     return (
       <div className="row flex-items-xs-right">
         <div className="col-xs-2">
@@ -32,7 +32,10 @@ export default class LiveMessage extends Component {
         </div>
         <div className="col-xs-10">
           <div className="body">
-            <span className={stricken ? 'strike' : null}>{body}</span>
+            <span
+              className={stricken ? 'strike' : null}
+              dangerouslySetInnerHTML={body_html}
+            />
             <a href="#" className="author">/u/{author}</a>
           </div>
           <div className="buttonrow">
@@ -46,7 +49,7 @@ export default class LiveMessage extends Component {
 LiveMessage.propTypes = {
   id: PropTypes.string.isRequired,
   created: PropTypes.number.isRequired,
-  body: PropTypes.string.isRequired,
+  body_html: PropTypes.object.isRequired,
   author: PropTypes.string.isRequired,
   stricken: PropTypes.bool.isRequired,
   actions: PropTypes.shape({

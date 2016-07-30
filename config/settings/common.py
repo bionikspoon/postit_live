@@ -46,8 +46,8 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'postit_live.users.apps.UsersConfig',
-    # Your stuff: custom apps go here
+    'postit_live.users',
+    'postit_live.live',
     'postit_live.blog',
     'postit_live.chat',
 )

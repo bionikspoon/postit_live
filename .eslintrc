@@ -5,6 +5,7 @@
     "no-unused-vars": 1,
     "max-len": [ 2, 120, { "ignoreTrailingComments": true } ],
     "brace-style": [ 2, "stroustrup", { "allowSingleLine": true } ],
-    "space-before-function-paren": [ 2, "never" ]
+    "space-before-function-paren": [ 2, "never" ],
+    "camelcase": 0
   }
 }

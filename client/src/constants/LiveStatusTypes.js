@@ -1,3 +1,3 @@
-export const CONNECTED = 'live.CONNECTED';
-export const CONNECTING = 'live.CONNECTING';
+export const OPENED = 'live.OPENED';
 export const CLOSED = 'live.CLOSED';
+export const CONNECTING = 'live.CONNECTING';

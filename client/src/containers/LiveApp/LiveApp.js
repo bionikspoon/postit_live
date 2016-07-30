@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as LiveActions from '../../actions/liveActions';
-import { CONNECTED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
+import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
@@ -22,7 +22,7 @@ export class LiveApp extends Component {
     actions.createMessage({
       author: user.username,
       body,
-      body_html: `<p>${body}</p>`,
+      body_html: { __html: body },
       created: Math.floor(Date.now() / 1000),
       id,
       name: `LiveUpdate-${id}`,
@@ -31,7 +31,7 @@ export class LiveApp extends Component {
   }
 
   render() {
-    const { room, messages, actions } = this.props;
+    const { room, messages, activity, actions } = this.props;
 
     return (
       <div className="container-fluid" role="main">
@@ -45,7 +45,7 @@ export class LiveApp extends Component {
         <div className="row">
 
           <div className="col-xs-12 col-md-9">
-            <LiveStatus {...room} />
+            <LiveStatus status={room.status} {...activity} />
 
             <LiveNewMessage makeUpdate={this.makeUpdate} />
 
@@ -59,19 +59,15 @@ export class LiveApp extends Component {
             </LiveAside>
 
             <LiveAside title="resources">
-              <p>asdfasdfasf</p>
+              <div dangerouslySetInnerHTML={room.resources_html} />
             </LiveAside>
 
-            <LiveAside title="discussions"> no discussions yet.
-              <a href="#">start one</a>
+            <LiveAside title="discussions">
+              <div dangerouslySetInnerHTML={room.discussions_html} />
             </LiveAside>
 
             <LiveAside title="updated by">
-              <ul>
-                <li>
-                  <a href="#">/u/admin</a>
-                </li>
-              </ul>
+              <div dangerouslySetInnerHTML={room.contributors_html} />
             </LiveAside>
 
             <LiveAside>
@@ -89,17 +85,26 @@ LiveApp.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape({
     author: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
-    body_html: PropTypes.string.isRequired,
+    body_html: PropTypes.object.isRequired,
     created: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     stricken: PropTypes.bool.isRequired,
   })).isRequired,
 
+  activity: PropTypes.shape({
+    viewers: PropTypes.number.isRequired,
+  }).isRequired,
+
   room: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    viewers: PropTypes.number.isRequired,
-    status: PropTypes.oneOf([CONNECTED, CONNECTING, CLOSED]).isRequired,
+    status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
+    resources: PropTypes.string.isRequired,
+    resources_html: PropTypes.object.isRequired,
+    discussions: PropTypes.string.isRequired,
+    discussions_html: PropTypes.object.isRequired,
+    contributors: PropTypes.string.isRequired,
+    contributors_html: PropTypes.object.isRequired,
   }).isRequired,
 
   user: PropTypes.shape({
@@ -113,6 +118,7 @@ function mapStateToProps(state) {
   return {
     messages: state.live.messages,
     room: state.live.room,
+    activity: state.live.activity,
     user: { username: 'admin' },
   };
 }
