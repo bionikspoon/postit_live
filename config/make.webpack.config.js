@@ -48,7 +48,7 @@ function getEntry({ PATH, ENV }) {
   const entry = {
     main: [PATH.src('index')],
     chat: [PATH.src('chat')],
-    vendor: getVendor(['bootstrap/dist/js/bootstrap']),
+    vendor: getVendor(),
   };
 
   switch (ENV) {
@@ -140,14 +140,17 @@ function getLoaders({ ENV }) {
 function getPlugins({ ENV }) {
   // add all common plugins here
   const plugins = [
-    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify(ENV) } }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(ENV),
+        BLUEBIRD_DEBUG: JSON.stringify(ENV === PRODUCTION ? 0 : 1),
+      },
+    }),
 
     // Promise and fetch polyfills
     new webpack.ProvidePlugin({
-      Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
-      jQuery: 'jquery',
-      'window.Tether': 'tether',
+      Promise: 'bluebird',
+      fetch: 'imports?this=>global!exports?global.fetch!isomorphic-fetch',
     }),
   ];
 
