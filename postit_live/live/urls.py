@@ -1,6 +1,8 @@
-try:
-    from django.conf.urls import *
-except ImportError:  # django < 1.4
-    from django.conf.urls.defaults import *
+from django.conf.urls import url
 
-# place app url patterns here
+from . import views
+
+urlpatterns = [
+    url(r'^create/$', views.create_channel, name='create_channel'),
+    url(r'^(?P<slug>[\w-]{0,50})/$', views.show_channel, name='show_channel'),
+]

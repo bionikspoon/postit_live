@@ -7,7 +7,7 @@ class Room(models.Model):
     label = models.SlugField(unique=True)
 
     def __repr__(self):
-        return '<%s name=name label=label>' % (self.name, self.label)
+        return '<%s name=%s label=%s>' % (self.__class__.__name__, self.name, self.label)
 
 
 class Message(TimeStampedModel):

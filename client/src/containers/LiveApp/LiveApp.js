@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as LiveActions from '../../actions/liveActions';
+import * as SocketActions from '../../actions/socketActions';
 import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
@@ -125,7 +125,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(LiveActions, dispatch),
+    actions: bindActionCreators(SocketActions, dispatch),
   };
 }
 

@@ -36,6 +36,10 @@ class Channel(TimeStampedModel, StatusModel):
                     continue
             return slug
 
+    def __str__(self):
+        ChannelClass = self.__class__
+        return '<%s slug=%s title=%s>' % (ChannelClass.__name__, self.slug, self.title)
+
 
 class Message(TimeStampedModel, StatusModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

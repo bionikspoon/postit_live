@@ -1,17 +1,10 @@
 {% extends "base.html" %}
-{% load render_bundle from webpack_loader %}
-
-{% block css %}
-   {{ block.super }}
-   {% render_bundle 'main' 'css' %}
-{% endblock %}
-
-{% block javascript %}
-   {{ block.super }}
-   {% render_bundle 'main' 'js' %}
-{% endblock %}
 
 
 {% block content %}
-   <main id="main"></main>
+   <h1>PostIt Live</h1>
+   <p>follow live events as they happen</p>
+
+   <a href="{% url 'live:create_channel' %}" class="btn btn-primary btn-lg">make a new live thread</a>
+
 {% endblock %}
