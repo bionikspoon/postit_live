@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db import transaction
 from haikunator import Haikunator
+from markdown import markdown
 from model_utils import Choices
 from model_utils.models import TimeStampedModel, StatusModel
 
@@ -15,7 +16,7 @@ class Channel(TimeStampedModel, StatusModel):
 
     title = models.TextField()
     resources = models.TextField()
-    resources_html = models.TextField()
+    resources_html = models.TextField(editable=False)
 
     contributors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Contributors')
 
@@ -24,7 +25,9 @@ class Channel(TimeStampedModel, StatusModel):
             ChannelClass = self.__class__
             self.slug = ChannelClass.create_slug()
             print(self.id, self.slug)
-        super().save(**kwargs)
+
+        self.resources_html = markdown(self.resources)
+        return super().save(**kwargs)
 
     @classmethod
     def create_slug(cls):
@@ -45,9 +48,14 @@ class Message(TimeStampedModel, StatusModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     STATUS = Choices('visible', 'stricken', 'deleted')
     body = models.TextField()
-    body_html = models.TextField()
+    body_html = models.TextField(editable=False)
 
     channel = models.ForeignKey(Channel, related_name='messages')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def save(self, **kwargs):
+        self.body_html = markdown((self.body))
+        return super().save(**kwargs)
 
 
 class Contributors(TimeStampedModel):
