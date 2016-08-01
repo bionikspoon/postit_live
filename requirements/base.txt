@@ -53,3 +53,4 @@ asgi-redis==0.14.0
 django-filter==0.13.0
 djangorestframework==3.4.1
 Markdown==2.6.6
+coreapi==1.32.0

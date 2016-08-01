@@ -1,27 +1,15 @@
-from django.conf.urls import url, include
 from django.contrib.auth import get_user_model
 from rest_framework import routers
-from rest_framework import serializers
-from rest_framework import viewsets
+
+from postit_live.live.views import ChannelViewSet, MessageViewSet, ActivityViewSet
+from postit_live.users.views import UserViewSet
 
 User = get_user_model()
 
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
-        extra_kwargs = {'url': {'view_name': 'users:detail', 'lookup_field': 'username'}}
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 router = routers.DefaultRouter(schema_title='PostIt Live Api')
 router.register('users', UserViewSet)
+router.register('live/channels', ChannelViewSet, base_name='channel')
+router.register('live/messages', MessageViewSet, base_name='message')
+router.register('live/activities', ActivityViewSet, base_name='activity')
 
-urlpatterns = [
-    url(r'^', include(router.urls)),
-]
+urlpatterns = router.urls

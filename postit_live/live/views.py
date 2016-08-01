@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import renderers
-from rest_framework.decorators import api_view
+from rest_framework import viewsets
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
 from .models import Channel, Message, Activity
-from .permissions import IsAuthorOrReadOnly
 from .serializers import ChannelSerializer, MessageSerializer, ActivitySerializer
 
 
@@ -21,72 +18,30 @@ def channel_detail(request, slug):
     return render(request, 'live/show.html', {'channel': channel})
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('api:user-list', request=request, format=format),
-        'channels': reverse('live:channel-list', request=request, format=format),
-        'messages': reverse('live:message-list', request=request, format=format),
-        'activities': reverse('live:activity-list', request=request, format=format),
-    })
-
-
-class ChannelList(generics.ListCreateAPIView):
+class ChannelViewSet(viewsets.ModelViewSet):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
     lookup_field = 'slug'
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-
-class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Channel.objects.all()
-    serializer_class = ChannelSerializer
-    lookup_field = 'slug'
-
-
-class ChannelResources(generics.GenericAPIView):
-    queryset = Channel.objects.all()
-    lookup_field = 'slug'
-    renderer_classes = (renderers.StaticHTMLRenderer,)
-
-    def get(self, request, *args, **kwargs):
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def resources(self, request, *args, **kwargs):
         channel = self.get_object()
         return Response(channel.resources_html)
 
 
-class MessageList(generics.ListCreateAPIView):
+class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def body(self, request, *args, **kwargs):
+        message = self.get_object()
+        return Response(message.body_html)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
-class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
-
-
-class MessageBody(generics.GenericAPIView):
-    queryset = Message.objects.all()
-    renderer_classes = (renderers.StaticHTMLRenderer,)
-
-    def get(self, request, *args, **kwargs):
-        message = self.get_object()
-        return Response(message.body_html)
-
-
-class ActivityList(generics.ListCreateAPIView):
-    queryset = Activity.objects.all()
-    serializer_class = ActivitySerializer
-
-
-class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
+class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
