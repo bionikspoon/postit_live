@@ -31,21 +31,21 @@ export class LiveApp extends Component {
   }
 
   render() {
-    const { room, messages, activity, actions } = this.props;
+    const { channel, messages, activity, actions } = this.props;
 
     return (
       <div className="container-fluid" role="main">
 
         <div className="row">
           <div className="col-md-9">
-            <LiveTitle {...room} />
+            <LiveTitle {...channel} />
           </div>
         </div>
 
         <div className="row">
 
           <div className="col-xs-12 col-md-9">
-            <LiveStatus status={room.status} {...activity} />
+            <LiveStatus status={channel.status} {...activity} />
 
             <LiveNewMessage makeUpdate={this.makeUpdate} />
 
@@ -59,15 +59,15 @@ export class LiveApp extends Component {
             </LiveAside>
 
             <LiveAside title="resources">
-              <div dangerouslySetInnerHTML={room.resources_html} />
+              <div dangerouslySetInnerHTML={channel.resources_html} />
             </LiveAside>
 
             <LiveAside title="discussions">
-              <div dangerouslySetInnerHTML={room.discussions_html} />
+              <div dangerouslySetInnerHTML={channel.discussions_html} />
             </LiveAside>
 
             <LiveAside title="updated by">
-              <div dangerouslySetInnerHTML={room.contributors_html} />
+              <div dangerouslySetInnerHTML={channel.contributors_html} />
             </LiveAside>
 
             <LiveAside>
@@ -96,7 +96,7 @@ LiveApp.propTypes = {
     viewers: PropTypes.number.isRequired,
   }).isRequired,
 
-  room: PropTypes.shape({
+  channel: PropTypes.shape({
     title: PropTypes.string.isRequired,
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
     resources: PropTypes.string.isRequired,
@@ -117,7 +117,7 @@ LiveApp.propTypes = {
 function mapStateToProps(state) {
   return {
     messages: state.live.messages,
-    room: state.live.room,
+    channel: state.live.channel,
     activity: state.live.activity,
     user: { username: 'admin' },
   };

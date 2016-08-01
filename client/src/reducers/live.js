@@ -4,7 +4,7 @@ import update from 'react-addons-update';
 import findIndex from 'lodash/findIndex';
 
 const initialState = {
-  room: {
+  channel: {
     title: 'ninja watchers',
     resources: 'I like turtles',
     resources_html: { __html: '<p>I like turtles</p>' },
