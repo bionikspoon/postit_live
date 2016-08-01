@@ -40,7 +40,7 @@ THIRD_PARTY_APPS = (
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
-
+    'rest_framework',
 )
 
 # Apps specific for this project go here.
@@ -50,6 +50,7 @@ LOCAL_APPS = (
     'postit_live.live',
     'postit_live.blog',
     'postit_live.chat',
+    'postit_live.api',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -259,4 +260,11 @@ CHANNEL_LAYERS = {
         },
         'ROUTING': 'config.routing.channel_routing'
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'PAGE_SIZE': 5,
 }
