@@ -19,7 +19,7 @@ class Socket {
   }
 
   open() {
-    console.debug('open this=%o', this);
+    console.debug('open this=', this);
     const conn = new WebSocket(this.path);
     conn.onopen = this.onopen;
     conn.onmessage = this.onmessage;
@@ -29,31 +29,31 @@ class Socket {
   }
 
   send(data) {
-    console.debug('send data=%o this=%o', data, this);
+    console.debug('send data=', data);
     this.conn.send(data);
   }
 
   onopen(event) {
-    console.debug('onopen event=%o this=%o', event, this);
+    console.debug('onopen event=', event);
   }
 
   onmessage(event) {
-    console.debug('onmessage event=%o this=%o', event, this);
+    console.debug('onmessage event=', event);
 
     const data = JSON.parse(event.data);
-    console.debug('onmessage data=%o', data);
+    console.debug('onmessage data=', data);
     this.dispatch(data);
   }
 
   onclose(event) {
-    console.debug('onclose event=%o this=%o', event, this);
+    console.debug('onclose event=', event);
 
     this.conn = null;
     if (!event.wasClean) setTimeout(this.open, 500);
   }
 
   onerror(event) {
-    console.debug('onerror event=%o this=%o', event, this);
+    console.debug('onerror event=', event);
   }
 }
 
