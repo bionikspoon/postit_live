@@ -82,7 +82,7 @@ LiveApp.propTypes = {
     body_html: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    stricken: PropTypes.bool.isRequired,
+    status: PropTypes.string.isRequired,
   })).isRequired,
 
   activity: PropTypes.shape({

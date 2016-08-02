@@ -33,7 +33,7 @@ class MessageSocketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ('id', 'author', 'body', 'body_html', 'stricken', 'created')
+        fields = ('id', 'author', 'body', 'body_html', 'status', 'created')
         depth = 2
 
 
