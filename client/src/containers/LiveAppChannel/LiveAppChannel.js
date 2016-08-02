@@ -30,7 +30,6 @@ export class LiveAppChannel extends Component {
 
     return (
       <div>
-
         <div className="row">
           <div className="col-md-9">
             <LiveTitle {...channel} />
@@ -38,7 +37,6 @@ export class LiveAppChannel extends Component {
         </div>
 
         <div className="row">
-
           <div className="col-xs-12 col-md-9">
             <LiveStatus status={channel.status} {...activity} />
 
