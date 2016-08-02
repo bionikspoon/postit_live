@@ -38,6 +38,7 @@ class ChannelSerializer(serializers.HyperlinkedModelSerializer):
 class ChannelSocketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
+        fields = ('title', 'resources', 'resources_html', 'description', 'description_html', 'status')
 
 
 class ActivitySerializer(serializers.ModelSerializer):

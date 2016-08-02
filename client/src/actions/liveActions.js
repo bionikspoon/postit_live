@@ -12,6 +12,10 @@ export function deleteMessage(payload) {
   return { type: types.DELETE, payload };
 }
 
+export function updateChannel(payload) {
+  return { type: types.UPDATE_CHANNEL, payload };
+}
+
 export function fetchMessages(payload) {
   return dispatch => {
     dispatch({ type: types.FETCH_MESSAGES_REQUEST });

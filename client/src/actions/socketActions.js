@@ -11,3 +11,8 @@ export function strikeMessage(payload) {
 export function deleteMessage(payload) {
   return { type: types.DELETE, payload };
 }
+
+
+export function updateChannel(payload) {
+  return { type: types.UPDATE_CHANNEL, payload };
+}

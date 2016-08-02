@@ -13,6 +13,8 @@ const initialState = {
     title: 'ninja watchers',
     resources: 'I like turtles',
     resources_html: '<p>I like turtles</p>',
+    description: '',
+    description_html: '',
     discussions: 'no discussions yet. [start one](#)',
     discussions_html: '<p>no discussions yet. <a href="#">start one</a></p>',
     contributors: '- [/u/admin](#)',
@@ -34,6 +36,9 @@ export default function reducer(state = initialState, action = {}) {
 
     case types.DELETE:
       return handleDelete(state, action.payload);
+
+    case types.UPDATE_CHANNEL:
+      return handleUpdateChannel(state, action.payload);
 
     case types.FETCH_MESSAGES_REQUEST:
       return handleFetchChannelRequest(state, action.payload);
@@ -66,6 +71,10 @@ function handleStrike(state, payload) {
 function handleDelete(state, payload) {
   const { id } = payload;
   return update(state, { messages: { $set: _.omit(state.messages, [id]) } });
+}
+
+function handleUpdateChannel(state, payload) {
+  return update(state, { channel: { $merge: payload } });
 }
 
 function handleFetchChannelRequest(state) {
