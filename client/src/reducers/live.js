@@ -1,10 +1,13 @@
 import * as types from '../constants/LiveActionTypes';
 import { OPENED } from '../constants/LiveStatusTypes';
 import update from 'react-addons-update';
-import findIndex from 'lodash/findIndex';
+import _ from 'lodash';
 
 const initialState = {
-  isFetching: false,
+  meta: {
+    synced: false,
+    isFetching: false,
+  },
 
   channel: {
     title: 'ninja watchers',
@@ -19,7 +22,7 @@ const initialState = {
   activity: {
     viewers: 5,
   },
-  messages: [],
+  messages: {},
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -50,53 +53,56 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 function handleCreate(state, payload) {
-  return update(state, { messages: { $push: [payload.message] } });
+  const { message } = payload;
+  return update(state, { messages: { [message.id]: { $set: message } } });
 }
 
 function handleStrike(state, payload) {
   const { id } = payload;
-  const index = findIndex(state.messages, { id });
-  if (index === -1) return state;
 
-  return update(state, { messages: { [index]: { status: { $set: 'stricken' } } } });
+  return update(state, { messages: { [id]: { status: { $set: 'stricken' } } } });
 }
 
 function handleDelete(state, payload) {
   const { id } = payload;
-  const index = findIndex(state.messages, { id });
-  if (index === -1) return state;
-
-  return update(state, { messages: { $splice: [[index, 1]] } });
+  return update(state, { messages: { $set: _.omit(state.messages, [id]) } });
 }
 
 function handleFetchChannelRequest(state) {
-  return update(state, { isFetching: { $set: true } });
+  return update(state, { meta: { isFetching: { $set: true } } });
 }
 
 function handleFetchChannelSuccess(state, payload) {
-  const messages = payload.messages.map(message => ({
-    author: { username: 'admin' },
-    body: message.body,
-    body_html: message.body_html,
-    created: message.created,
-    status: message.status,
-    id: message.id,
-  }));
+  const messages = payload.messages.reduce((obj, message) =>
+    update(obj, {
+      [message.id]: {
+        $set: {
+          author: { username: 'admin' },
+          body: message.body,
+          body_html: message.body_html,
+          created: message.created,
+          status: message.status,
+          id: message.id,
+        },
+      },
+    }), {});
+
   return update(state, {
-    isFetching: { $set: false },
+    meta: {
+      isFetching: { $set: false },
+      synced: { $set: true },
+    },
     channel: {
       title: { $set: payload.title },
       resources: { $set: payload.resources },
       resources_html: { $set: payload.resources_html },
     },
     messages: {
-      $push: messages,
+      $merge: messages,
     },
   });
 }
 
 function handleFetchChannelFailure(state, payload) {
-  return update(state, {
-    isFetching: { $set: false },
-  });
+  return update(state, { meta: { isFetching: { $set: false } } });
 }

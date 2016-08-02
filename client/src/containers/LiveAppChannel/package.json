@@ -1,0 +1,6 @@
+{
+  "name": "LiveAppChannel",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./LiveAppChannel.js"
+}
