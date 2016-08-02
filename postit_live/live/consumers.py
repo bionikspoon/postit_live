@@ -55,64 +55,66 @@ def live_messages_consumer(message):
         return
 
     if action == CREATE:
-        return create_message(payload['body'], live_channel, groups)
+        return create_message(groups, payload['body'], live_channel)
 
     if action == STRIKE:
-        return strike_message(payload['id'], live_channel, groups)
+        return strike_message(groups, payload['id'], live_channel)
 
     if action == DELETE:
-        return delete_message(payload['id'], live_channel, groups)
+        return delete_message(groups, payload['id'], live_channel)
 
 
-def create_message(body, channel, groups):
+def dispatch(action):
+    def outer_wrapper(function):
+        def inner_wrapper(groups, *args):
+            data = function(*args)
+            text = json_dumps(data)
+            [group.send({'text': text}) for group in groups]
+
+            logger.debug('message %s, text=%s', action, text)
+            return data
+
+        return inner_wrapper
+
+    return outer_wrapper
+
+
+@dispatch('created')
+def create_message(body, channel):
     message = channel.messages.create(body=body, author=User.objects.all().first())
     serializer = MessageSocketSerializer(message)
 
-    data = {
+    return {
         'type': 'live.CREATE',
         'payload': {
             'message': serializer.data
         }
     }
 
-    text = json_dumps(data)
-    [group.send({'text': text}) for group in groups]
 
-    logger.debug('message created, text=%s' % text)
+@dispatch('stricken')
+def strike_message(message_id, channel):
+    channel.messages.get(id=message_id).strike().save()
 
-
-def strike_message(message_id, channel, groups):
-    message = channel.messages.get(id=message_id)
-    message.strike().save()
-
-    data = {
+    return {
         'type': 'live.STRIKE',
         'payload': {
             'id': message_id
         }
     }
 
-    text = json_dumps(data)
-    [group.send({'text': text}) for group in groups]
 
-    logger.debug('message stricken, text=%s' % text)
+@dispatch('deleted')
+def delete_message(message_id, channel):
+    channel.messages.get(id=message_id).delete()
 
-
-def delete_message(message_id, channel, groups):
-    message = channel.messages.get(id=message_id).delete()
-
-
-    data = {
+    return {
         'type': 'live.DELETE',
         'payload': {
             'id': message_id
         }
     }
 
-    text = json_dumps(data)
-    [group.send({'text': text}) for group in groups]
-
-    logger.debug('message deleted, text=%s' % text)
 
 def json_dumps(data):
     return TO_JSON.render(data).decode('utf-8')
