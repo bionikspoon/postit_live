@@ -4,7 +4,7 @@ import update from 'react-addons-update';
 import findIndex from 'lodash/findIndex';
 
 const initialState = {
-  room: {
+  channel: {
     title: 'ninja watchers',
     resources: 'I like turtles',
     resources_html: { __html: '<p>I like turtles</p>' },
@@ -19,32 +19,25 @@ const initialState = {
   },
   messages: [
     {
-      author: 'admin',
+      author: { username: 'admin' },
       body: 'I like turtles',
-      body_html: { __html: 'I like turtles' },
-      created: 1469766549,
+      body_html: '<p>I like turtles</p>',
+      created: '2016-08-01T23:20:29.247962Z',
       id: '0',
-      name: 'LiveUpdate-0',
-      stricken: false,
+      status: 'visible',
     },
   ],
 };
 export default function reducer(state = initialState, action = {}) {
-  const index = findIndex(state.messages, action.payload);
-
   switch (action.type) {
     case types.CREATE:
-      return update(state, { messages: { $push: [action.payload] } });
+      return update(state, { messages: { $unshift: [action.payload.message] } });
 
     case types.STRIKE:
-      return index === -1
-        ? state
-        : update(state, { messages: { [index]: { stricken: { $set: true } } } });
+      return handleStrike(state, action.payload.id);
 
     case types.DELETE:
-      return index === -1
-        ? state
-        : update(state, { messages: { $splice: [[index, 1]] } });
+      return handleDelete(state, action.payload.id);
 
     case types.ACTIVITY:
       return state;
@@ -52,4 +45,18 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+function handleStrike(state, id) {
+  const index = findIndex(state.messages, { id });
+  if (index === -1) return state;
+
+  return update(state, { messages: { [index]: { stricken: { $set: 'stricken' } } } });
+}
+
+function handleDelete(state, id) {
+  const index = findIndex(state.messages, { id });
+  if (index === -1) return state;
+
+  return update(state, { messages: { $splice: [[index, 1]] } });
 }

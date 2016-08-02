@@ -12,42 +12,36 @@ import LiveAside from '../../components/LiveAside';
 export class LiveApp extends Component {
   constructor(props) {
     super(props);
-    this.makeUpdate = this.makeUpdate.bind(this);
+    this.createMessage = this.createMessage.bind(this);
   }
 
-  makeUpdate(body) {
+  createMessage(body) {
     const { user, messages, actions } = this.props;
     const id = messages.length.toString();
 
     actions.createMessage({
-      author: user.username,
       body,
-      body_html: { __html: body },
-      created: Math.floor(Date.now() / 1000),
-      id,
-      name: `LiveUpdate-${id}`,
-      stricken: false,
     });
   }
 
   render() {
-    const { room, messages, activity, actions } = this.props;
+    const { channel, messages, activity, actions } = this.props;
 
     return (
       <div className="container-fluid" role="main">
 
         <div className="row">
           <div className="col-md-9">
-            <LiveTitle {...room} />
+            <LiveTitle {...channel} />
           </div>
         </div>
 
         <div className="row">
 
           <div className="col-xs-12 col-md-9">
-            <LiveStatus status={room.status} {...activity} />
+            <LiveStatus status={channel.status} {...activity} />
 
-            <LiveNewMessage makeUpdate={this.makeUpdate} />
+            <LiveNewMessage makeUpdate={this.createMessage} />
 
             {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
           </div>
@@ -59,15 +53,15 @@ export class LiveApp extends Component {
             </LiveAside>
 
             <LiveAside title="resources">
-              <div dangerouslySetInnerHTML={room.resources_html} />
+              <div dangerouslySetInnerHTML={channel.resources_html} />
             </LiveAside>
 
             <LiveAside title="discussions">
-              <div dangerouslySetInnerHTML={room.discussions_html} />
+              <div dangerouslySetInnerHTML={channel.discussions_html} />
             </LiveAside>
 
             <LiveAside title="updated by">
-              <div dangerouslySetInnerHTML={room.contributors_html} />
+              <div dangerouslySetInnerHTML={channel.contributors_html} />
             </LiveAside>
 
             <LiveAside>
@@ -83,20 +77,19 @@ export class LiveApp extends Component {
 LiveApp.propTypes = {
 
   messages: PropTypes.arrayOf(PropTypes.shape({
-    author: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
     body: PropTypes.string.isRequired,
-    body_html: PropTypes.object.isRequired,
-    created: PropTypes.number.isRequired,
+    body_html: PropTypes.string.isRequired,
+    created: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    stricken: PropTypes.bool.isRequired,
+    status: PropTypes.string.isRequired,
   })).isRequired,
 
   activity: PropTypes.shape({
     viewers: PropTypes.number.isRequired,
   }).isRequired,
 
-  room: PropTypes.shape({
+  channel: PropTypes.shape({
     title: PropTypes.string.isRequired,
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
     resources: PropTypes.string.isRequired,
@@ -117,7 +110,7 @@ LiveApp.propTypes = {
 function mapStateToProps(state) {
   return {
     messages: state.live.messages,
-    room: state.live.room,
+    channel: state.live.channel,
     activity: state.live.activity,
     user: { username: 'admin' },
   };

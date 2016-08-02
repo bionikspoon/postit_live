@@ -24,7 +24,7 @@ export default class LiveMessage extends Component {
   }
 
   render() {
-    const { created, body_html, author, stricken } = this.props;
+    const { created, body_html, author, status } = this.props;
     return (
       <div className="row flex-items-xs-right">
         <div className="col-xs-2">
@@ -33,10 +33,10 @@ export default class LiveMessage extends Component {
         <div className="col-xs-10">
           <div className="body">
             <span
-              className={stricken ? 'strike' : null}
-              dangerouslySetInnerHTML={body_html}
+              className={status}
+              dangerouslySetInnerHTML={{ __html: body_html }}
             />
-            <a href="#" className="author">/u/{author}</a>
+            <a href="#" className="author">/u/{author.username}</a>
           </div>
           <div className="buttonrow">
             {this.renderStrikeButton()} {this.renderDeleteButton()}
@@ -48,10 +48,10 @@ export default class LiveMessage extends Component {
 }
 LiveMessage.propTypes = {
   id: PropTypes.string.isRequired,
-  created: PropTypes.number.isRequired,
-  body_html: PropTypes.object.isRequired,
-  author: PropTypes.string.isRequired,
-  stricken: PropTypes.bool.isRequired,
+  created: PropTypes.string.isRequired,
+  body_html: PropTypes.string.isRequired,
+  author: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
+  status: PropTypes.oneOf(['visible', 'stricken']).isRequired,
   actions: PropTypes.shape({
     strikeMessage: PropTypes.func.isRequired,
     deleteMessage: PropTypes.func.isRequired,

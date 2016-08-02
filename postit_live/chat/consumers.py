@@ -5,7 +5,7 @@ import logging
 from channels import Group
 from channels.sessions import channel_session
 
-from postit_live.chat.models import Room
+from .models import Room
 
 logger = logging.getLogger(__name__)
 

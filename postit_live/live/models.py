@@ -57,6 +57,10 @@ class Message(TimeStampedModel, StatusModel):
         self.body_html = markdown((self.body))
         return super().save(**kwargs)
 
+    def strike(self):
+        self.status = self.STATUS.stricken
+        return self
+
 
 class Contributors(TimeStampedModel):
     channel = models.ForeignKey(Channel, related_name='contributor_set')

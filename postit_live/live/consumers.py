@@ -1,63 +1,120 @@
-import json
 import logging
 
+import channels
 from channels import Group
-from channels.sessions import channel_session
+from channels.generic.websockets import JsonWebsocketConsumer
+from rest_framework.renderers import JSONRenderer
 
+from postit_live.live.serializers import MessageSocketSerializer
+from postit_live.users.models import User
 from .models import Channel
 
 logger = logging.getLogger(__name__)
 
+TO_JSON = JSONRenderer()
 
-@channel_session
-def ws_connect(message, slug):
+CREATE = 'socket.CREATE'
+STRIKE = 'socket.STRIKE'
+DELETE = 'socket.DELETE'
+
+
+class ConsumerMixin(object):
+    consumer = NotImplemented
+
+    def consumer_send(self, content, close=False):
+        message = self.kwargs.copy()
+        if close:
+            message["close"] = True
+
+        message['connection_groups'] = self.connection_groups(**self.kwargs)
+        message['data'] = content
+
+        channels.Channel(self.consumer).send(message)
+
+
+class LiveConsumer(ConsumerMixin, JsonWebsocketConsumer):
+    channel_session = True
+    consumer = 'live-messages'
+
+    def connection_groups(self, slug=None, **kwargs):
+        return ['live-%s' % slug]
+
+    def receive(self, content, slug=None, **kwargs):
+        self.consumer_send(content)
+
+
+def live_messages_consumer(message):
     try:
-        channel = Channel.objects.get(slug=slug)
-    except Channel.DoesNotExist:
-        logger.error('channel connect failed, channel does not exist slug=%s', slug)
+        slug = message.content['slug']
+        groups = [Group(name) for name in message.content['connection_groups']]
+        action = message.content['data']['type']
+        payload = message.content['data']['payload']
+        live_channel = Channel.objects.get(slug=slug)
+    except (KeyError, Channel.DoesNotExist):
+        logger.error('live_messages message is malformed')
         return
 
-    Group('live-%s' % slug, channel_layer=message.channel_layer).add(message.reply_channel)
-    message.channel_session['slug'] = slug
-    logger.debug('connect slug=%s client=[%s:%s]', channel.slug, message['client'][0],message['client'][1])
+    if action == CREATE:
+        return create_message(groups, payload['body'], live_channel)
+
+    if action == STRIKE:
+        return strike_message(groups, payload['id'], live_channel)
+
+    if action == DELETE:
+        return delete_message(groups, payload['id'], live_channel)
 
 
-@channel_session
-def ws_receive(message):
-    try:
-        slug = message.channel_session['slug']
-    except KeyError:
-        logger.error('no "slug" in channel_session')
-        return
+def dispatch(action):
+    def outer_wrapper(function):
+        def inner_wrapper(groups, *args):
+            data = function(*args)
+            text = json_dumps(data)
+            [group.send({'text': text}) for group in groups]
 
-    try:
-        channel = Channel.objects.get(slug=slug)
-    except Channel.DoesNotExist:
-        logger.error('message received, but channel does not exist slug=%s', slug)
-        return
+            logger.debug('message %s, text=%s', action, text)
+            return data
 
-    try:
-        data = json.loads(message['text'])
-    except ValueError:
-        logger.error('could not deserialize text=%s', message['text'])
-        return
+        return inner_wrapper
 
-    if set(data.keys()) != {'type', 'payload'}:
-        logger.error('message data malformed data=%s', data)
-
-    data['type'] = data['type'].replace('socket', 'live', 1)
-    channel_message = channel.messages.create(body=data['payload']['body'])
-    Group('live-%s' % slug, channel_layer=message.channel_layer).send({'text': json.dumps(data)})
-    logger.debug('message sent slug=%s body=%s' % (slug, data['payload']['body']))
+    return outer_wrapper
 
 
-@channel_session
-def ws_disconnect(message, slug):
-    try:
-        channel = Channel.objects.get(slug=slug)
-    except Channel.DoesNotExist:
-        logger.error('channel disconnect failed, channel does not exist slug=%s', slug)
-        return
+@dispatch('created')
+def create_message(body, channel):
+    message = channel.messages.create(body=body, author=User.objects.all().first())
+    serializer = MessageSocketSerializer(message)
 
-    Group('live-%s' % slug, channel_layer=message.channel_layer).discard(message.reply_channel)
-    logger.debug('disconnected slug=%s', slug)
+    return {
+        'type': 'live.CREATE',
+        'payload': {
+            'message': serializer.data
+        }
+    }
+
+
+@dispatch('stricken')
+def strike_message(message_id, channel):
+    channel.messages.get(id=message_id).strike().save()
+
+    return {
+        'type': 'live.STRIKE',
+        'payload': {
+            'id': message_id
+        }
+    }
+
+
+@dispatch('deleted')
+def delete_message(message_id, channel):
+    channel.messages.get(id=message_id).delete()
+
+    return {
+        'type': 'live.DELETE',
+        'payload': {
+            'id': message_id
+        }
+    }
+
+
+def json_dumps(data):
+    return TO_JSON.render(data).decode('utf-8')
