@@ -53,7 +53,7 @@ class Socket {
   }
 
   onerror(event) {
-    console.error('onerror event=%o this=%o', event, this);
+    console.debug('onerror event=%o this=%o', event, this);
   }
 }
 
