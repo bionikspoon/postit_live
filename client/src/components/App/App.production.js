@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Router, browserHistory } from 'react-router';
 import routes from '../../routes';
+import { syncHistoryWithStore } from 'react-router-redux';
 
-export default function App() {
+export default function App({ store }) {
+  const history = syncHistoryWithStore(browserHistory, store);
   return (
     <main>
-      <Router history={browserHistory} routes={routes} />
+      <Router history={history} routes={routes} />
     </main>
   );
 }
-
-App.propTypes = {};
+App.propTypes = {
+  store: PropTypes.object.isRequired,
+};

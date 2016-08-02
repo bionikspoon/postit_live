@@ -1,23 +1,27 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as SocketActions from '../../actions/socketActions';
+import * as socketActions from '../../actions/socketActions';
+import * as liveActions from '../../actions/liveActions';
 import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
-
+import { getSortedMessages } from '../../selectors';
 export class LiveApp extends Component {
   constructor(props) {
     super(props);
     this.createMessage = this.createMessage.bind(this);
+
+    const { slug } = props;
+    const { location } = window;
+    this.props.actions.fetchMessages({ slug, location });
   }
 
   createMessage(body) {
-    const { user, messages, actions } = this.props;
-    const id = messages.length.toString();
+    const { actions } = this.props;
 
     actions.createMessage({
       body,
@@ -53,15 +57,15 @@ export class LiveApp extends Component {
             </LiveAside>
 
             <LiveAside title="resources">
-              <div dangerouslySetInnerHTML={channel.resources_html} />
+              <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
             </LiveAside>
 
             <LiveAside title="discussions">
-              <div dangerouslySetInnerHTML={channel.discussions_html} />
+              <div dangerouslySetInnerHTML={{ __html: channel.discussions_html }} />
             </LiveAside>
 
             <LiveAside title="updated by">
-              <div dangerouslySetInnerHTML={channel.contributors_html} />
+              <div dangerouslySetInnerHTML={{ __html: channel.contributors_html }} />
             </LiveAside>
 
             <LiveAside>
@@ -93,32 +97,36 @@ LiveApp.propTypes = {
     title: PropTypes.string.isRequired,
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
     resources: PropTypes.string.isRequired,
-    resources_html: PropTypes.object.isRequired,
+    resources_html: PropTypes.string.isRequired,
     discussions: PropTypes.string.isRequired,
-    discussions_html: PropTypes.object.isRequired,
+    discussions_html: PropTypes.string.isRequired,
     contributors: PropTypes.string.isRequired,
-    contributors_html: PropTypes.object.isRequired,
+    contributors_html: PropTypes.string.isRequired,
   }).isRequired,
 
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
   }).isRequired,
 
+  slug: PropTypes.string.isRequired,
+
   actions: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    messages: state.live.messages,
+    messages: getSortedMessages(state),
     channel: state.live.channel,
     activity: state.live.activity,
     user: { username: 'admin' },
+    slug: props.params.slug,
   };
 }
 
 function mapDispatchToProps(dispatch) {
+  const actions = { ...liveActions, ...socketActions };
   return {
-    actions: bindActionCreators(SocketActions, dispatch),
+    actions: bindActionCreators(actions, dispatch),
   };
 }
 

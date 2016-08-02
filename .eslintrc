@@ -1,5 +1,6 @@
 {
   "extends": [ "airbnb" ],
+  "parser": "babel-eslint",
   "rules": {
     "no-use-before-define": [ 2, { "functions": false } ],
     "no-unused-vars": 1,

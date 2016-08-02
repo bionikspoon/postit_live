@@ -11,7 +11,7 @@ const ROOT_ELEMENT = 'main';
 if (typeof document !== 'undefined') {
   ReactDOM.render(
     <Provider store={STORE}>
-      <App />
+      <App store={STORE} />
     </Provider>,
     document.getElementById(ROOT_ELEMENT)
   );

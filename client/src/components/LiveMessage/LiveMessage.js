@@ -13,8 +13,8 @@ export default class LiveMessage extends Component {
   }
 
   renderStrikeButton() {
-    const { stricken } = this.props;
-    return stricken
+    const { status } = this.props;
+    return status === 'stricken'
       ? <span>stricken</span>
       : <ButtonConfirm onClick={this.strikeMessage} value="strike" />;
   }
