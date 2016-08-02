@@ -15,12 +15,11 @@ class LiveApp extends Component {
   }
 
   render() {
-    const { children, slug } = this.props;
     return (
       <div className="container-fluid" role="main">
-        <LiveNav slug={slug} />
+        <LiveNav {...this.props} />
 
-        {children}
+        {this.props.children}
       </div>
     );
   }
@@ -39,6 +38,7 @@ function mapStateToProps(state, props) {
   return {
     meta: state.live.meta,
     slug: props.params.slug,
+    pathname: props.location.pathname,
   };
 }
 
