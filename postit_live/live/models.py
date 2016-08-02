@@ -1,6 +1,7 @@
 import uuid
 
 from django.conf import settings
+from django.core import serializers
 from django.db import models
 from django.db import transaction
 from haikunator import Haikunator
@@ -56,6 +57,19 @@ class Message(TimeStampedModel, StatusModel):
     def save(self, **kwargs):
         self.body_html = markdown((self.body))
         return super().save(**kwargs)
+
+    @property
+    def stricken(self):
+        return self.status == self.STATUS.stricken
+
+    def serialize(self, include_fk=True):
+        data = serializers.serialize('python', [self])[0]
+
+        if include_fk:
+            data['author'] = self.author.serialize(include_fk=False)
+
+
+        return data
 
 
 class Contributors(TimeStampedModel):

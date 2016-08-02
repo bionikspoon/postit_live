@@ -36,12 +36,12 @@ export default class Moment extends Component {
   }
 }
 Moment.propTypes = {
-  date: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
 };
 
 function createDate(epoch) {
-  const date = moment.unix(epoch);
+  const date = moment(epoch);
   return {
     date,
     title: date.format('LLLL'),

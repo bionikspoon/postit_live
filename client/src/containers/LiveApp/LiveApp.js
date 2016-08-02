@@ -12,21 +12,15 @@ import LiveAside from '../../components/LiveAside';
 export class LiveApp extends Component {
   constructor(props) {
     super(props);
-    this.makeUpdate = this.makeUpdate.bind(this);
+    this.createMessage = this.createMessage.bind(this);
   }
 
-  makeUpdate(body) {
+  createMessage(body) {
     const { user, messages, actions } = this.props;
     const id = messages.length.toString();
 
     actions.createMessage({
-      author: user.username,
       body,
-      body_html: { __html: body },
-      created: Math.floor(Date.now() / 1000),
-      id,
-      name: `LiveUpdate-${id}`,
-      stricken: false,
     });
   }
 
@@ -47,7 +41,7 @@ export class LiveApp extends Component {
           <div className="col-xs-12 col-md-9">
             <LiveStatus status={channel.status} {...activity} />
 
-            <LiveNewMessage makeUpdate={this.makeUpdate} />
+            <LiveNewMessage makeUpdate={this.createMessage} />
 
             {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
           </div>
@@ -83,12 +77,11 @@ export class LiveApp extends Component {
 LiveApp.propTypes = {
 
   messages: PropTypes.arrayOf(PropTypes.shape({
-    author: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
     body: PropTypes.string.isRequired,
-    body_html: PropTypes.object.isRequired,
-    created: PropTypes.number.isRequired,
+    body_html: PropTypes.string.isRequired,
+    created: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
     stricken: PropTypes.bool.isRequired,
   })).isRequired,
 

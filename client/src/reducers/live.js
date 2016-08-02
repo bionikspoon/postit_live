@@ -19,12 +19,11 @@ const initialState = {
   },
   messages: [
     {
-      author: 'admin',
+      author: { username: 'admin' },
       body: 'I like turtles',
-      body_html: { __html: 'I like turtles' },
-      created: 1469766549,
+      body_html: '<p>I like turtles</p>',
+      created: '2016-08-01T23:20:29.247962Z',
       id: '0',
-      name: 'LiveUpdate-0',
       stricken: false,
     },
   ],
@@ -34,7 +33,7 @@ export default function reducer(state = initialState, action = {}) {
 
   switch (action.type) {
     case types.CREATE:
-      return update(state, { messages: { $push: [action.payload] } });
+      return update(state, { messages: { $unshift: [action.payload.message] } });
 
     case types.STRIKE:
       return index === -1

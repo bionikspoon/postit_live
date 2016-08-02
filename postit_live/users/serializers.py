@@ -9,3 +9,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         extra_kwargs = {'url': {'view_name': 'api:user-detail'}}
         fields = ('url', 'email', 'username', 'name', 'last_login', 'is_superuser', 'is_staff', 'is_active')
+
+
+class UserSocketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'name')

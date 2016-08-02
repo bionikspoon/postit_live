@@ -34,9 +34,9 @@ export default class LiveMessage extends Component {
           <div className="body">
             <span
               className={stricken ? 'strike' : null}
-              dangerouslySetInnerHTML={body_html}
+              dangerouslySetInnerHTML={{ __html: body_html }}
             />
-            <a href="#" className="author">/u/{author}</a>
+            <a href="#" className="author">/u/{author.username}</a>
           </div>
           <div className="buttonrow">
             {this.renderStrikeButton()} {this.renderDeleteButton()}
@@ -48,9 +48,9 @@ export default class LiveMessage extends Component {
 }
 LiveMessage.propTypes = {
   id: PropTypes.string.isRequired,
-  created: PropTypes.number.isRequired,
-  body_html: PropTypes.object.isRequired,
-  author: PropTypes.string.isRequired,
+  created: PropTypes.string.isRequired,
+  body_html: PropTypes.string.isRequired,
+  author: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
   stricken: PropTypes.bool.isRequired,
   actions: PropTypes.shape({
     strikeMessage: PropTypes.func.isRequired,
