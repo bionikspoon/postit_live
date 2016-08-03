@@ -47,7 +47,9 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     # custom users app
     # 'postit_live.users',
+    # 'postit_live.auth',
     'postit_live.live',
+    'postit_live.user',
     # 'postit_live.blog',
     # 'postit_live.chat',
     'postit_live.api',
@@ -225,8 +227,8 @@ AUTHENTICATION_BACKENDS = (
 # # Custom user app defaults
 # # Select the correct user model
 # AUTH_USER_MODEL = 'users.User'
-# LOGIN_REDIRECT_URL = 'users:redirect'
-# LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'user:login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'

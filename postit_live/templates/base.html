@@ -1,15 +1,20 @@
-{% extends 'app-base.html' %}
 {% load staticfiles i18n compress %}
 {% load render_bundle from webpack_loader %}
-
-{% block title %}postit-live{% endblock title %}
-
-{% block css %}
-   {% render_bundle 'bootstrap' 'css' %}
-{% endblock %}
-
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>{% block title %}postit-live{% endblock title %}</title>
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+   {% block css %}{% render_bundle 'bootstrap' 'css' %}{% endblock %}
+</head>
+<body>
 {% block nav %}{% endblock nav %}
-
 {% block messages %}
    <div>
       {% if messages %}
@@ -19,15 +24,12 @@
       {% endif %}
    </div>
 {% endblock messages %}
-
 {% block page-header %}{% endblock page-header %}
-
-{% block container %}{% block content %}{% endblock %}{% endblock container %}
-
+{% block container %}{% block content %}{% endblock content %}{% endblock container %}
 {% block modal %}{% endblock modal %}
-
 {% block javascript %}
    {% render_bundle 'vendor' %}
    {% render_bundle 'bootstrap' 'js' %}
    {% render_bundle 'common' %}
-{% endblock javascript %}
+{% endblock javascript %}</body>
+</html>

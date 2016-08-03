@@ -19,11 +19,12 @@ urlpatterns = [
     # url(r'^users/', include('postit_live.users.urls', namespace='users')),
     # url(r'^blog/', include('postit_live.blog.urls', namespace='blog')),
     # url(r'^chat/', include('postit_live.chat.urls', namespace='chat')),
+    # url(r'^auth/', include('django.contrib.auth.urls', namespace='auth')),
+    url(r'^user/', include('postit_live.user.urls', namespace='user')),
     url(r'^live/', include('postit_live.live.urls', namespace='live')),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('postit_live.api.urls', namespace='api')),
     # url(r'^accounts/', include('allauth.urls')),
-
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
