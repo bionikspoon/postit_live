@@ -5,23 +5,23 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
-from .models import Channel, Message, Activity
-from .serializers import ChannelSerializer, MessageSerializer, ActivitySerializer
+from .models import LiveChannel, LiveMessage, Activity
+from .serializers import LiveChannelSerializer, LiveMessageSerializer, ActivitySerializer
 
 @login_required
 def create_channel(request):
-    channel = Channel.objects.create()
+    channel = LiveChannel.objects.create()
     return redirect('live:channel_detail_settings', slug=channel.slug)
 
 
 def channel_detail(request, slug):
-    channel = get_object_or_404(Channel, slug=slug)
+    channel = get_object_or_404(LiveChannel, slug=slug)
     return render(request, 'live/show.html', {'channel': channel})
 
 
-class ChannelViewSet(viewsets.ModelViewSet):
-    queryset = Channel.objects.all()
-    serializer_class = ChannelSerializer
+class LiveChannelViewSet(viewsets.ModelViewSet):
+    queryset = LiveChannel.objects.all()
+    serializer_class = LiveChannelSerializer
     lookup_field = 'slug'
 
     @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
@@ -30,9 +30,9 @@ class ChannelViewSet(viewsets.ModelViewSet):
         return Response(channel.resources_html)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
+class LiveMessageViewSet(viewsets.ModelViewSet):
+    queryset = LiveMessage.objects.all()
+    serializer_class = LiveMessageSerializer
 
     @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
     def body(self, request, *args, **kwargs):

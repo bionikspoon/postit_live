@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 
 from postit_live.user.serializers import UserSocketSerializer
 from postit_live.utils import ConsumerMixin, dispatch, SerializerWebsocketConsumer
-from .models import Channel
-from .serializers import MessageSocketSerializer, ChannelSocketSerializer
+from .models import LiveChannel
+from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -35,16 +35,15 @@ class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
 
 def live_messages_consumer(message):
     try:
-        logger.debug(message.content)
         slug = message.content['slug']
         groups = [Group(name) for name in message.content['connection_groups']]
         action = message.content['data']['type'].replace('socket', 'live', 1)
         payload = message.content['data']['payload']
         user = User.objects.get(**message.content['data']['user'])
-        live_channel = Channel.objects.get(slug=slug)
+        live_channel = LiveChannel.objects.get(slug=slug)
     except KeyError:
         return logger.error('live-messages message.content is malformed')
-    except Channel.DoesNotExist:
+    except LiveChannel.DoesNotExist:
         return logger.error('live-messages channel does not exist')
     except User.DoesNotExist:
         return logger.error('live-messages user does not exist')
@@ -63,9 +62,9 @@ def live_messages_consumer(message):
 
 
 @dispatch
-def create_message(body, user, channel):
-    message = channel.messages.create(body=body, author=user)
-    serializer = MessageSocketSerializer(message)
+def create_message(body, user, live_channel):
+    live_message = live_channel.messages.create(body=body, author=user)
+    serializer = LiveMessageSocketSerializer(live_message)
 
     return {
         'type': CREATE,
@@ -76,8 +75,8 @@ def create_message(body, user, channel):
 
 
 @dispatch
-def strike_message(message_id, channel):
-    channel.messages.get(id=message_id).strike().save()
+def strike_message(message_id, live_channel):
+    live_channel.messages.get(id=message_id).strike().save()
 
     return {
         'type': STRIKE,
@@ -88,8 +87,8 @@ def strike_message(message_id, channel):
 
 
 @dispatch
-def delete_message(message_id, channel):
-    channel.messages.get(id=message_id).delete()
+def delete_message(message_id, live_channel):
+    live_channel.messages.get(id=message_id).delete()
 
     return {
         'type': DELETE,
@@ -100,13 +99,13 @@ def delete_message(message_id, channel):
 
 
 @dispatch
-def update_channel(payload, channel):
-    channel.title = payload['title']
-    channel.description = payload['description']
-    channel.resources = payload['resources']
-    channel.save()
+def update_channel(payload, live_channel):
+    live_channel.title = payload['title']
+    live_channel.description = payload['description']
+    live_channel.resources = payload['resources']
+    live_channel.save()
 
     return {
         'type': UPDATE_CHANNEL,
-        'payload': ChannelSocketSerializer(channel).data
+        'payload': LiveChannelSocketSerializer(live_channel).data
     }
