@@ -2,7 +2,7 @@ import './LiveMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
 import ButtonConfirm from '../ButtonConfirm';
-
+import LayoutInnerRow from '../LayoutInnerRow';
 export default class LiveMessage extends Component {
   constructor(props) {
     super(props);
@@ -25,24 +25,17 @@ export default class LiveMessage extends Component {
 
   render() {
     const { created, body_html, author, status } = this.props;
+    const moment = <Moment date={created} href="#" />;
     return (
-      <div className="row flex-items-xs-right">
-        <div className="col-xs-2">
-          <Moment date={created} href="#" />
+      <LayoutInnerRow sidebar={moment}>
+        <div className="body">
+          <span className={status} dangerouslySetInnerHTML={{ __html: body_html }} />
+          <a href="#" className="author">/u/{author.username}</a>
         </div>
-        <div className="col-xs-10">
-          <div className="body">
-            <span
-              className={status}
-              dangerouslySetInnerHTML={{ __html: body_html }}
-            />
-            <a href="#" className="author">/u/{author.username}</a>
-          </div>
-          <div className="buttonrow">
-            {this.renderStrikeButton()} {this.renderDeleteButton()}
-          </div>
+        <div className="buttonrow">
+          {this.renderStrikeButton()} {this.renderDeleteButton()}
         </div>
-      </div>
+      </LayoutInnerRow>
     );
   }
 }

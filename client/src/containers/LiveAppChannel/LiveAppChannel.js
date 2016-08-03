@@ -9,6 +9,7 @@ import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
+import LayoutRow from '../../components/LayoutRow';
 import { getSortedMessages } from '../../selectors';
 
 export class LiveAppChannel extends Component {
@@ -25,49 +26,50 @@ export class LiveAppChannel extends Component {
     });
   }
 
+  renderSidebar() {
+    const { channel } = this.props;
+
+    return (
+      <div>
+        <LiveAside>
+          <label><input type="checkbox" />popup notifications</label>
+        </LiveAside>
+
+        <LiveAside title="resources">
+          <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
+        </LiveAside>
+
+        <LiveAside title="discussions">
+          <div dangerouslySetInnerHTML={{ __html: channel.discussions_html }} />
+        </LiveAside>
+
+        <LiveAside title="updated by">
+          <div dangerouslySetInnerHTML={{ __html: channel.contributors_html }} />
+        </LiveAside>
+
+        <LiveAside>
+          <button className="btn btn-secondary btn-sm">report a rule violation</button>
+        </LiveAside>
+      </div>
+    );
+  }
+
   render() {
     const { channel, messages, activity, actions } = this.props;
 
     return (
       <div>
-        <div className="row">
-          <div className="col-md-9">
-            <LiveTitle {...channel} />
-          </div>
-        </div>
+        <LayoutRow ><LiveTitle {...channel} /></LayoutRow>
 
-        <div className="row">
-          <div className="col-xs-12 col-md-9">
-            <LiveStatus status={channel.status} {...activity} />
+        <LayoutRow ><LiveStatus status={channel.status} {...activity} /></LayoutRow>
 
-            <LiveNewMessage makeUpdate={this.createMessage} />
+        <LayoutRow sidebar={this.renderSidebar()}>
 
-            {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
-          </div>
+          <LiveNewMessage makeUpdate={this.createMessage} />
 
-          <div className="col-xs-9 col-md-3">
+          {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
+        </LayoutRow>
 
-            <LiveAside>
-              <label><input type="checkbox" />popup notifications</label>
-            </LiveAside>
-
-            <LiveAside title="resources">
-              <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
-            </LiveAside>
-
-            <LiveAside title="discussions">
-              <div dangerouslySetInnerHTML={{ __html: channel.discussions_html }} />
-            </LiveAside>
-
-            <LiveAside title="updated by">
-              <div dangerouslySetInnerHTML={{ __html: channel.contributors_html }} />
-            </LiveAside>
-
-            <LiveAside>
-              <button className="btn btn-secondary btn-sm">report a rule violation</button>
-            </LiveAside>
-          </div>
-        </div>
       </div>
     );
   }
@@ -102,7 +104,6 @@ LiveAppChannel.propTypes = {
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
   }).isRequired,
-
 
   actions: PropTypes.object.isRequired,
 };
