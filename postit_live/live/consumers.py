@@ -1,12 +1,12 @@
 import logging
 
 from channels import Group
-from channels.generic.websockets import JsonWebsocketConsumer
 from django.contrib.auth import get_user_model
 
-from postit_live.live.serializers import MessageSocketSerializer, ChannelSocketSerializer
-from postit_live.utils import ConsumerMixin, dispatch
+from postit_live.user.serializers import UserSocketSerializer
+from postit_live.utils import ConsumerMixin, dispatch, SerializerWebsocketConsumer
 from .models import Channel
+from .serializers import MessageSocketSerializer, ChannelSocketSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -14,12 +14,57 @@ CREATE = 'live.CREATE'
 STRIKE = 'live.STRIKE'
 DELETE = 'live.DELETE'
 UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
+AUTH_REQUIRED = 'live.AUTH_REQUIRED'
 
 User = get_user_model()
 
+
+class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
+    http_user = True
+    consumer = 'live-messages'
+
+    def connection_groups(self, slug=None, **kwargs):
+        return ['live-%s' % slug]
+
+    def receive(self, content, slug=None, **kwargs):
+        if not self.message.user.is_authenticated():
+            return self.send({'type': AUTH_REQUIRED})
+        content['user'] = UserSocketSerializer(self.message.user).data
+        self.consumer_send(content)
+
+
+def live_messages_consumer(message):
+    try:
+        logger.debug(message.content)
+        slug = message.content['slug']
+        groups = [Group(name) for name in message.content['connection_groups']]
+        action = message.content['data']['type'].replace('socket', 'live', 1)
+        payload = message.content['data']['payload']
+        user = User.objects.get(**message.content['data']['user'])
+        live_channel = Channel.objects.get(slug=slug)
+    except KeyError:
+        return logger.error('live-messages message.content is malformed')
+    except Channel.DoesNotExist:
+        return logger.error('live-messages channel does not exist')
+    except User.DoesNotExist:
+        return logger.error('live-messages user does not exist')
+
+    if action == CREATE:
+        return create_message(groups, payload['body'], user, live_channel)
+
+    if action == STRIKE:
+        return strike_message(groups, payload['id'], live_channel)
+
+    if action == DELETE:
+        return delete_message(groups, payload['id'], live_channel)
+
+    if action == UPDATE_CHANNEL:
+        return update_channel(groups, payload, live_channel)
+
+
 @dispatch
-def create_message(body, channel):
-    message = channel.messages.create(body=body, author=User.objects.all().first())
+def create_message(body, user, channel):
+    message = channel.messages.create(body=body, author=user)
     serializer = MessageSocketSerializer(message)
 
     return {
@@ -65,38 +110,3 @@ def update_channel(payload, channel):
         'type': UPDATE_CHANNEL,
         'payload': ChannelSocketSerializer(channel).data
     }
-
-
-class LiveConsumer(ConsumerMixin, JsonWebsocketConsumer):
-    channel_session = True
-    consumer = 'live-messages'
-
-    def connection_groups(self, slug=None, **kwargs):
-        return ['live-%s' % slug]
-
-    def receive(self, content, slug=None, **kwargs):
-        self.consumer_send(content)
-
-
-def live_messages_consumer(message):
-    try:
-        slug = message.content['slug']
-        groups = [Group(name) for name in message.content['connection_groups']]
-        action = message.content['data']['type'].replace('socket', 'live', 1)
-        payload = message.content['data']['payload']
-        live_channel = Channel.objects.get(slug=slug)
-    except (KeyError, Channel.DoesNotExist):
-        logger.error('live_messages message is malformed')
-        return
-
-    if action == CREATE:
-        return create_message(groups, payload['body'], live_channel)
-
-    if action == STRIKE:
-        return strike_message(groups, payload['id'], live_channel)
-
-    if action == DELETE:
-        return delete_message(groups, payload['id'], live_channel)
-
-    if action == UPDATE_CHANNEL:
-        return update_channel(groups, payload, live_channel)

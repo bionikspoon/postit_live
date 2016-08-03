@@ -1,10 +1,13 @@
 import logging
 
-from django.contrib.auth import views, REDIRECT_FIELD_NAME
+from django.contrib.auth import views, get_user_model
+from rest_framework import viewsets
 
 from .forms import UserAuthenticationForm
+from .serializers import UserSerializer
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
 def login(request, next_page=None):
@@ -37,3 +40,8 @@ def password_reset_confirm(request):
 
 def password_reset_complete(request):
     return views.password_reset_complete(request)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
