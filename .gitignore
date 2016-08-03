@@ -83,3 +83,5 @@ webpack-stats-production.json
 
 shell.ipynb
 .ipynb_checkpoints/
+
+.old

@@ -2,9 +2,9 @@ import logging
 
 from channels import Group
 from channels.generic.websockets import JsonWebsocketConsumer
+from django.contrib.auth import get_user_model
 
 from postit_live.live.serializers import MessageSocketSerializer, ChannelSocketSerializer
-from postit_live.users.models import User
 from postit_live.utils import ConsumerMixin, dispatch
 from .models import Channel
 
@@ -15,6 +15,7 @@ STRIKE = 'live.STRIKE'
 DELETE = 'live.DELETE'
 UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
 
+User = get_user_model()
 
 @dispatch
 def create_message(body, channel):

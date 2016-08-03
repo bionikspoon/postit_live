@@ -16,13 +16,13 @@ urlpatterns = [
     url(settings.ADMIN_URL, include(admin.site.urls)),
 
     # User management
-    url(r'^users/', include('postit_live.users.urls', namespace='users')),
-    url(r'^blog/', include('postit_live.blog.urls', namespace='blog')),
-    url(r'^chat/', include('postit_live.chat.urls', namespace='chat')),
+    # url(r'^users/', include('postit_live.users.urls', namespace='users')),
+    # url(r'^blog/', include('postit_live.blog.urls', namespace='blog')),
+    # url(r'^chat/', include('postit_live.chat.urls', namespace='chat')),
     url(r'^live/', include('postit_live.live.urls', namespace='live')),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('postit_live.api.urls', namespace='api')),
-    url(r'^accounts/', include('allauth.urls')),
+    # url(r'^accounts/', include('allauth.urls')),
 
 ]
 

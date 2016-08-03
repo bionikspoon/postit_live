@@ -34,7 +34,7 @@ def dispatch(function):
         action = json_dumps(data)
         [group.send({'text': action}) for group in groups]
 
-        logger.debug('dispatch action=%s', action)
+        logger.debug('dispatch type=%s payload=%s', data['type'], json_dumps(data['payload']))
         return data
 
     return wrapper

@@ -1,7 +1,7 @@
 # coding=utf-8
 from rest_framework import serializers
 
-from postit_live.users.serializers import UserSocketSerializer
+# from postit_live.users.serializers import UserSocketSerializer
 from .models import Channel, Message, Activity
 
 
@@ -17,7 +17,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class MessageSocketSerializer(serializers.ModelSerializer):
-    author = UserSocketSerializer()
+    # author = UserSocketSerializer()
 
     class Meta:
         model = Message
