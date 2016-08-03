@@ -78,34 +78,23 @@ export class LiveAppChannel extends Component {
 LiveAppChannel.propTypes = {
 
   messages: PropTypes.arrayOf(PropTypes.shape({
-    author: PropTypes.object.isRequired,
-    body: PropTypes.string.isRequired,
-    body_html: PropTypes.string.isRequired,
-    created: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
   })).isRequired,
 
-  activity: PropTypes.shape({
-    viewers: PropTypes.number.isRequired,
-  }).isRequired,
+  activity: PropTypes.object.isRequired,
 
   channel: PropTypes.shape({
     title: PropTypes.string.isRequired,
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
-    discussions: PropTypes.string.isRequired,
     discussions_html: PropTypes.string.isRequired,
-    contributors: PropTypes.string.isRequired,
     contributors_html: PropTypes.string.isRequired,
   }).isRequired,
 
-  user: PropTypes.shape({
-    username: PropTypes.string.isRequired,
+  actions: PropTypes.shape({
+    createMessage: PropTypes.func.isRequired,
   }).isRequired,
-
-  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
