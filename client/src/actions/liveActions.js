@@ -1,4 +1,5 @@
 import * as types from '../constants/LiveActionTypes';
+import { parseResponse, checkStatus, FETCH_OPTIONS } from '../utils/fetch';
 
 export function createMessage(payload) {
   return { type: types.CREATE, payload };
@@ -22,10 +23,10 @@ export function fetchMessages(payload) {
 
     const { slug, location } = payload;
     const endpoint = `${location.origin}/api/live/channels/${slug}/`;
-    console.log("endpoint", endpoint);
 
-    fetch(endpoint)
-      .then(response => response.json())
+    fetch(endpoint, FETCH_OPTIONS)
+      .then(checkStatus)
+      .then(parseResponse)
       .then(data => {
         dispatch({ type: types.FETCH_MESSAGES_SUCCESS, payload: data });
       })
