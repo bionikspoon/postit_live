@@ -5,9 +5,16 @@ import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 import socketMiddleware from '../middleware/socket';
+import { routerMiddleware } from 'react-router-redux';
+import { browserHistory } from 'react-router';
 
 export default function configureStore(initialState) {
-  const middlewares = [thunkMiddleware, reduxImmutableStateInvariant(), socketMiddleware];
+  const middlewares = [
+    thunkMiddleware,
+    reduxImmutableStateInvariant(),
+    routerMiddleware(browserHistory),
+    socketMiddleware,
+  ];
   const middleware = applyMiddleware(...middlewares);
 
   const getDebugSessionKey = () => {

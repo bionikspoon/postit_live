@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
 
@@ -21,7 +22,9 @@ export class LiveAppSettings extends Component {
   }
 
   handleSave() {
-    this.props.actions.updateChannel(this.state);
+    const { slug, actions } = this.props;
+    actions.updateChannel(this.state);
+    actions.push(`/live/${slug}/`);
   }
 
   render() {
@@ -46,7 +49,9 @@ export class LiveAppSettings extends Component {
 
               <div className="form-group">
                 <label htmlFor="description">description</label>
-                <small className="form-text text-muted">one or two sentences (120 characters) saying what this channel is about</small>
+                <small className="form-text text-muted">
+                  one or two sentences (120 characters) saying what this channel is about
+                </small>
                 <textarea
                   id="description"
                   rows="10"
@@ -84,16 +89,22 @@ LiveAppSettings.propTypes = {
     description: PropTypes.string.isRequired,
     resources: PropTypes.string.isRequired,
   }).isRequired,
+  actions: PropTypes.shape({
+    updateChannel: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  slug: PropTypes.string.isRequired,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
     channel: state.live.channel,
+    slug: props.params.slug,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions, ...socketActions };
+  const actions = { ...liveActions, ...socketActions, push };
   return {
     actions: bindActionCreators(actions, dispatch),
   };
