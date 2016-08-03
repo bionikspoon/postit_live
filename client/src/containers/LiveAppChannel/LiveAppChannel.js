@@ -63,7 +63,7 @@ export class LiveAppChannel extends Component {
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
-          <LiveStatus status={channel.status} {...activity} />
+          <LiveStatus {...channel} {...activity} />
 
           <LiveNewMessage makeUpdate={this.createMessage} />
 
@@ -84,7 +84,6 @@ LiveAppChannel.propTypes = {
   activity: PropTypes.object.isRequired,
 
   channel: PropTypes.shape({
-    title: PropTypes.string.isRequired,
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
