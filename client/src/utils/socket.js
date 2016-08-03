@@ -4,7 +4,6 @@ export default class Socket {
   constructor(store, location, timeout = 500) {
     const { dispatch } = store;
     const { protocol, host, pathname } = location;
-
     const scheme = protocol === 'https:' ? 'wss:' : 'ws:';
     this.dispatch = dispatch;
     this.path = `${scheme}//${host}${pathname}`;

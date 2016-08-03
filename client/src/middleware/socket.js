@@ -13,7 +13,8 @@ class LiveSocket extends Socket {
 }
 
 export default function connect(store) {
-  const socket = new LiveSocket(store, window.location);
+  const { protocol, host, pathname } = window.location;
+  const socket = new LiveSocket(store, { protocol, host, pathname: `${pathname.split('/').slice(0, 3).join('/')}/` });
   const middlewareActions = Object.keys(types).map(type => types[type]);
 
   socket.open();

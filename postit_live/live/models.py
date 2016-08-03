@@ -14,7 +14,11 @@ class Channel(TimeStampedModel, StatusModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     slug = models.SlugField(unique=True)
 
-    title = models.TextField()
+    title = models.CharField(max_length=120)
+
+    description = models.CharField(max_length=120, null=True)
+    description_html = models.TextField(editable=False)
+
     resources = models.TextField()
     resources_html = models.TextField(editable=False)
 
@@ -27,6 +31,7 @@ class Channel(TimeStampedModel, StatusModel):
             print(self.id, self.slug)
 
         self.resources_html = markdown(self.resources)
+        self.description_html = markdown(self.description)
         return super().save(**kwargs)
 
     @classmethod

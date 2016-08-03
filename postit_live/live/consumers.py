@@ -3,7 +3,7 @@ import logging
 from channels import Group
 from channels.generic.websockets import JsonWebsocketConsumer
 
-from postit_live.live.serializers import MessageSocketSerializer
+from postit_live.live.serializers import MessageSocketSerializer, ChannelSocketSerializer
 from postit_live.users.models import User
 from postit_live.utils import ConsumerMixin, dispatch
 from .models import Channel
@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 CREATE = 'live.CREATE'
 STRIKE = 'live.STRIKE'
 DELETE = 'live.DELETE'
+UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
 
 
 @dispatch
@@ -52,6 +53,19 @@ def delete_message(message_id, channel):
     }
 
 
+@dispatch
+def update_channel(payload, channel):
+    channel.title = payload['title']
+    channel.description = payload['description']
+    channel.resources = payload['resources']
+    channel.save()
+
+    return {
+        'type': UPDATE_CHANNEL,
+        'payload': ChannelSocketSerializer(channel).data
+    }
+
+
 class LiveConsumer(ConsumerMixin, JsonWebsocketConsumer):
     channel_session = True
     consumer = 'live-messages'
@@ -82,3 +96,6 @@ def live_messages_consumer(message):
 
     if action == DELETE:
         return delete_message(groups, payload['id'], live_channel)
+
+    if action == UPDATE_CHANNEL:
+        return update_channel(groups, payload, live_channel)
