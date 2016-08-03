@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import renderers
 from rest_framework import viewsets
@@ -7,10 +8,9 @@ from rest_framework.response import Response
 from .models import Channel, Message, Activity
 from .serializers import ChannelSerializer, MessageSerializer, ActivitySerializer
 
-
 def create_channel(request):
     channel = Channel.objects.create()
-    return redirect('live:channel_detail', slug=channel.slug)
+    return redirect('live:channel_detail_settings', slug=channel.slug)
 
 
 def channel_detail(request, slug):

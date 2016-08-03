@@ -3,13 +3,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
+import LayoutRow from '../../components/LayoutRow';
+import LayoutInnerRow from '../../components/LayoutInnerRow';
 
 export class LiveAppContributors extends Component {
   render() {
     return (
-      <div >
+      <LayoutRow > <LayoutInnerRow>
         <h1>Contributors</h1>
-      </div>
+      </LayoutInnerRow></LayoutRow>
     );
   }
 }

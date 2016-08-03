@@ -35,7 +35,7 @@ export class LiveAppChannel extends Component {
           <label><input type="checkbox" />popup notifications</label>
         </LiveAside>
 
-        <LiveAside title="resources">
+        <LiveAside title="resources" render={!!channel.resources.length}>
           <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
         </LiveAside>
 
@@ -61,9 +61,9 @@ export class LiveAppChannel extends Component {
       <div>
         <LayoutRow ><LiveTitle {...channel} /></LayoutRow>
 
-        <LayoutRow ><LiveStatus status={channel.status} {...activity} /></LayoutRow>
-
         <LayoutRow sidebar={this.renderSidebar()}>
+
+          <LiveStatus status={channel.status} {...activity} />
 
           <LiveNewMessage makeUpdate={this.createMessage} />
 

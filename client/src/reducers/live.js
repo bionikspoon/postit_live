@@ -10,9 +10,9 @@ const initialState = {
   },
 
   channel: {
-    title: 'ninja watchers',
-    resources: 'I like turtles',
-    resources_html: '<p>I like turtles</p>',
+    title: '',
+    resources: '',
+    resources_html: '',
     description: '',
     description_html: '',
     discussions: 'no discussions yet. [start one](#)',

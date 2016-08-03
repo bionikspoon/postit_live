@@ -29,9 +29,8 @@ class Channel(TimeStampedModel, StatusModel):
             ChannelClass = self.__class__
             self.slug = ChannelClass.create_slug()
             print(self.id, self.slug)
-
         self.resources_html = markdown(self.resources)
-        self.description_html = markdown(self.description)
+        self.description_html = markdown(self.description or '')
         return super().save(**kwargs)
 
     @classmethod
