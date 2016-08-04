@@ -25,7 +25,7 @@ const initialState = {
 
   messages: {},
 
-  currentUser:{},
+  currentUser: {},
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {

@@ -47,7 +47,6 @@ module.exports = ({ ENV, PATH }) => ({
 function getEntry({ PATH, ENV }) {
   const entry = {
     main: [PATH.src('index')],
-    chat: [PATH.src('chat')],
     vendor: getVendor(),
   };
 

@@ -1,6 +1,6 @@
-/* eslint no-console:0 */
-export default class Socket {
+const debug = require('debug')('app:utils');
 
+export default class Socket {
   constructor(store, location, timeout = 500) {
     const { dispatch } = store;
     const { protocol, host, pathname } = location;
@@ -19,7 +19,7 @@ export default class Socket {
   }
 
   open() {
-    console.debug('open this=', this);
+    debug('open this=', this);
     const conn = new WebSocket(this.path);
 
     conn.onopen = this.onopen;
@@ -30,26 +30,26 @@ export default class Socket {
   }
 
   send(data) {
-    console.debug('send data=', data);
+    debug('send data=', data);
     this.conn.send(data);
   }
 
   onopen(event) {
-    console.debug('onopen event=', event);
+    debug('onopen event=', event);
   }
 
   onmessage(event) {
-    console.debug('onmessage event=', event);
+    debug('onmessage event=', event);
   }
 
   onclose(event) {
-    console.debug('onclose event=', event);
+    debug('onclose event=', event);
 
     this.conn = null;
     if (!event.wasClean) setTimeout(this.open, this.timeout);
   }
 
   onerror(event) {
-    console.debug('onerror event=', event);
+    debug('onerror event=', event);
   }
 }
