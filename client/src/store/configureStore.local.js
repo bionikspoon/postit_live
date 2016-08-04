@@ -9,13 +9,12 @@ import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 
 export default function configureStore(initialState) {
-  const middlewares = [
+  const middleware = applyMiddleware(
     thunkMiddleware,
     reduxImmutableStateInvariant(),
     routerMiddleware(browserHistory),
-    socketMiddleware,
-  ];
-  const middleware = applyMiddleware(...middlewares);
+    socketMiddleware
+  );
 
   const getDebugSessionKey = () => {
     const matches = window.location.href.match(/[?&]debug_session=([^&]+)\b/);
@@ -24,7 +23,6 @@ export default function configureStore(initialState) {
   const enhancer = compose(
     middleware,
     window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
-    // DevTools.instrument(),
     persistState(getDebugSessionKey())
   );
 

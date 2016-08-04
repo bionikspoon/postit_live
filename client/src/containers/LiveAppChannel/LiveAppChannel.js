@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
-import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveChannelStatus';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
@@ -63,7 +62,7 @@ export class LiveAppChannel extends Component {
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
-          <LiveStatus {...channel} {...meta} />
+          <LiveStatus channelStatus={channel.status} {...meta} />
 
           <LiveNewMessage createMessage={this.createMessage} />
 
@@ -84,7 +83,7 @@ LiveAppChannel.propTypes = {
   })).isRequired,
 
   channel: PropTypes.shape({
-    status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
+    status: PropTypes.string.isRequired,
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
     discussions_html: PropTypes.string.isRequired,

@@ -1,5 +1,6 @@
 import * as types from '../constants/LiveActionTypes';
-import { OPENED } from '../constants/LiveChannelStatus';
+import { CHANNEL_OPENED } from '../constants/ChannelStatus';
+import { CONNECTION_CLOSED } from '../constants/ConnectionStatus';
 import update from 'react-addons-update';
 import _ from 'lodash';
 
@@ -8,6 +9,7 @@ const initialState = {
     synced: false,
     isFetching: false,
     subscribers: 0,
+    connectionStatus: CONNECTION_CLOSED,
   },
 
   channel: {
@@ -20,13 +22,14 @@ const initialState = {
     discussions_html: '<p>no discussions yet. <a href="#">start one</a></p>',
     contributors: '- [/u/admin](#)',
     contributors_html: '<ul><li><a href="#">/u/admin</a></li></ul>',
-    status: OPENED,
+    status: CHANNEL_OPENED,
   },
 
   messages: {},
 
   currentUser: {},
 };
+
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case types.CREATE_MESSAGE:
@@ -49,6 +52,9 @@ export default function reducer(state = initialState, action = {}) {
 
     case types.FETCH_CHANNEL_FAILURE:
       return handleFetchChannelFailure(state, action.payload);
+
+    case types.UPDATE_CONNECTION_STATUS:
+      return handleUpdateConnectionStatus(state, action.payload);
 
     case types.ACTIVITY:
       return state;
@@ -80,6 +86,10 @@ function handleUpdateChannel(state, payload) {
 
 function handleFetchChannelRequest(state) {
   return update(state, { meta: { isFetching: { $set: true } } });
+}
+
+function handleUpdateConnectionStatus(state, payload) {
+  return update(state, { meta: { connectionStatus: { $set: payload.connectionStatus } } });
 }
 
 function handleFetchChannelSuccess(state, payload) {

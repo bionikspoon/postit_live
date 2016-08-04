@@ -17,6 +17,10 @@ export function updateChannel(payload) {
   return { type: types.UPDATE_CHANNEL, payload };
 }
 
+export function updateConnectionStatus(payload) {
+  return { type: types.UPDATE_CONNECTION_STATUS, payload };
+}
+
 export function fetchChannel(payload) {
   return dispatch => {
     dispatch({ type: types.FETCH_CHANNEL_REQUEST });

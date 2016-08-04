@@ -12,7 +12,6 @@ export function deleteMessage(payload) {
   return { type: types.DELETE_MESSAGE, payload };
 }
 
-
 export function updateChannel(payload) {
   return { type: types.UPDATE_CHANNEL, payload };
 }

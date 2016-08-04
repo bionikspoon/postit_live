@@ -1,5 +1,7 @@
 import * as types from '../constants/SocketActionTypes';
+import * as actions from '../actions/liveActions';
 import Socket from '../utils/socket';
+import { CONNECTION_OPENED, CONNECTION_CLOSED, CONNECTION_RECONNECTING } from '../constants/ConnectionStatus';
 const debug = require('debug')('app:middleware:socket');
 
 class LiveSocket extends Socket {
@@ -7,6 +9,24 @@ class LiveSocket extends Socket {
     super.onmessage(event);
 
     const action = JSON.parse(event.data);
+    this.dispatch(action);
+
+    debug('dispatched type=%s payload=', action.type, action.payload);
+  }
+
+  onopen(event) {
+    super.onopen(event);
+    const action = actions.updateConnectionStatus({ connectionStatus: CONNECTION_OPENED });
+    this.dispatch(action);
+
+    debug('dispatched type=%s payload=', action.type, action.payload);
+  }
+
+  onclose(event) {
+    super.onclose(event);
+
+    const connectionStatus = event.wasClean ? CONNECTION_CLOSED : CONNECTION_RECONNECTING;
+    const action = actions.updateConnectionStatus({ connectionStatus });
     this.dispatch(action);
 
     debug('dispatched type=%s payload=', action.type, action.payload);
