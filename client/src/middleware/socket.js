@@ -27,9 +27,12 @@ class LiveSocket extends Socket {
 
     const connectionStatus = event.wasClean ? CONNECTION_CLOSED : CONNECTION_RECONNECTING;
     const action = actions.updateConnectionStatus({ connectionStatus });
-    this.dispatch(action);
+    const state = this.store.getState();
 
-    debug('dispatched type=%s payload=', action.type, action.payload);
+    if (connectionStatus !== state.live.meta.connectionStatus) {
+      this.dispatch(action);
+      debug('dispatched type=%s payload=', action.type, action.payload);
+    }
   }
 }
 

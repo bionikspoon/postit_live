@@ -6,6 +6,7 @@ export default class Socket {
     const { protocol, host, pathname } = location;
     const scheme = protocol === 'https:' ? 'wss:' : 'ws:';
     this.dispatch = dispatch;
+    this.store = store;
     this.path = `${scheme}//${host}${pathname}`;
     this.conn = null;
     this.timeout = timeout;
