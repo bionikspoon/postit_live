@@ -13,13 +13,13 @@ class LiveApp extends Component {
     const { location } = window;
     if (!meta.synced) {
       actions.fetchChannel({ slug, location });
-      actions.fetchCurrentUser({  location });
+      actions.fetchCurrentUser({ location });
     }
   }
 
   render() {
     return (
-      <div className="container-fluid" role="main">
+      <div className="container-fluid LiveApp" role="main">
         <LiveNav {...this.props} />
 
         {this.props.children}

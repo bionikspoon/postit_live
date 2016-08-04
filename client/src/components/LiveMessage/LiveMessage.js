@@ -3,6 +3,8 @@ import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
 import ButtonConfirm from '../ButtonConfirm';
 import LayoutInnerRow from '../LayoutInnerRow';
+import classnames from 'classnames';
+
 export default class LiveMessage extends Component {
   constructor(props) {
     super(props);
@@ -26,10 +28,12 @@ export default class LiveMessage extends Component {
   render() {
     const { created, body_html, author, status } = this.props;
     const moment = <Moment date={created} href="#" />;
+    const spanClass = classnames('body-text', status);
+
     return (
-      <LayoutInnerRow sidebar={moment}>
+      <LayoutInnerRow sidebar={moment} className="LiveMessage">
         <div className="body">
-          <span className={status} dangerouslySetInnerHTML={{ __html: body_html }} />
+          <span className={spanClass} dangerouslySetInnerHTML={{ __html: body_html }} />
           <a href="#" className="author">/u/{author.username}</a>
         </div>
         <div className="buttonrow">

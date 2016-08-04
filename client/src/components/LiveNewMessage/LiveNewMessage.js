@@ -22,7 +22,7 @@ export default class LiveNewMessage extends Component {
   render() {
     const { input } = this.state;
     return (
-      <LayoutInnerRow>
+      <LayoutInnerRow className="LiveNewMessage">
         <div className="form-group">
           <textarea onChange={this.handleInputChange} className="form-control" rows="5" value={input} />
         </div>

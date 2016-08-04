@@ -9,9 +9,13 @@ import LayoutInnerRow from '../../components/LayoutInnerRow';
 export class LiveAppContributors extends Component {
   render() {
     return (
-      <LayoutRow > <LayoutInnerRow>
-        <h1>Contributors</h1>
-      </LayoutInnerRow></LayoutRow>
+      <LayoutRow className="LiveAppContributors">
+
+        <LayoutInnerRow>
+          <h1>Contributors</h1>
+        </LayoutInnerRow>
+
+      </LayoutRow>
     );
   }
 }

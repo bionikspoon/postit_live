@@ -1,3 +1,12 @@
-.stricken {
-  text-decoration: line-through !important;
+
+.LiveMessage {
+  .stricken {
+    text-decoration: line-through !important;
+  }
+
+  .body-text {
+    display:      inline-block;
+    margin-right: 5px;
+  }
+
 }

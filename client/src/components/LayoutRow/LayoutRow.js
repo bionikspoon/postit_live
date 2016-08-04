@@ -1,5 +1,6 @@
 import './LayoutRow.scss';
 import React, { PropTypes, Component, Children } from 'react';
+import classnames from 'classnames';
 
 export default class LayoutRow extends Component {
   renderSidebar() {
@@ -13,9 +14,10 @@ export default class LayoutRow extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, className } = this.props;
+    const wrapClass = classnames('row LayoutRow', className);
     return (
-      <div className="row">
+      <div className={wrapClass}>
         <div className="col-xs-12 col-md-9">
           {Children.map(children, child => child)}
         </div>
@@ -27,5 +29,6 @@ export default class LayoutRow extends Component {
 }
 LayoutRow.propTypes = {
   children: PropTypes.any.isRequired,
+  className: PropTypes.string,
   sidebar: PropTypes.element,
 };

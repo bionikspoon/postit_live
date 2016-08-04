@@ -29,7 +29,7 @@ export class LiveAppChannel extends Component {
     const { channel } = this.props;
 
     return (
-      <div>
+      <div className="LiveAppChannel--sidebar">
         <LiveAside>
           <label><input type="checkbox" />popup notifications</label>
         </LiveAside>
@@ -57,7 +57,7 @@ export class LiveAppChannel extends Component {
     const { channel, messages, meta, actions } = this.props;
 
     return (
-      <div>
+      <div className="LiveAppChannel">
         <LayoutRow ><LiveTitle {...channel} /></LayoutRow>
 
         <LayoutRow sidebar={this.renderSidebar()}>

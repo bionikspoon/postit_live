@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 export default function LiveNav({ slug, pathname }) {
   const base = `/live/${slug}`;
   return (
-    <ul className="nav nav-tabs">
+    <ul className="nav nav-tabs LiveNav">
       <li className="nav-item">
         <Link to={`${base}/`} className={pathname === `${base}/` ? 'nav-link active' : 'nav-link'}>channel</Link>
       </li>

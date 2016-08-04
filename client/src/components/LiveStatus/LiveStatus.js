@@ -13,7 +13,7 @@ export default function LiveStatus({ subscribers, channelStatus, connectionStatu
     'alert-danger': connectionStatus === connTypes.CONNECTION_CLOSED,
   });
   return (
-    <LayoutInnerRow>
+    <LayoutInnerRow className="LiveStatus">
 
       <div className={alertClass}>
         <span>{channelStatus === chanTypes.CHANNEL_OPENED ? 'live' : 'not live'}</span>
