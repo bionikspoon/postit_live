@@ -1,9 +1,9 @@
 import logging
+import pickle
 
 from channels import Group
 from django.contrib.auth import get_user_model
 
-from postit_live.user.serializers import UserSocketSerializer
 from postit_live.utils import ConsumerMixin, dispatch, SerializerWebsocketConsumer
 from .models import LiveChannel
 from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
@@ -29,7 +29,7 @@ class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
     def receive(self, content, slug=None, **kwargs):
         if not self.message.user.is_authenticated():
             return self.send({'type': AUTH_REQUIRED})
-        content['user'] = UserSocketSerializer(self.message.user).data
+        content['user'] = pickle.dumps(self.message.user)
         self.consumer_send(content)
 
 
@@ -39,7 +39,8 @@ def live_messages_consumer(message):
         groups = [Group(name) for name in message.content['connection_groups']]
         action = message.content['data']['type'].replace('socket', 'live', 1)
         payload = message.content['data']['payload']
-        user = User.objects.get(**message.content['data']['user'])
+        user = pickle.loads(message.content['data']['user'])
+
         live_channel = LiveChannel.objects.get(slug=slug)
     except KeyError:
         return logger.error('live-messages message.content is malformed')
