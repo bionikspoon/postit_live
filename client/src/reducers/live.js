@@ -3,7 +3,7 @@ import { CHANNEL_OPENED } from '../constants/ChannelStatus';
 import { CONNECTION_CLOSED } from '../constants/ConnectionStatus';
 import update from 'react-addons-update';
 import _ from 'lodash';
-
+const debug = require('debug')('app:reducers:live');
 const initialState = {
   meta: {
     synced: false,
@@ -27,7 +27,10 @@ const initialState = {
 
   messages: {},
 
-  currentUser: {},
+  currentUser: {
+    isFetching: false,
+    username: null,
+  },
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -44,6 +47,9 @@ export default function reducer(state = initialState, action = {}) {
     case types.UPDATE_CHANNEL:
       return handleUpdateChannel(state, action.payload);
 
+    case types.UPDATE_CONNECTION_STATUS:
+      return handleUpdateConnectionStatus(state, action.payload);
+
     case types.FETCH_CHANNEL_REQUEST:
       return handleFetchChannelRequest(state, action.payload);
 
@@ -53,11 +59,14 @@ export default function reducer(state = initialState, action = {}) {
     case types.FETCH_CHANNEL_FAILURE:
       return handleFetchChannelFailure(state, action.payload);
 
-    case types.UPDATE_CONNECTION_STATUS:
-      return handleUpdateConnectionStatus(state, action.payload);
+    case types.FETCH_CURRENT_USER_REQUEST:
+      return handleFetchCurrentUserRequest(state, action.payload);
 
-    case types.ACTIVITY:
-      return state;
+    case types.FETCH_CURRENT_USER_SUCCESS:
+      return handleFetchCurrentUserSuccess(state, action.payload);
+
+    case types.FETCH_CURRENT_USER_FAILURE:
+      return handleFetchCurrentUserFailure(state, action.payload);
 
     default:
       return state;
@@ -80,16 +89,16 @@ function handleDeleteMessage(state, payload) {
   return update(state, { messages: { $set: _.omit(state.messages, [id]) } });
 }
 
+function handleUpdateConnectionStatus(state, payload) {
+  return update(state, { meta: { connectionStatus: { $set: payload.connectionStatus } } });
+}
+
 function handleUpdateChannel(state, payload) {
   return update(state, { channel: { $merge: payload } });
 }
 
 function handleFetchChannelRequest(state) {
   return update(state, { meta: { isFetching: { $set: true } } });
-}
-
-function handleUpdateConnectionStatus(state, payload) {
-  return update(state, { meta: { connectionStatus: { $set: payload.connectionStatus } } });
 }
 
 function handleFetchChannelSuccess(state, payload) {
@@ -125,4 +134,16 @@ function handleFetchChannelSuccess(state, payload) {
 
 function handleFetchChannelFailure(state, payload) {
   return update(state, { meta: { isFetching: { $set: false } } });
+}
+
+function handleFetchCurrentUserRequest(state) {
+  return update(state, { currentUser: { isFetching: { $set: true } } });
+}
+
+function handleFetchCurrentUserSuccess(state, payload) {
+  return update(state, { currentUser: { isFetching: { $set: false }, username: { $set: payload.username } } });
+}
+
+function handleFetchCurrentUserFailure(state, payload) {
+  return update(state, { currentUser: { isFetching: { $set: false } } });
 }

@@ -39,3 +39,22 @@ export function fetchChannel(payload) {
       });
   };
 }
+
+export function fetchCurrentUser(payload) {
+  return dispatch => {
+    dispatch({ type: types.FETCH_CURRENT_USER_REQUEST });
+
+    const { location } = payload;
+    const endpoint = `${location.origin}/api/users/current/`;
+
+    fetch(endpoint, FETCH_OPTIONS)
+      .then(checkStatus)
+      .then(parseResponse)
+      .then(data => {
+        dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: data });
+      })
+      .catch(error => {
+        dispatch({ type: types.FETCH_CURRENT_USER_FAILURE, error });
+      });
+  };
+}

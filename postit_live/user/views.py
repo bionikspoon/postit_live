@@ -2,6 +2,8 @@ import logging
 
 from django.contrib.auth import views, get_user_model
 from rest_framework import viewsets
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
 
 from .forms import UserAuthenticationForm
 from .serializers import UserSerializer
@@ -10,7 +12,7 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-def login(request, next_page=None):
+def login(request):
     return views.login(request, template_name='user/login.html', authentication_form=UserAuthenticationForm)
 
 
@@ -45,3 +47,8 @@ def password_reset_complete(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    @list_route(methods=['get'])
+    def current(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
