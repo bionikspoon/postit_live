@@ -26,8 +26,8 @@ class LiveChannel(TimeStampedModel, StatusModel):
 
     def save(self, **kwargs):
         if not self.slug:
-            ChannelClass = self.__class__
-            self.slug = ChannelClass.create_slug()
+            LiveChannelClass = self.__class__
+            self.slug = LiveChannelClass.create_slug()
             print(self.id, self.slug)
         self.resources_html = markdown(self.resources)
         self.description_html = markdown(self.description or '')
@@ -44,8 +44,21 @@ class LiveChannel(TimeStampedModel, StatusModel):
             return slug
 
     def __str__(self):
-        ChannelClass = self.__class__
-        return '<%s slug=%s title=%s>' % (ChannelClass.__name__, self.slug, self.title)
+        LiveChannelClass = self.__class__
+        return '<%s slug=%s title=%s>' % (LiveChannelClass.__name__, self.slug, self.title)
+
+    class Meta:
+        permissions = (
+            ('full_channel', 'Can manage channel'),
+            ('change_channel_close', 'Can permanently close live channel'),
+            ('change_channel_messages', 'Can strike and delete live channel messages'),
+            ('change_channel_contributors', 'Can add, change, delete permissions of other contributors'),
+            ('change_channel_settings', 'Can change title and description of live channel'),
+            ('add_channel_messages', 'Can post channel messages'),
+        )
+
+        default_permissions = ('add',)
+        verbose_name = 'channel'
 
 
 class LiveMessage(TimeStampedModel, StatusModel):
@@ -65,6 +78,9 @@ class LiveMessage(TimeStampedModel, StatusModel):
         self.status = self.STATUS.stricken
         return self
 
+    class Meta:
+        verbose_name = 'message'
+
 
 class Contributor(TimeStampedModel):
     channel = models.ForeignKey(LiveChannel, related_name='contributor_set')
@@ -75,3 +91,7 @@ class Activity(TimeStampedModel):
     viewers = models.IntegerField()
 
     channel = models.ForeignKey(LiveChannel)
+
+    class Meta:
+        verbose_name = 'activity'
+        verbose_name_plural = 'activities'
