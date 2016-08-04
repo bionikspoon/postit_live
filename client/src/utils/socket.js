@@ -1,4 +1,4 @@
-const debug = require('debug')('app:utils');
+const debug = require('debug')('app:utils:socket');
 
 export default class Socket {
   constructor(store, location, timeout = 500) {

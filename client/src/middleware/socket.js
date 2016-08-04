@@ -1,6 +1,6 @@
 import * as types from '../constants/SocketActionTypes';
 import Socket from '../utils/socket';
-const debug = require('debug')('app:middleware');
+const debug = require('debug')('app:middleware:socket');
 
 class LiveSocket extends Socket {
   onmessage(event) {
@@ -9,7 +9,7 @@ class LiveSocket extends Socket {
     const action = JSON.parse(event.data);
     this.dispatch(action);
 
-    debug('onmessage dispatched type=%s payload=', action.type, action.payload);
+    debug('dispatched type=%s payload=', action.type, action.payload);
   }
 }
 
