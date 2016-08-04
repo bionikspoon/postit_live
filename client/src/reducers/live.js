@@ -106,7 +106,7 @@ function handleFetchChannelSuccess(state, payload) {
     update(obj, {
       [message.id]: {
         $set: {
-          author: { username: 'admin' },
+          author: { username: 'admin' }, // TODO use value
           body: message.body,
           body_html: message.body_html,
           created: message.created,

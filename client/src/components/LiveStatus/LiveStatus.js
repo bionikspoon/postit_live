@@ -6,23 +6,42 @@ import LayoutInnerRow from '../LayoutInnerRow';
 import classnames from 'classnames';
 import _ from 'lodash';
 
-export default function LiveStatus({ subscribers, channelStatus, connectionStatus }) {
-  const alertClass = classnames('alert', {
-    'alert-success': connectionStatus === connTypes.CONNECTION_OPENED,
-    'alert-warning': connectionStatus === connTypes.CONNECTION_RECONNECTING,
-    'alert-danger': connectionStatus === connTypes.CONNECTION_CLOSED,
-  });
-  return (
-    <LayoutInnerRow className="LiveStatus">
+const ALERT_CLASS = {
+  [connTypes.CONNECTION_OPENED]: 'alert-success',
+  [connTypes.CONNECTION_RECONNECTING]: 'alert-warning',
+  [connTypes.CONNECTION_CLOSED]: 'alert-danger',
+};
 
-      <div className={alertClass}>
-        <span>{channelStatus === chanTypes.CHANNEL_OPENED ? 'live' : 'not live'}</span>
-        <span>~{subscribers} viewers</span>
-      </div>
+export default class LiveStatus extends Component {
+  renderOpened() {
+    const { subscribers, connectionStatus } = this.props;
+    const alertClass = classnames('alert', ALERT_CLASS[connectionStatus]);
 
-    </LayoutInnerRow>
-  );
+    return (
+      <LayoutInnerRow className="LiveStatus">
+        <div className={alertClass}>live ~{subscribers} viewers</div>
+      </LayoutInnerRow>
+    );
+  }
+
+  renderClosed() {
+    const alertClass = classnames('alert');
+
+    return (
+      <LayoutInnerRow className="LiveStatus">
+        <div className={alertClass}>This channel is closed.</div>
+      </LayoutInnerRow>
+    );
+  }
+
+  render() {
+    const { channelStatus } = this.props;
+    return channelStatus === chanTypes.CHANNEL_OPENED
+      ? this.renderOpened()
+      : this.renderClosed();
+  }
 }
+
 LiveStatus.propTypes = {
   channelStatus: PropTypes.oneOf(_.values(chanTypes)).isRequired,
   connectionStatus: PropTypes.oneOf(_.values(connTypes)).isRequired,

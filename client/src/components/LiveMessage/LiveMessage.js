@@ -34,6 +34,7 @@ export default class LiveMessage extends Component {
       <LayoutInnerRow sidebar={moment} className="LiveMessage">
         <div className="body">
           <span className={spanClass} dangerouslySetInnerHTML={{ __html: body_html }} />
+
           <a href="#" className="author">/u/{author.username}</a>
         </div>
         <div className="buttonrow">

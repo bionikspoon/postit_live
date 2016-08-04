@@ -14,8 +14,7 @@ export class LiveAppContributors extends Component {
         <LayoutInnerRow>
           <h1>Contributors</h1>
           <div className="alert alert-warning">
-            you are a contributor to this live channel. |
-            <a href="#">leave</a>
+            you are a contributor to this live channel. | <a href="#">leave</a>
           </div>
 
           <div>
@@ -28,9 +27,7 @@ export class LiveAppContributors extends Component {
                     <a href="#">remove</a>
                   </td>
                   <td>full permissions</td>
-                  <td>(
-                    <a href="#">change</a>
-                      )
+                  <td>( <a href="#">change</a> )
                   </td>
                 </tr>
               </tbody>
@@ -45,10 +42,7 @@ export class LiveAppContributors extends Component {
                   <td>
                     <input type="text" />
                   </td>
-                  <td>full permissions(
-                    <a href="#">change</a>
-                      )
-                  </td>
+                  <td>full permissions(<a href="#">change</a>)</td>
                   <td>
                     <button>invite</button>
                   </td>
@@ -68,9 +62,7 @@ export class LiveAppContributors extends Component {
                     <a href="#">remove</a>
                   </td>
                   <td>full permissions</td>
-                  <td>(
-                    <a href="#">change</a>
-                      )
+                  <td>( <a href="#">change</a> )
                   </td>
                 </tr>
               </tbody>

@@ -28,11 +28,7 @@ export default class LiveNewMessage extends Component {
         </div>
         <div className="clearfix">
           <button className="btn btn-outline-primary pull-xs-left" onClick={this.handleOnClick}>make update</button>
-          <p className="pull-xs-right">
-            <a href="#">contenty policy</a>
-            <span>&nbsp;</span>
-            <a href="#">formatting help</a>
-          </p>
+          <p className="pull-xs-right"><a href="#">contenty policy</a> <a href="#">formatting help</a></p>
 
         </div>
       </LayoutInnerRow>
