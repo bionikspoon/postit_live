@@ -23,12 +23,9 @@ export class LiveAppContributors extends Component {
               <tbody>
                 <tr>
                   <td>/u/user</td>
-                  <td>
-                    <a href="#">remove</a>
-                  </td>
+                  <td><a href="#">remove</a></td>
                   <td>full permissions</td>
-                  <td>( <a href="#">change</a> )
-                  </td>
+                  <td>(<a href="#">change</a>)</td>
                 </tr>
               </tbody>
             </table>
@@ -39,13 +36,9 @@ export class LiveAppContributors extends Component {
             <table>
               <tbody>
                 <tr>
-                  <td>
-                    <input type="text" />
-                  </td>
+                  <td><input type="text" /></td>
                   <td>full permissions(<a href="#">change</a>)</td>
-                  <td>
-                    <button>invite</button>
-                  </td>
+                  <td><button>invite</button></td>
                 </tr>
               </tbody>
             </table>
@@ -58,12 +51,9 @@ export class LiveAppContributors extends Component {
               <tbody>
                 <tr>
                   <td>/u/admin</td>
-                  <td>
-                    <a href="#">remove</a>
-                  </td>
+                  <td><a href="#">remove</a></td>
                   <td>full permissions</td>
-                  <td>( <a href="#">change</a> )
-                  </td>
+                  <td>(<a href="#">change</a>)</td>
                 </tr>
               </tbody>
             </table>
