@@ -1,5 +1,5 @@
 import * as types from '../constants/LiveActionTypes';
-import { OPENED } from '../constants/LiveStatusTypes';
+import { OPENED } from '../constants/LiveChannelStatus';
 import update from 'react-addons-update';
 import _ from 'lodash';
 
@@ -7,6 +7,7 @@ const initialState = {
   meta: {
     synced: false,
     isFetching: false,
+    subscribers: 0,
   },
 
   channel: {
@@ -21,32 +22,32 @@ const initialState = {
     contributors_html: '<ul><li><a href="#">/u/admin</a></li></ul>',
     status: OPENED,
   },
-  activity: {
-    viewers: 5,
-  },
+
   messages: {},
+
+  currentUser:{},
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.CREATE:
-      return handleCreate(state, action.payload);
+    case types.CREATE_MESSAGE:
+      return handleCreateMessage(state, action.payload);
 
-    case types.STRIKE:
-      return handleStrike(state, action.payload);
+    case types.STRIKE_MESSAGE:
+      return handleStrikeMessage(state, action.payload);
 
-    case types.DELETE:
-      return handleDelete(state, action.payload);
+    case types.DELETE_MESSAGE:
+      return handleDeleteMessage(state, action.payload);
 
     case types.UPDATE_CHANNEL:
       return handleUpdateChannel(state, action.payload);
 
-    case types.FETCH_MESSAGES_REQUEST:
+    case types.FETCH_CHANNEL_REQUEST:
       return handleFetchChannelRequest(state, action.payload);
 
-    case types.FETCH_MESSAGES_SUCCESS:
+    case types.FETCH_CHANNEL_SUCCESS:
       return handleFetchChannelSuccess(state, action.payload);
 
-    case types.FETCH_MESSAGES_FAILURE:
+    case types.FETCH_CHANNEL_FAILURE:
       return handleFetchChannelFailure(state, action.payload);
 
     case types.ACTIVITY:
@@ -57,18 +58,18 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-function handleCreate(state, payload) {
+function handleCreateMessage(state, payload) {
   const { message } = payload;
   return update(state, { messages: { [message.id]: { $set: message } } });
 }
 
-function handleStrike(state, payload) {
+function handleStrikeMessage(state, payload) {
   const { id } = payload;
 
   return update(state, { messages: { [id]: { status: { $set: 'stricken' } } } });
 }
 
-function handleDelete(state, payload) {
+function handleDeleteMessage(state, payload) {
   const { id } = payload;
   return update(state, { messages: { $set: _.omit(state.messages, [id]) } });
 }

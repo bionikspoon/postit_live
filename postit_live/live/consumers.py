@@ -10,9 +10,9 @@ from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerialize
 
 logger = logging.getLogger(__name__)
 
-CREATE = 'live.CREATE'
-STRIKE = 'live.STRIKE'
-DELETE = 'live.DELETE'
+CREATE_MESSAGE = 'live.CREATE_MESSAGE'
+STRIKE_MESSAGE = 'live.STRIKE_MESSAGE'
+DELETE_MESSAGE = 'live.DELETE_MESSAGE'
 UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
 AUTH_REQUIRED = 'live.AUTH_REQUIRED'
 
@@ -48,13 +48,13 @@ def live_messages_consumer(message):
     except User.DoesNotExist:
         return logger.error('live-messages user does not exist')
 
-    if action == CREATE:
+    if action == CREATE_MESSAGE:
         return create_message(groups, payload['body'], user, live_channel)
 
-    if action == STRIKE:
+    if action == STRIKE_MESSAGE:
         return strike_message(groups, payload['id'], live_channel)
 
-    if action == DELETE:
+    if action == DELETE_MESSAGE:
         return delete_message(groups, payload['id'], live_channel)
 
     if action == UPDATE_CHANNEL:
@@ -67,7 +67,7 @@ def create_message(body, user, live_channel):
     serializer = LiveMessageSocketSerializer(live_message)
 
     return {
-        'type': CREATE,
+        'type': CREATE_MESSAGE,
         'payload': {
             'message': serializer.data
         }
@@ -79,7 +79,7 @@ def strike_message(message_id, live_channel):
     live_channel.messages.get(id=message_id).strike().save()
 
     return {
-        'type': STRIKE,
+        'type': STRIKE_MESSAGE,
         'payload': {
             'id': message_id
         }
@@ -91,7 +91,7 @@ def delete_message(message_id, live_channel):
     live_channel.messages.get(id=message_id).delete()
 
     return {
-        'type': DELETE,
+        'type': DELETE_MESSAGE,
         'payload': {
             'id': message_id
         }

@@ -8,7 +8,7 @@ class LiveSocket extends Socket {
     const action = JSON.parse(event.data);
     this.dispatch(action);
 
-    console.debug('onmessage action=', action);
+    console.debug('onmessage dispatched type=%s payload=', action.type, action.payload);
   }
 }
 

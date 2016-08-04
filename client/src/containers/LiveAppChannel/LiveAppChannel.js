@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
-import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
+import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveChannelStatus';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
@@ -55,7 +55,7 @@ export class LiveAppChannel extends Component {
   }
 
   render() {
-    const { channel, messages, activity, actions } = this.props;
+    const { channel, messages, meta, actions } = this.props;
 
     return (
       <div>
@@ -63,9 +63,9 @@ export class LiveAppChannel extends Component {
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
-          <LiveStatus {...channel} {...activity} />
+          <LiveStatus {...channel} {...meta} />
 
-          <LiveNewMessage makeUpdate={this.createMessage} />
+          <LiveNewMessage createMessage={this.createMessage} />
 
           {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
         </LayoutRow>
@@ -77,11 +77,11 @@ export class LiveAppChannel extends Component {
 
 LiveAppChannel.propTypes = {
 
+  meta: PropTypes.object.isRequired,
+
   messages: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
   })).isRequired,
-
-  activity: PropTypes.object.isRequired,
 
   channel: PropTypes.shape({
     status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
@@ -98,9 +98,9 @@ LiveAppChannel.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    meta: state.live.meta,
     messages: getSortedMessages(state),
     channel: state.live.channel,
-    activity: state.live.activity,
     user: { username: 'admin' },
   };
 }

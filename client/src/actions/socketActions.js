@@ -1,15 +1,15 @@
 import * as types from '../constants/SocketActionTypes';
 
 export function createMessage(payload) {
-  return { type: types.CREATE, payload };
+  return { type: types.CREATE_MESSAGE, payload };
 }
 
 export function strikeMessage(payload) {
-  return { type: types.STRIKE, payload };
+  return { type: types.STRIKE_MESSAGE, payload };
 }
 
 export function deleteMessage(payload) {
-  return { type: types.DELETE, payload };
+  return { type: types.DELETE_MESSAGE, payload };
 }
 
 

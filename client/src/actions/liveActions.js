@@ -2,24 +2,24 @@ import * as types from '../constants/LiveActionTypes';
 import { parseResponse, checkStatus, FETCH_OPTIONS } from '../utils/fetch';
 
 export function createMessage(payload) {
-  return { type: types.CREATE, payload };
+  return { type: types.CREATE_MESSAGE, payload };
 }
 
 export function strikeMessage(payload) {
-  return { type: types.STRIKE, payload };
+  return { type: types.STRIKE_MESSAGE, payload };
 }
 
 export function deleteMessage(payload) {
-  return { type: types.DELETE, payload };
+  return { type: types.DELETE_MESSAGE, payload };
 }
 
 export function updateChannel(payload) {
   return { type: types.UPDATE_CHANNEL, payload };
 }
 
-export function fetchMessages(payload) {
+export function fetchChannel(payload) {
   return dispatch => {
-    dispatch({ type: types.FETCH_MESSAGES_REQUEST });
+    dispatch({ type: types.FETCH_CHANNEL_REQUEST });
 
     const { slug, location } = payload;
     const endpoint = `${location.origin}/api/live/channels/${slug}/`;
@@ -28,10 +28,10 @@ export function fetchMessages(payload) {
       .then(checkStatus)
       .then(parseResponse)
       .then(data => {
-        dispatch({ type: types.FETCH_MESSAGES_SUCCESS, payload: data });
+        dispatch({ type: types.FETCH_CHANNEL_SUCCESS, payload: data });
       })
       .catch(error => {
-        dispatch({ type: types.FETCH_MESSAGES_FAILURE, error });
+        dispatch({ type: types.FETCH_CHANNEL_FAILURE, error });
       });
   };
 }
