@@ -1,13 +1,13 @@
 # coding=utf-8
 from rest_framework import serializers
 
-from postit_live.users.serializers import UserSocketSerializer
-from .models import Channel, Message, Activity
+from postit_live.user.serializers import UserSocketSerializer
+from .models import LiveChannel, LiveMessage, Activity
 
 
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
+class LiveMessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Message
+        model = LiveMessage
         fields = ('id', 'author', 'body', 'body_html', 'created', 'status')
         extra_kwargs = {
             'url': {'view_name': 'api:message-detail'},
@@ -16,28 +16,28 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 
-class MessageSocketSerializer(serializers.ModelSerializer):
+class LiveMessageSocketSerializer(serializers.ModelSerializer):
     author = UserSocketSerializer()
 
     class Meta:
-        model = Message
+        model = LiveMessage
         fields = ('id', 'author', 'body', 'body_html', 'status', 'created')
         depth = 2
 
 
-class ChannelSerializer(serializers.HyperlinkedModelSerializer):
-    messages = MessageSerializer(many=True)
+class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
+    messages = LiveMessageSerializer(many=True)
 
     class Meta:
-        model = Channel
+        model = LiveChannel
         extra_kwargs = {
             'url': {'view_name': 'api:channel-detail', 'lookup_field': 'slug'},
         }
 
 
-class ChannelSocketSerializer(serializers.ModelSerializer):
+class LiveChannelSocketSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Channel
+        model = LiveChannel
         fields = ('title', 'resources', 'resources_html', 'description', 'description_html', 'status')
 
 

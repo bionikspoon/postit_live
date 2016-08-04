@@ -37,19 +37,21 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'channels',
     'crispy_forms',  # Form layouts
-    'allauth',  # registration
-    'allauth.account',  # registration
-    'allauth.socialaccount',  # registration
+    # 'allauth',  # registration
+    # 'allauth.account',  # registration
+    # 'allauth.socialaccount',  # registration
     'rest_framework',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'postit_live.users',
+    # 'postit_live.users',
+    # 'postit_live.auth',
     'postit_live.live',
-    'postit_live.blog',
-    'postit_live.chat',
+    'postit_live.user',
+    # 'postit_live.blog',
+    # 'postit_live.chat',
     'postit_live.api',
 )
 
@@ -210,23 +212,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ------------------------------------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# Some really nice defaults
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# # Some really nice defaults
+# ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+#
+# ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+# ACCOUNT_ADAPTER = 'postit_live.users.adapters.AccountAdapter'
+# SOCIALACCOUNT_ADAPTER = 'postit_live.users.adapters.SocialAccountAdapter'
 
-ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'postit_live.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'postit_live.users.adapters.SocialAccountAdapter'
-
-# Custom user app defaults
-# Select the correct user model
-AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
+# # Custom user app defaults
+# # Select the correct user model
+# AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'user:login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -264,7 +266,7 @@ CHANNEL_LAYERS = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
     'PAGE_SIZE': 5,
 }

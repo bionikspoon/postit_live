@@ -29,7 +29,7 @@ export default class Moment extends Component {
     const { title, iso, fromNow } = this.state;
     const { href } = this.props;
     return (
-      <a href={href}>
+      <a href={href} className="Moment">
         <time dateTime={iso} title={title}>{fromNow}</time>
       </a>
     );

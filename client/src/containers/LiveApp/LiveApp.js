@@ -11,12 +11,15 @@ class LiveApp extends Component {
 
     const { slug, meta, actions } = this.props;
     const { location } = window;
-    if (!meta.synced) actions.fetchMessages({ slug, location });
+    if (!meta.synced) {
+      actions.fetchChannel({ slug, location });
+      actions.fetchCurrentUser({ location });
+    }
   }
 
   render() {
     return (
-      <div className="container-fluid" role="main">
+      <div className="container-fluid LiveApp" role="main">
         <LiveNav {...this.props} />
 
         {this.props.children}
@@ -31,7 +34,10 @@ LiveApp.propTypes = {
   }).isRequired,
   children: PropTypes.element.isRequired,
   slug: PropTypes.string.isRequired,
-  actions: PropTypes.shape({ fetchMessages: PropTypes.func.isRequired }).isRequired,
+  actions: PropTypes.shape({
+    fetchChannel: PropTypes.func.isRequired,
+    fetchCurrentUser: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 function mapStateToProps(state, props) {

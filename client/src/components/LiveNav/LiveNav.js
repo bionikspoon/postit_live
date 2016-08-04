@@ -1,13 +1,16 @@
 import './LiveNav.scss';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
+import classnames from 'classnames';
 
 export default function LiveNav({ slug, pathname }) {
   const base = `/live/${slug}`;
+  const baseClass = classnames('nav-link', { active: pathname === `${base}/` });
+  
   return (
-    <ul className="nav nav-tabs">
+    <ul className="nav nav-tabs LiveNav">
       <li className="nav-item">
-        <Link to={`${base}/`} className={pathname === `${base}/` ? 'nav-link active' : 'nav-link'}>channel</Link>
+        <Link to={`${base}/`} className={baseClass}>channel</Link>
       </li>
       <li className="nav-item">
         <Link to={`${base}/settings/`} activeClassName="active" className="nav-link">settings</Link>

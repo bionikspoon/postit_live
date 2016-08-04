@@ -21,12 +21,12 @@ describe('live reducer', () => {
     });
   });
 
-  describe('CREATE', () => {
+  describe('CREATE_MESSAGE', () => {
     let subject;
     let action;
 
     beforeEach(() => {
-      action = { type: types.CREATE, payload: messageFactory(...{ id: 1 }) };
+      action = { type: types.CREATE_MESSAGE, payload: messageFactory(...{ id: 1 }) };
       subject = liveReducer(undefined, action);
     });
 
@@ -37,12 +37,12 @@ describe('live reducer', () => {
     });
   });
 
-  describe('STRIKE', () => {
+  describe('STRIKE_MESSAGE', () => {
     describe('valid index', () => {
       let subject;
 
       beforeEach(() => {
-        const action = { type: types.STRIKE, payload: { id: '0' } };
+        const action = { type: types.STRIKE_MESSAGE, payload: { id: '0' } };
         subject = liveReducer(undefined, action);
       });
 
@@ -55,7 +55,7 @@ describe('live reducer', () => {
       let subject;
 
       beforeEach(() => {
-        const action = { type: types.STRIKE, payload: { id: '1' } };
+        const action = { type: types.STRIKE_MESSAGE, payload: { id: '1' } };
         subject = liveReducer(undefined, action);
       });
 
@@ -65,12 +65,12 @@ describe('live reducer', () => {
     });
   });
 
-  describe('DELETE', () => {
+  describe('DELETE_MESSAGE', () => {
     describe('valid index', () => {
       let subject;
 
       beforeEach(() => {
-        const action = { type: types.DELETE, payload: { id: '0' } };
+        const action = { type: types.DELETE_MESSAGE, payload: { id: '0' } };
         subject = liveReducer(undefined, action);
       });
 
@@ -83,7 +83,7 @@ describe('live reducer', () => {
       let subject;
 
       beforeEach(() => {
-        const action = { type: types.DELETE, payload: { id: '1' } };
+        const action = { type: types.DELETE_MESSAGE, payload: { id: '1' } };
         subject = liveReducer(undefined, action);
       });
 

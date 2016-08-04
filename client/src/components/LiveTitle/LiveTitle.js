@@ -4,7 +4,7 @@ import LayoutInnerRow from '../LayoutInnerRow';
 
 export default function LiveTitle({ title, description_html }) {
   return (
-    <LayoutInnerRow>
+    <LayoutInnerRow className="LiveTitle">
       <h1>{title}</h1>
       <div dangerouslySetInnerHTML={{ __html: description_html }}></div>
     </LayoutInnerRow>

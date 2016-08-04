@@ -1,6 +1,6 @@
 import './ButtonConfirm.scss';
 import React, { PropTypes, Component } from 'react';
-const CLASS = 'btn btn-secondary btn-sm';
+const BUTTON_CLASS = 'btn btn-secondary btn-sm ButtonConfirm';
 
 export default class ButtonConfirm extends Component {
   constructor(props) {
@@ -28,9 +28,9 @@ export default class ButtonConfirm extends Component {
     return (
       <span className="confirmation">
         <span>are you sure? </span>
-        <button onClick={this.handleClick} className={CLASS}>yes</button>
+        <button onClick={this.handleClick} className={BUTTON_CLASS}>yes</button>
         <span> / </span>
-        <button onClick={this.closeConfirmation} className={CLASS}>no</button>
+        <button onClick={this.closeConfirmation} className={BUTTON_CLASS}>no</button>
       </span>
     );
   }
@@ -38,7 +38,7 @@ export default class ButtonConfirm extends Component {
   renderButton() {
     const { value } = this.props;
     return (
-      <button onClick={this.openConfirmation} className={CLASS}>{value}</button>
+      <button onClick={this.openConfirmation} className={BUTTON_CLASS}>{value}</button>
     );
   }
 

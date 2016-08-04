@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
-import { OPENED, CONNECTING, CLOSED } from '../../constants/LiveStatusTypes';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
@@ -30,12 +29,12 @@ export class LiveAppChannel extends Component {
     const { channel } = this.props;
 
     return (
-      <div>
+      <div className="LiveAppChannel--sidebar">
         <LiveAside>
           <label><input type="checkbox" />popup notifications</label>
         </LiveAside>
 
-        <LiveAside title="resources">
+        <LiveAside title="resources" render={!!channel.resources.length}>
           <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
         </LiveAside>
 
@@ -55,17 +54,17 @@ export class LiveAppChannel extends Component {
   }
 
   render() {
-    const { channel, messages, activity, actions } = this.props;
+    const { channel, messages, meta, actions } = this.props;
 
     return (
-      <div>
+      <div className="LiveAppChannel">
         <LayoutRow ><LiveTitle {...channel} /></LayoutRow>
-
-        <LayoutRow ><LiveStatus status={channel.status} {...activity} /></LayoutRow>
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
-          <LiveNewMessage makeUpdate={this.createMessage} />
+          <LiveStatus channelStatus={channel.status} {...meta} />
+
+          <LiveNewMessage createMessage={this.createMessage} />
 
           {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
         </LayoutRow>
@@ -77,42 +76,30 @@ export class LiveAppChannel extends Component {
 
 LiveAppChannel.propTypes = {
 
+  meta: PropTypes.object.isRequired,
+
   messages: PropTypes.arrayOf(PropTypes.shape({
-    author: PropTypes.object.isRequired,
-    body: PropTypes.string.isRequired,
-    body_html: PropTypes.string.isRequired,
-    created: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
   })).isRequired,
 
-  activity: PropTypes.shape({
-    viewers: PropTypes.number.isRequired,
-  }).isRequired,
-
   channel: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    status: PropTypes.oneOf([OPENED, CONNECTING, CLOSED]).isRequired,
+    status: PropTypes.string.isRequired,
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
-    discussions: PropTypes.string.isRequired,
     discussions_html: PropTypes.string.isRequired,
-    contributors: PropTypes.string.isRequired,
     contributors_html: PropTypes.string.isRequired,
   }).isRequired,
 
-  user: PropTypes.shape({
-    username: PropTypes.string.isRequired,
+  actions: PropTypes.shape({
+    createMessage: PropTypes.func.isRequired,
   }).isRequired,
-
-  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
+    meta: state.live.meta,
     messages: getSortedMessages(state),
     channel: state.live.channel,
-    activity: state.live.activity,
     user: { username: 'admin' },
   };
 }

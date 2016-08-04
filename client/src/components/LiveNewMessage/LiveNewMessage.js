@@ -6,12 +6,12 @@ export default class LiveNewMessage extends Component {
   constructor(props) {
     super(props);
     this.state = { input: '' };
-    this.handleMakeUpdate = this.handleMakeUpdate.bind(this);
+    this.handleOnClick = this.handleOnClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleMakeUpdate(event) {
-    this.props.makeUpdate(this.state.input);
+  handleOnClick(event) {
+    this.props.createMessage(this.state.input);
     this.setState({ input: '' });
   }
 
@@ -22,17 +22,13 @@ export default class LiveNewMessage extends Component {
   render() {
     const { input } = this.state;
     return (
-      <LayoutInnerRow>
+      <LayoutInnerRow className="LiveNewMessage">
         <div className="form-group">
           <textarea onChange={this.handleInputChange} className="form-control" rows="5" value={input} />
         </div>
         <div className="clearfix">
-          <button className="btn btn-outline-primary pull-xs-left" onClick={this.handleMakeUpdate}>make update</button>
-          <p className="pull-xs-right">
-            <a href="#">contenty policy</a>
-            <span>&nbsp;</span>
-            <a href="#">formatting help</a>
-          </p>
+          <button className="btn btn-outline-primary pull-xs-left" onClick={this.handleOnClick}>make update</button>
+          <p className="pull-xs-right"><a href="#">contenty policy</a> <a href="#">formatting help</a></p>
 
         </div>
       </LayoutInnerRow>
@@ -40,5 +36,5 @@ export default class LiveNewMessage extends Component {
   }
 }
 LiveNewMessage.propTypes = {
-  makeUpdate: PropTypes.func.isRequired,
+  createMessage: PropTypes.func.isRequired,
 };

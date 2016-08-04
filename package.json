@@ -19,6 +19,8 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "3.4.1",
+    "classnames": "2.2.5",
+    "debug": "2.2.0",
     "isomorphic-fetch": "2.2.1",
     "jquery": "3.1.0",
     "lodash": "4.14.1",
@@ -74,7 +76,6 @@
     "karma-phantomjs-launcher": "1.0.1",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "github:goldhand/karma-webpack",
-    "lodash": "4.14.1",
     "mocha": "3.0.0-2",
     "node-sass": "3.8.0",
     "null-loader": "0.1.1",
