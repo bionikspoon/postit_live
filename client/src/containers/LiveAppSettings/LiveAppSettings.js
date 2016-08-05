@@ -8,6 +8,7 @@ import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import autobind from 'autobind-decorator';
 import FormGroupTextarea from '../../components/FormGroupTextarea';
+import FormGroupText from '../../components/FormGroupText';
 const debug = require('debug')('app:containers:LiveAppSettings');  // eslint-disable-line no-unused-vars
 const MAX_DESC_CHARS = 120;
 
@@ -23,7 +24,9 @@ export class LiveAppSettings extends Component {
   render() {
     const { handleSubmit, fields: { title, description, resources }, values } = this.props;
     const charsLeft = MAX_DESC_CHARS - (values.description || '').length;
-    const descriptionHelp = `one or two sentences (${MAX_DESC_CHARS} characters) saying what this channel is about (${charsLeft} left)`;
+    const descriptionHelp = (
+      `one or two sentences (${MAX_DESC_CHARS} characters) saying what this channel is about (${charsLeft} left)`
+    );
     const resourcesHelp = 'information and links that are useful at any point';
     return (
       <LayoutRow className="LivAppSettings">
@@ -31,18 +34,11 @@ export class LiveAppSettings extends Component {
         <LayoutInnerRow>
           <h1>Settings</h1>
           <form onSubmit={handleSubmit(this.handleSubmit)}>
-            <div className="form-group">
-              <label htmlFor="title">title</label>
-              <input
-                type="text"
-                id="title"
-                className="form-control" {...title}
-              />
-            </div>
+            <FormGroupText id="title" label="title" {...title} />
 
             <FormGroupTextarea rows="2" id="description" label="description" help={descriptionHelp} {...description} />
-            <FormGroupTextarea rows="10" id="resources" label="resources" help={resourcesHelp} {...resources} />
 
+            <FormGroupTextarea rows="10" id="resources" label="resources" help={resourcesHelp} {...resources} />
 
             <button className="btn btn-primary" type="submit">save settings</button>
           </form>

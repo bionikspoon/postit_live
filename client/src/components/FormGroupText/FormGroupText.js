@@ -1,9 +1,9 @@
-import './FormGroupTextarea.scss';
+import './FormGroupText.scss';
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
-const debug = require('debug')('app:components:FormGroupTextarea');  // eslint-disable-line no-unused-vars
+const debug = require('debug')('app:components:FormGroupText');  // eslint-disable-line no-unused-vars
 
-export default class FormGroupTextarea extends Component {
+export default class FormGroupText extends Component {
   renderHelp() {
     const { help } = this.props;
     return help && help.length
@@ -24,19 +24,19 @@ export default class FormGroupTextarea extends Component {
       'onUpdate', 'invalid', 'help',
     ]);
     return (
-      <div className="form-group FormGroupTextarea">
+      <div className="form-group FormGroupText">
         {this.renderLabel()}
 
         {this.renderHelp()}
 
-        <textarea className="form-control" {...props} value={props.value || ''} />
+        <input type="text" className="form-control" {...props} />
+
       </div>
     );
   }
 }
 
-FormGroupTextarea.propTypes = {
-  rows: PropTypes.string.isRequired,
+FormGroupText.propTypes = {
   label: PropTypes.string,
   help: PropTypes.string,
   id: PropTypes.string.isRequired,
