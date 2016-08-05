@@ -3,28 +3,24 @@ import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
 import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
-import _ from 'lodash';
+import FormGroupTextarea from '../FormGroupTextarea';
 const debug = require('debug')('app:components:LiveNewMessage');  // eslint-disable-line no-unused-vars
 
 class LiveNewMessage extends Component {
   @autobind
   handleSubmit(...args) {
     const { handleSubmit, resetForm } = this.props;
-    resetForm(...args);
+    resetForm();
     return handleSubmit(...args);
   }
 
   render() {
     const { submitting, fields: { body } } = this.props;
-
-    const bodyProps = _.omit(body, ['initialValue', 'autofill', 'valid', 'dirty', 'pristine', 'active', 'touched', 'visited', 'autofilled', 'onUpdate', 'invalid']);
-
+    debug('this.props', this.props);
     return (
       <LayoutInnerRow className="LiveNewMessage">
         <form className="form" onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <textarea className="form-control" rows="5" {...bodyProps} value={body.value || ''} />
-          </div>
+          <FormGroupTextarea {...body} id="new-message-body" rows="5" />
           <div className="clearfix">
             <button
               className="btn btn-outline-primary pull-xs-left"
@@ -47,4 +43,9 @@ LiveNewMessage.propTypes = {
   submitting: PropTypes.bool.isRequired,
 };
 
-export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);
+function mapStateToProps(state, props) {
+  debug('arguments', arguments);
+  debug('state=%o props=%o', state, props);
+  return {};
+}
+export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] }, mapStateToProps)(LiveNewMessage);

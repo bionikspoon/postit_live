@@ -1,86 +1,52 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
+import { reduxForm } from 'redux-form';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
+import autobind from 'autobind-decorator';
+import FormGroupTextarea from '../../components/FormGroupTextarea';
+const debug = require('debug')('app:containers:LiveAppSettings');  // eslint-disable-line no-unused-vars
 const MAX_DESC_CHARS = 120;
 
 export class LiveAppSettings extends Component {
-  constructor(props) {
-    super(props);
-    const { title, description, resources } = this.props.channel;
-    this.state = { title, description, resources, charsRemaining: MAX_DESC_CHARS - description.length };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSave = this.handleSave.bind(this);
-  }
-
-  handleChange(field) {
-    return event => {
-      const charsCount = field === 'description'
-        ? { charsRemaining: MAX_DESC_CHARS - event.target.value.length }
-        : {};
-      this.setState({ [field]: event.target.value, ...charsCount });
-    };
-  }
-
-  handleSave() {
+  @autobind
+  handleSubmit(data) {
     const { slug, actions } = this.props;
-    actions.updateChannel(this.state);
+    actions.updateChannel(data);
     actions.push(`/live/${slug}/`);
   }
 
   render() {
-    const { title, description, resources, charsRemaining } = this.state;
-
+    const { handleSubmit, fields: { title, description, resources }, values } = this.props;
+    const charsLeft = MAX_DESC_CHARS - (values.description || '').length;
+    const descriptionHelp = `one or two sentences (${MAX_DESC_CHARS} characters) saying what this channel is about (${charsLeft} left)`;
+    const resourcesHelp = 'information and links that are useful at any point';
     return (
       <LayoutRow className="LivAppSettings">
 
         <LayoutInnerRow>
           <h1>Settings</h1>
-          <div className="form-group">
-            <label htmlFor="title">title</label>
-            <input
-              type="text"
-              id="title"
-              className="form-control"
-              onChange={this.handleChange('title')}
-              value={title}
-            />
-          </div>
+          <form onSubmit={handleSubmit(this.handleSubmit)}>
+            <div className="form-group">
+              <label htmlFor="title">title</label>
+              <input
+                type="text"
+                id="title"
+                className="form-control" {...title}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="description">description</label>
-            <small className="form-text text-muted">
-              one or two sentences ({MAX_DESC_CHARS} characters) saying what this channel is about
-              ({charsRemaining} left)
-            </small>
-            <textarea
-              id="description"
-              rows="2"
-              className="form-control"
-              onChange={this.handleChange('description')}
-              value={description}
-            />
-          </div>
+            <FormGroupTextarea rows="2" id="description" label="description" help={descriptionHelp} {...description} />
+            <FormGroupTextarea rows="10" id="resources" label="resources" help={resourcesHelp} {...resources} />
 
 
-          <div className="form-group">
-            <label htmlFor="resources">resources</label>
-            <small className="form-text text-muted">information and links that are useful at any point</small>
-            <textarea
-              id="resources"
-              rows="10"
-              className="form-control"
-              onChange={this.handleChange('resources')}
-              value={resources}
-            />
-          </div>
+            <button className="btn btn-primary" type="submit">save settings</button>
+          </form>
 
-          <button className="btn btn-primary" onClick={this.handleSave}>save settings</button>
         </LayoutInnerRow>
 
       </LayoutRow>
@@ -89,11 +55,14 @@ export class LiveAppSettings extends Component {
 }
 
 LiveAppSettings.propTypes = {
-  channel: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    resources: PropTypes.string.isRequired,
+
+  handleSubmit: PropTypes.func.isRequired,
+  fields: PropTypes.shape({
+    title: PropTypes.object.isRequired,
+    description: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
   }).isRequired,
+  values: PropTypes.object.isRequired,
   actions: PropTypes.shape({
     updateChannel: PropTypes.func.isRequired,
     push: PropTypes.func.isRequired,
@@ -103,8 +72,8 @@ LiveAppSettings.propTypes = {
 
 function mapStateToProps(state, props) {
   return {
-    channel: state.live.channel,
     slug: props.params.slug,
+    initialValues: state.live.channel,
   };
 }
 
@@ -114,5 +83,5 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(actions, dispatch),
   };
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(LiveAppSettings);
+const formConfig = { form: 'LiveAppSettings', fields: ['title', 'description', 'resources'] };
+export default reduxForm(formConfig, mapStateToProps, mapDispatchToProps)(LiveAppSettings);

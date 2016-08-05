@@ -1,17 +1,9 @@
-import './LiveNav.scss';
+import './FormGroupTextarea.scss';
 import React, { PropTypes, Component } from 'react';
+import _ from 'lodash';
+const debug = require('debug')('app:components:FormGroupTextarea');  // eslint-disable-line no-unused-vars
 
 export default class FormGroupTextarea extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: this.props.defaultValue };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
   renderHelp() {
     const { help } = this.props;
     return help && help.length
@@ -27,32 +19,25 @@ export default class FormGroupTextarea extends Component {
   }
 
   render() {
-    const { id, rows } = this.props;
-    const { value } = this.state;
+    const props = _.omit(this.props, [
+      'initialValue', 'autofill', 'valid', 'dirty', 'pristine', 'active', 'touched', 'visited', 'autofilled', 'onUpdate', 'invalid', 'help'
+    ]);
     return (
       <div className="form-group FormGroupTextarea">
         {this.renderLabel()}
 
         {this.renderHelp()}
 
-        <textarea
-          id={id}
-          name={id}
-          rows={rows}
-          className="form-control"
-          onChange={this.handleChange}
-          value={value}
-        />
+        <textarea className="form-control" {...props} value={props.value || ''} />
       </div>
     );
   }
 }
 
 FormGroupTextarea.propTypes = {
-  defaultValue: PropTypes.string.isRequired,
-  help: PropTypes.string,
+  rows: PropTypes.string.isRequired,
   label: PropTypes.string,
+  help: PropTypes.string,
   id: PropTypes.string.isRequired,
-  rows: PropTypes.number.isRequired,
 };
 
