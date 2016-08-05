@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db import transaction
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_users_with_perms
 from haikunator import Haikunator
 from markdown import markdown
 from model_utils import Choices
@@ -23,6 +23,7 @@ class LiveChannelManager(models.Manager):
         [assign_perm(perm, group, channel) for perm in perms]
 
         user.groups.add(group)
+        channel.save()
         logger.info('channel created channel=%s user=%s group=%s', channel, user, group)
         return channel
 
@@ -41,16 +42,23 @@ class LiveChannel(TimeStampedModel, StatusModel):
     resources = models.TextField()
     resources_html = models.TextField(editable=False)
 
-    contributors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Contributor')
+    contributors_html = models.TextField(editable=False)
 
     def save(self, **kwargs):
         if not self.slug:
             LiveChannelClass = self.__class__
             self.slug = LiveChannelClass.create_slug()
-            print(self.id, self.slug)
         self.resources_html = markdown(self.resources)
         self.description_html = markdown(self.description or '')
+
+        contributors = '\n'.join(['- /u/%s' % contributor.username for contributor in self.contributors])
+        self.contributors_html = markdown(contributors)
+
         return super().save(**kwargs)
+
+    @property
+    def contributors(self):
+        return get_users_with_perms(self)
 
     @classmethod
     def create_slug(cls):
@@ -98,11 +106,6 @@ class LiveMessage(TimeStampedModel, StatusModel):
 
     class Meta:
         verbose_name = 'message'
-
-
-class Contributor(TimeStampedModel):
-    channel = models.ForeignKey(LiveChannel, related_name='contributor_set')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
 class Activity(TimeStampedModel):
