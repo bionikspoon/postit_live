@@ -3,7 +3,7 @@ import { CHANNEL_OPENED } from '../constants/ChannelStatus';
 import { CONNECTION_CLOSED } from '../constants/ConnectionStatus';
 import update from 'react-addons-update';
 import _ from 'lodash';
-const debug = require('debug')('app:reducers:live');
+const debug = require('debug')('app:reducers:live');  // eslint-disable-line no-unused-vars
 const initialState = {
   meta: {
     synced: false,
@@ -124,6 +124,8 @@ function handleFetchChannelSuccess(state, payload) {
       title: { $set: payload.title },
       resources: { $set: payload.resources },
       resources_html: { $set: payload.resources_html },
+      description: { $set: payload.description },
+      description_html: { $set: payload.description_html },
       contributors_html: { $set: payload.contributors_html },
     },
     messages: {
