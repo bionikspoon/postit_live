@@ -6,9 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 class LiveApp extends Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     const { slug, meta, actions } = this.props;
     const { location } = window;
     if (!meta.synced) {

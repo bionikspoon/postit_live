@@ -9,10 +9,11 @@ export default class Moment extends Component {
   }
 
   componentWillMount() {
-    const intervalId = setInterval(() => {
+    this.setInterval(recalculate, 10 * 1000);
+
+    function recalculate() {
       this.setState({ fromNow: this.state.date.fromNow() });
-    }, 10 * 1000);
-    this.setState({ intervalId });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -20,7 +21,12 @@ export default class Moment extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    clearInterval(this.intervalId);
+  }
+
+  setInterval(func, time) {
+    clearInterval(this.interval);
+    this.interval = setInterval(func.bind(this), time);
   }
 
   render() {
