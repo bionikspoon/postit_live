@@ -91,6 +91,7 @@
     "redux-devtools-log-monitor": "1.0.11",
     "redux-devtools-multiple-monitors": "1.0.1",
     "redux-immutable-state-invariant": "1.2.3",
+    "redux-logger": "2.6.1",
     "redux-slider-monitor": "1.0.7",
     "reselect": "2.5.3",
     "sass-loader": "4.0.0",

@@ -7,13 +7,15 @@ import DevTools from '../containers/DevTools';
 import socketMiddleware from '../middleware/socket';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
+import createLogger from 'redux-logger';
 
 export default function configureStore(initialState) {
   const middleware = applyMiddleware(
     thunkMiddleware,
     reduxImmutableStateInvariant(),
     routerMiddleware(browserHistory),
-    socketMiddleware
+    socketMiddleware,
+    createLogger({ duration: true, collapsed: true, diff: true, predicate: ignore('redux-form') })
   );
 
   const getDebugSessionKey = () => {
@@ -36,4 +38,8 @@ export default function configureStore(initialState) {
   }
 
   return store;
+}
+
+function ignore(predicate) {
+  return (_, action) => !action.type.startsWith(predicate);
 }
