@@ -1,7 +1,9 @@
 import * as types from '../constants/LiveActionTypes';
 import { parseResponse, checkStatus, FETCH_OPTIONS } from '../utils/fetch';
+const debug = require('debug')('app:actions:liveActions');
 
 export function createMessage(payload) {
+  debug('payload', payload);
   return { type: types.CREATE_MESSAGE, payload };
 }
 

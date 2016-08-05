@@ -1,40 +1,50 @@
 import './LiveNewMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
+import { reduxForm } from 'redux-form';
+import autobind from 'autobind-decorator';
+import _ from 'lodash';
+const debug = require('debug')('app:components:LiveNewMessage');  // eslint-disable-line no-unused-vars
 
-export default class LiveNewMessage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { input: '' };
-    this.handleOnClick = this.handleOnClick.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  handleOnClick(event) {
-    this.props.createMessage(this.state.input);
-    this.setState({ input: '' });
-  }
-
-  handleInputChange(event) {
-    this.setState({ input: event.target.value });
+class LiveNewMessage extends Component {
+  @autobind
+  handleSubmit(...args) {
+    const { handleSubmit, resetForm } = this.props;
+    resetForm(...args);
+    return handleSubmit(...args);
   }
 
   render() {
-    const { input } = this.state;
+    const { submitting, fields: { body } } = this.props;
+
+    const bodyProps = _.omit(body, ['initialValue', 'autofill', 'valid', 'dirty', 'pristine', 'active', 'touched', 'visited', 'autofilled', 'onUpdate', 'invalid']);
+
     return (
       <LayoutInnerRow className="LiveNewMessage">
-        <div className="form-group">
-          <textarea onChange={this.handleInputChange} className="form-control" rows="5" value={input} />
-        </div>
-        <div className="clearfix">
-          <button className="btn btn-outline-primary pull-xs-left" onClick={this.handleOnClick}>make update</button>
-          <p className="pull-xs-right"><a href="#">contenty policy</a> <a href="#">formatting help</a></p>
-
-        </div>
+        <form className="form" onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <textarea className="form-control" rows="5" {...bodyProps} value={body.value || ''} />
+          </div>
+          <div className="clearfix">
+            <button
+              className="btn btn-outline-primary pull-xs-left"
+              disabled={submitting}
+              type="submit"
+            >
+              make update
+            </button>
+            <small className="pull-xs-right"><a href="#">contenty policy</a> <a href="#">formatting help</a></small>
+          </div>
+        </form>
       </LayoutInnerRow>
     );
   }
 }
 LiveNewMessage.propTypes = {
-  createMessage: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  resetForm: PropTypes.func.isRequired,
+  fields: PropTypes.shape({ body: PropTypes.object.isRequired }).isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
+
+export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);

@@ -6,7 +6,7 @@ import classnames from 'classnames';
 export default function LiveNav({ slug, pathname }) {
   const base = `/live/${slug}`;
   const baseClass = classnames('nav-link', { active: pathname === `${base}/` });
-  
+
   return (
     <ul className="nav nav-tabs LiveNav">
       <li className="nav-item">

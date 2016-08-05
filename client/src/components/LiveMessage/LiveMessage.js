@@ -1,7 +1,7 @@
 import './LiveMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
-import ButtonConfirm from '../ButtonConfirm';
+import Confirm from '../Confirm';
 import LayoutInnerRow from '../LayoutInnerRow';
 import classnames from 'classnames';
 
@@ -18,11 +18,11 @@ export default class LiveMessage extends Component {
     const { status } = this.props;
     return status === 'stricken'
       ? <span>stricken</span>
-      : <ButtonConfirm onClick={this.strikeMessage} value="strike" />;
+      : <Confirm onClick={this.strikeMessage} btnClass="btn btn-secondary btn-sm Confirm" value="strike" />;
   }
 
   renderDeleteButton() {
-    return <ButtonConfirm onClick={this.deleteMessage} value="delete" />;
+    return <Confirm onClick={this.deleteMessage} btnClass="btn btn-secondary btn-sm Confirm" value="delete" />;
   }
 
   render() {

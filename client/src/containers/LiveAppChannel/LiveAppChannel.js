@@ -10,19 +10,15 @@ import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
 import { getSortedMessages } from '../../selectors';
+import autobind from 'autobind-decorator';
+const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
 export class LiveAppChannel extends Component {
-  constructor(props) {
-    super(props);
-    this.createMessage = this.createMessage.bind(this);
-  }
-
-  createMessage(body) {
+  @autobind
+  createMessage({ body }) {
     const { actions } = this.props;
 
-    actions.createMessage({
-      body,
-    });
+    actions.createMessage({ body });
   }
 
   renderSidebar() {
@@ -64,7 +60,7 @@ export class LiveAppChannel extends Component {
 
           <LiveStatus channelStatus={channel.status} {...meta} />
 
-          <LiveNewMessage createMessage={this.createMessage} />
+          <LiveNewMessage form="new-message" onSubmit={this.createMessage} />
 
           {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
         </LayoutRow>

@@ -1,0 +1,6 @@
+{
+  "name": "LiveNav",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./LiveNav.js"
+}

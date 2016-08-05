@@ -1,9 +1,9 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
-import ButtonConfirm from '../ButtonConfirm';
+import ButtonConfirm from '../Confirm';
 
-describe('<ButtonConfirm />', () => {
+describe('<Confirm />', () => {
   let wrapper;
   let onClickSpy;
 
