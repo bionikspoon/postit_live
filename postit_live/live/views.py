@@ -8,9 +8,10 @@ from rest_framework.response import Response
 from .models import LiveChannel, LiveMessage, Activity
 from .serializers import LiveChannelSerializer, LiveMessageSerializer, ActivitySerializer
 
+
 @login_required
 def create_channel(request):
-    channel = LiveChannel.objects.create()
+    channel = LiveChannel.objects.create_channel(user=request.user)
     return redirect('live:channel_detail_settings', slug=channel.slug)
 
 

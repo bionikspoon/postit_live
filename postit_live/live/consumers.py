@@ -1,7 +1,5 @@
 import logging
-import pickle
 
-from channels import Group
 from django.contrib.auth import get_user_model
 
 from postit_live.utils import ConsumerMixin, SerializerWebsocketConsumer, ActionDispatcher
@@ -14,10 +12,14 @@ CREATE_MESSAGE = 'live.CREATE_MESSAGE'
 STRIKE_MESSAGE = 'live.STRIKE_MESSAGE'
 DELETE_MESSAGE = 'live.DELETE_MESSAGE'
 UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
-AUTH_REQUIRED = 'live.AUTH_REQUIRED'
+CLOSE_CHANNEL = 'live.CLOSE_CHANNEL'
+ADD_CONTRIBUTOR = 'live.ADD_CONTRIBUTOR'
+DELETE_CONTRIBUTOR = 'live.DELETE_CONTRIBUTOR'
+UPDATE_CONTRIBUTOR = 'live.UPDATE_CONTRIBUTOR'
+ACCESS_DENIED = 'live.ACCESS_DENIED'
 
 User = get_user_model()
-handle = ActionDispatcher()
+handle = ActionDispatcher(access_denied=ACCESS_DENIED)
 
 
 class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
@@ -29,19 +31,16 @@ class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
 
     def receive(self, content, slug=None, **kwargs):
         if not self.message.user.is_authenticated():
-            return self.send({'type': AUTH_REQUIRED})
-        content['user'] = pickle.dumps(self.message.user)
+            return self.send({'type': ACCESS_DENIED})
         self.consumer_send(content)
 
 
 @LiveConsumer.wrap_consumer
-def live_messages_consumer(content):
+def live_messages_consumer(message):
     try:
-        slug = content['slug']
-        groups = [Group(name) for name in content['connection_groups']]
-        action = content['data']['type'].replace('socket', 'live', 1)
-        payload = content['data']['payload']
-        user = pickle.loads(content['data']['user'])
+        slug = message['slug']
+        action = message['content']['type'].replace('socket', 'live', 1)
+        payload = message['content']['payload']
 
         channel = LiveChannel.objects.get(slug=slug)
     except KeyError:
@@ -51,10 +50,10 @@ def live_messages_consumer(content):
     except User.DoesNotExist:
         return logger.error('live-messages user does not exist')
 
-    handle(action_type=action, payload=payload, user=user, channel=channel, groups=groups)
+    handle(action_type=action, payload=payload, channel=channel, **message)
 
 
-@handle.action(CREATE_MESSAGE)
+@handle.action(CREATE_MESSAGE, perm='add_channel_messages')
 def create_message(payload, *, user, channel, **_):
     body = payload['body']
     message = channel.messages.create(body=body, author=user)
@@ -63,7 +62,7 @@ def create_message(payload, *, user, channel, **_):
     return {'message': serializer.data}
 
 
-@handle.action(STRIKE_MESSAGE)
+@handle.action(STRIKE_MESSAGE, perm='change_channel_messages')
 def strike_message(payload, *, channel, **_):
     message = channel.messages.get(id=payload['id'])
     message.strike().save()
@@ -71,7 +70,7 @@ def strike_message(payload, *, channel, **_):
     return {'id': message.id}
 
 
-@handle.action(DELETE_MESSAGE)
+@handle.action(DELETE_MESSAGE, perm='change_channel_messages')
 def delete_message(payload, *, channel, **_):
     message = channel.messages.get(id=payload['id'])
     message.delete()
@@ -79,7 +78,7 @@ def delete_message(payload, *, channel, **_):
     return {'id': message.id}
 
 
-@handle.action(UPDATE_CHANNEL)
+@handle.action(UPDATE_CHANNEL, perm='change_channel_settings')
 def update_channel(payload, *, channel, **_):
     channel.title = payload['title']
     channel.description = payload['description']
@@ -87,3 +86,23 @@ def update_channel(payload, *, channel, **_):
     channel.save()
 
     return LiveChannelSocketSerializer(channel).data
+
+
+@handle.action(CLOSE_CHANNEL, perm='change_channel_close')
+def close_chanel(payload, *, channel, **_):
+    pass
+
+
+@handle.action(ADD_CONTRIBUTOR, perm='change_channel_contributors')
+def add_contributor(payload, *, channel, **_):
+    pass
+
+
+@handle.action(DELETE_CONTRIBUTOR, perm='change_channel_contributors')
+def remove_contributor(payload, *, channel, **_):
+    pass
+
+
+@handle.action(UPDATE_CONTRIBUTOR, perm='change_channel_contributors')
+def updaet_contributor(payload, *, channel, **_):
+    pass
