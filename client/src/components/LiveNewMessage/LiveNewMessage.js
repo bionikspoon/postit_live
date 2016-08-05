@@ -16,7 +16,6 @@ class LiveNewMessage extends Component {
 
   render() {
     const { submitting, fields: { body } } = this.props;
-    debug('this.props', this.props);
     return (
       <LayoutInnerRow className="LiveNewMessage">
         <form className="form" onSubmit={this.handleSubmit}>
@@ -43,9 +42,4 @@ LiveNewMessage.propTypes = {
   submitting: PropTypes.bool.isRequired,
 };
 
-function mapStateToProps(state, props) {
-  debug('arguments', arguments);
-  debug('state=%o props=%o', state, props);
-  return {};
-}
-export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] }, mapStateToProps)(LiveNewMessage);
+export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);
