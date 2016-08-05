@@ -20,8 +20,7 @@ const initialState = {
     description_html: '',
     discussions: 'no discussions yet. [start one](#)',
     discussions_html: '<p>no discussions yet. <a href="#">start one</a></p>',
-    contributors: '- [/u/admin](#)',
-    contributors_html: '<ul><li><a href="#">/u/admin</a></li></ul>',
+    contributors_html: '',
     status: CHANNEL_OPENED,
   },
 
@@ -106,7 +105,7 @@ function handleFetchChannelSuccess(state, payload) {
     update(obj, {
       [message.id]: {
         $set: {
-          author: { username: 'admin' }, // TODO use value
+          author: { username: message.author.username },
           body: message.body,
           body_html: message.body_html,
           created: message.created,
@@ -125,6 +124,7 @@ function handleFetchChannelSuccess(state, payload) {
       title: { $set: payload.title },
       resources: { $set: payload.resources },
       resources_html: { $set: payload.resources_html },
+      contributors_html: { $set: payload.contributors_html },
     },
     messages: {
       $merge: messages,
@@ -141,7 +141,13 @@ function handleFetchCurrentUserRequest(state) {
 }
 
 function handleFetchCurrentUserSuccess(state, payload) {
-  return update(state, { currentUser: { isFetching: { $set: false }, username: { $set: payload.username } } });
+  return update(state, {
+    currentUser: {
+      isFetching: { $set: false },
+      username: { $set: payload.username },
+      perms: { $set: payload.channel_permissions },
+    },
+  });
 }
 
 function handleFetchCurrentUserFailure(state, payload) {

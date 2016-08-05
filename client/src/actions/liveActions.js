@@ -44,8 +44,8 @@ export function fetchCurrentUser(payload) {
   return dispatch => {
     dispatch({ type: types.FETCH_CURRENT_USER_REQUEST });
 
-    const { location } = payload;
-    const endpoint = `${location.origin}/api/users/current/`;
+    const { slug, location } = payload;
+    const endpoint = `${location.origin}/api/users/current/?channel_slug=${slug}`;
 
     fetch(endpoint, FETCH_OPTIONS)
       .then(checkStatus)

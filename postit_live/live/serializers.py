@@ -6,6 +6,8 @@ from .models import LiveChannel, LiveMessage, Activity
 
 
 class LiveMessageSerializer(serializers.HyperlinkedModelSerializer):
+    author = UserSocketSerializer()
+
     class Meta:
         model = LiveMessage
         fields = ('id', 'author', 'body', 'body_html', 'created', 'status')
@@ -38,7 +40,9 @@ class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
 class LiveChannelSocketSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveChannel
-        fields = ('title', 'resources', 'resources_html', 'description', 'description_html', 'status')
+        fields = (
+            'title', 'resources', 'resources_html', 'description', 'description_html', 'status', 'contributors_html'
+        )
 
 
 class ActivitySerializer(serializers.ModelSerializer):

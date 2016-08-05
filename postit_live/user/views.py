@@ -1,10 +1,12 @@
 import logging
 
 from django.contrib.auth import views, get_user_model
+from guardian.shortcuts import get_perms
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
+from postit_live.live.models import LiveChannel
 from .forms import UserAuthenticationForm
 from .serializers import UserSerializer
 
@@ -47,6 +49,15 @@ def password_reset_complete(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_serializer_context(self):
+        context = super(UserViewSet, self).get_serializer_context()
+
+        if self.request.GET.get('channel_slug', None):
+            slug = self.request.GET['channel_slug']
+            channel = LiveChannel.objects.get(slug=slug)
+            context['perms'] = get_perms(self.request.user, channel)
+        return context
 
     @list_route(methods=['get'])
     def current(self, request):

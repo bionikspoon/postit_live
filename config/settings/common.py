@@ -36,22 +36,16 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = (
     'channels',
+    'guardian',
     'crispy_forms',  # Form layouts
-    # 'allauth',  # registration
-    # 'allauth.account',  # registration
-    # 'allauth.socialaccount',  # registration
     'rest_framework',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    # 'postit_live.users',
-    # 'postit_live.auth',
     'postit_live.live',
     'postit_live.user',
-    # 'postit_live.blog',
-    # 'postit_live.chat',
     'postit_live.api',
 )
 
@@ -212,7 +206,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ------------------------------------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    # 'allauth.account.auth_backends.AuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 # # Some really nice defaults
