@@ -141,7 +141,13 @@ function handleFetchCurrentUserRequest(state) {
 }
 
 function handleFetchCurrentUserSuccess(state, payload) {
-  return update(state, { currentUser: { isFetching: { $set: false }, username: { $set: payload.username } } });
+  return update(state, {
+    currentUser: {
+      isFetching: { $set: false },
+      username: { $set: payload.username },
+      perms: { $set: payload.channel_permissions },
+    },
+  });
 }
 
 function handleFetchCurrentUserFailure(state, payload) {

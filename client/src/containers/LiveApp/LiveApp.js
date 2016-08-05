@@ -13,7 +13,7 @@ class LiveApp extends Component {
     const { location } = window;
     if (!meta.synced) {
       actions.fetchChannel({ slug, location });
-      actions.fetchCurrentUser({ location });
+      actions.fetchCurrentUser({ slug, location });
     }
   }
 
