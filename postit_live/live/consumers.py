@@ -4,7 +4,7 @@ import pickle
 from channels import Group
 from django.contrib.auth import get_user_model
 
-from postit_live.utils import ConsumerMixin, dispatch, SerializerWebsocketConsumer
+from postit_live.utils import ConsumerMixin, SerializerWebsocketConsumer, ActionDispatcher
 from .models import LiveChannel
 from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
 
@@ -17,6 +17,7 @@ UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
 AUTH_REQUIRED = 'live.AUTH_REQUIRED'
 
 User = get_user_model()
+handle = ActionDispatcher()
 
 
 class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
@@ -33,15 +34,16 @@ class LiveConsumer(ConsumerMixin, SerializerWebsocketConsumer):
         self.consumer_send(content)
 
 
-def live_messages_consumer(message):
+@LiveConsumer.wrap_consumer
+def live_messages_consumer(content):
     try:
-        slug = message.content['slug']
-        groups = [Group(name) for name in message.content['connection_groups']]
-        action = message.content['data']['type'].replace('socket', 'live', 1)
-        payload = message.content['data']['payload']
-        user = pickle.loads(message.content['data']['user'])
+        slug = content['slug']
+        groups = [Group(name) for name in content['connection_groups']]
+        action = content['data']['type'].replace('socket', 'live', 1)
+        payload = content['data']['payload']
+        user = pickle.loads(content['data']['user'])
 
-        live_channel = LiveChannel.objects.get(slug=slug)
+        channel = LiveChannel.objects.get(slug=slug)
     except KeyError:
         return logger.error('live-messages message.content is malformed')
     except LiveChannel.DoesNotExist:
@@ -49,64 +51,39 @@ def live_messages_consumer(message):
     except User.DoesNotExist:
         return logger.error('live-messages user does not exist')
 
-    if action == CREATE_MESSAGE:
-        return create_message(groups, payload['body'], user, live_channel)
-
-    if action == STRIKE_MESSAGE:
-        return strike_message(groups, payload['id'], live_channel)
-
-    if action == DELETE_MESSAGE:
-        return delete_message(groups, payload['id'], live_channel)
-
-    if action == UPDATE_CHANNEL:
-        return update_channel(groups, payload, live_channel)
+    handle(action_type=action, payload=payload, user=user, channel=channel, groups=groups)
 
 
-@dispatch
-def create_message(body, user, live_channel):
-    live_message = live_channel.messages.create(body=body, author=user)
-    serializer = LiveMessageSocketSerializer(live_message)
+@handle.action(CREATE_MESSAGE)
+def create_message(payload, *, user, channel, **_):
+    body = payload['body']
+    message = channel.messages.create(body=body, author=user)
+    serializer = LiveMessageSocketSerializer(message)
 
-    return {
-        'type': CREATE_MESSAGE,
-        'payload': {
-            'message': serializer.data
-        }
-    }
+    return {'message': serializer.data}
 
 
-@dispatch
-def strike_message(message_id, live_channel):
-    live_channel.messages.get(id=message_id).strike().save()
+@handle.action(STRIKE_MESSAGE)
+def strike_message(payload, *, channel, **_):
+    message = channel.messages.get(id=payload['id'])
+    message.strike().save()
 
-    return {
-        'type': STRIKE_MESSAGE,
-        'payload': {
-            'id': message_id
-        }
-    }
+    return {'id': message.id}
 
 
-@dispatch
-def delete_message(message_id, live_channel):
-    live_channel.messages.get(id=message_id).delete()
+@handle.action(DELETE_MESSAGE)
+def delete_message(payload, *, channel, **_):
+    message = channel.messages.get(id=payload['id'])
+    message.delete()
 
-    return {
-        'type': DELETE_MESSAGE,
-        'payload': {
-            'id': message_id
-        }
-    }
+    return {'id': message.id}
 
 
-@dispatch
-def update_channel(payload, live_channel):
-    live_channel.title = payload['title']
-    live_channel.description = payload['description']
-    live_channel.resources = payload['resources']
-    live_channel.save()
+@handle.action(UPDATE_CHANNEL)
+def update_channel(payload, *, channel, **_):
+    channel.title = payload['title']
+    channel.description = payload['description']
+    channel.resources = payload['resources']
+    channel.save()
 
-    return {
-        'type': UPDATE_CHANNEL,
-        'payload': LiveChannelSocketSerializer(live_channel).data
-    }
+    return LiveChannelSocketSerializer(channel).data

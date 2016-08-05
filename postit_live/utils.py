@@ -1,8 +1,6 @@
 # coding=utf-8
 import logging
-from functools import wraps
 from io import BytesIO
-from io import StringIO
 
 from channels import Channel
 from channels.generic.websockets import JsonWebsocketConsumer, WebsocketConsumer
@@ -60,15 +58,41 @@ class SerializerWebsocketConsumer(JsonWebsocketConsumer):
     def group_send(cls, name, content, close=False):
         WebsocketConsumer.group_send(name, text=json_dumps(content), close=close)
 
+    @staticmethod
+    def wrap_consumer(function):
+        def wrapper(message, **kwargs):
+            return function(message.content, **kwargs)
 
-def dispatch(function):
-    @wraps(function)
-    def wrapper(groups, *args):
-        data = function(*args)
-        action = json_dumps(data)
+        return wrapper
+
+
+class ActionDispatcher(object):
+    def __init__(self):
+        self.registry = {}
+
+    def __call__(self, *, action_type, payload, groups, **kwargs):
+        function = self.registry.get(action_type, None)
+        if function is None:
+            logger.info('no handler for action type=%s', action_type)
+            return None
+
+        action_payload = function(payload, **kwargs)
+        self.dispatch(action_type, action_payload, groups=groups)
+        return action_payload
+
+    def action(self, action):
+        def outer_wrapper(function):
+            self.registry[action] = function
+
+            def inner_Wrapper(*args, **kwargs):
+                return function(*args, **kwargs)
+
+            return inner_Wrapper
+
+        return outer_wrapper
+
+    def dispatch(self, action_type, payload, *, groups):
+        action = json_dumps({'type': action_type, 'payload': payload})
         [group.send({'text': action}) for group in groups]
 
-        logger.debug('dispatch type=%s payload=%s', data['type'], json_dumps(data['payload']))
-        return data
-
-    return wrapper
+        logger.debug('dispatch type=%s payload=%s', action_type, payload)

@@ -10,7 +10,7 @@ from model_utils.models import TimeStampedModel, StatusModel
 
 
 class LiveChannel(TimeStampedModel, StatusModel):
-    STATUS = Choices('opened', 'closed')
+    STATUS = Choices('OPENED', 'CLOSED')
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     slug = models.SlugField(unique=True)
 
