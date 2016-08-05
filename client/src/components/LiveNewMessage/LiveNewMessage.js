@@ -19,7 +19,7 @@ class LiveNewMessage extends Component {
     return (
       <LayoutInnerRow className="LiveNewMessage">
         <form className="form" onSubmit={this.handleSubmit}>
-          <FormGroupTextarea {...body} id="new-message-body" rows="5" />
+          <FormGroupTextarea {...body} id="new-message-body" title="message body" rows="5" />
           <div className="clearfix">
             <button
               className="btn btn-outline-primary pull-xs-left"
@@ -28,18 +28,20 @@ class LiveNewMessage extends Component {
             >
               make update
             </button>
-            <small className="pull-xs-right"><a href="#">contenty policy</a> <a href="#">formatting help</a></small>
+            <small className="pull-xs-right">
+              <a href="#" role="button">contenty policy</a> <a href="#" role="button">formatting help</a>
+            </small>
           </div>
         </form>
       </LayoutInnerRow>
     );
   }
 }
+
+export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);
 LiveNewMessage.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   resetForm: PropTypes.func.isRequired,
   fields: PropTypes.shape({ body: PropTypes.object.isRequired }).isRequired,
   submitting: PropTypes.bool.isRequired,
 };
-
-export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);

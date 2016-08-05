@@ -27,7 +27,13 @@ export class LiveAppChannel extends Component {
     return (
       <div className="LiveAppChannel--sidebar">
         <LiveAside>
-          <label><input type="checkbox" />popup notifications</label>
+          <div className="form-check">
+            <label htmlFor="popup" id="popup-label" className="form-check-label">
+              <input type="checkbox" id="popup" className="form-check-input" aria-labelledby="popup-label" />
+
+              popup notifications
+            </label>
+          </div>
         </LiveAside>
 
         <LiveAside title="resources" render={!!channel.resources.length}>

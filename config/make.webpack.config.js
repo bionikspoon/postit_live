@@ -32,7 +32,7 @@ module.exports = ({ ENV, PATH }) => ({
     modulesDirectories: [PATH.src(), 'node_modules'],
   },
 
-  devtool: ENV === TEST ? 'inline-source-map' : undefined,
+  devtool: getDevtool({ ENV }),
   watch: ENV !== PRODUCTION,
   devServer: getDevServer(),
   externals: getExternals({ ENV }),
@@ -201,6 +201,18 @@ function getPlugins({ ENV }) {
       break;
   }
   return plugins;
+}
+function getDevtool({ ENV }) {
+  switch (ENV) {
+    case PRODUCTION:
+      return 'source-map';
+    case TEST:
+      return 'inline-source-map';
+    case LOCAL:
+      return 'cheap-module-eval-source-map';
+    default:
+      return undefined;
+  }
 }
 
 function getExternals({ ENV }) {

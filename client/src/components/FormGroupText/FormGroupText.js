@@ -23,6 +23,7 @@ export default class FormGroupText extends Component {
       'initialValue', 'autofill', 'valid', 'dirty', 'pristine', 'active', 'touched', 'visited', 'autofilled',
       'onUpdate', 'invalid', 'help',
     ]);
+    props['aria-label'] = props.label || props.title || props.name;
     return (
       <div className="form-group FormGroupText">
         {this.renderLabel()}

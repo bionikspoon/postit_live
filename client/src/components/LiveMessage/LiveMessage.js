@@ -3,6 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
 import Confirm from '../Confirm';
 import LayoutInnerRow from '../LayoutInnerRow';
+import User from '../User';
 import classnames from 'classnames';
 
 export default class LiveMessage extends Component {
@@ -27,7 +28,7 @@ export default class LiveMessage extends Component {
 
   render() {
     const { created, body_html, author, status } = this.props;
-    const moment = <Moment date={created} href="#" />;
+    const moment = <Moment date={created} />;
     const spanClass = classnames('body-text', status);
 
     return (
@@ -35,7 +36,7 @@ export default class LiveMessage extends Component {
         <div className="body">
           <span className={spanClass} dangerouslySetInnerHTML={{ __html: body_html }} />
 
-          <a href="#" className="author">/u/{author.username}</a>
+          <User {...author} />
         </div>
         <div className="buttonrow">
           {this.renderStrikeButton()} {this.renderDeleteButton()}

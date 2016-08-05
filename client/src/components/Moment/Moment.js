@@ -16,9 +16,7 @@ export default class Moment extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.date !== nextProps.date
-      || this.props.href !== nextProps.href
-      || this.state.fromNow !== nextState.fromNow;
+    return this.props.date !== nextProps.date || this.state.fromNow !== nextState.fromNow;
   }
 
   componentWillUnmount() {
@@ -27,17 +25,13 @@ export default class Moment extends Component {
 
   render() {
     const { title, iso, fromNow } = this.state;
-    const { href } = this.props;
     return (
-      <a href={href} className="Moment">
-        <time dateTime={iso} title={title}>{fromNow}</time>
-      </a>
+      <time dateTime={iso} title={title} className="Moment">{fromNow}</time>
     );
   }
 }
 Moment.propTypes = {
   date: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
 };
 
 function createDate(epoch) {
