@@ -9,7 +9,7 @@ import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
-import { getSortedMessages, permissionSelector } from '../../selectors';
+import { sortedMessagesSelector, permissionSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
@@ -104,7 +104,7 @@ LiveAppChannel.propTypes = {
 function mapStateToProps(state) {
   return {
     meta: state.live.meta,
-    messages: getSortedMessages(state),
+    messages: sortedMessagesSelector(state),
     channel: state.live.channel,
     user: { username: 'admin' },
 

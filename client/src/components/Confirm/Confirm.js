@@ -29,9 +29,9 @@ export default class ButtonConfirm extends Component {
     return (
       <span className="confirmation">
         <span>are you sure? </span>
-        <button onClick={this.handleClick} className={btnClass}>yes</button>
+        <button type="button" onClick={this.handleClick} className={btnClass}>yes</button>
         <span> / </span>
-        <button onClick={this.closeConfirmation} className={btnClass}>no</button>
+        <button type="button" onClick={this.closeConfirmation} className={btnClass}>no</button>
       </span>
     );
   }
@@ -39,7 +39,7 @@ export default class ButtonConfirm extends Component {
   renderButton() {
     const { value, btnClass } = this.props;
     return (
-      <button onClick={this.openConfirmation} className={btnClass}>{value}</button>
+      <button type="button" onClick={this.openConfirmation} className={btnClass}>{value}</button>
     );
   }
 

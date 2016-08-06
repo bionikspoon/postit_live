@@ -4,10 +4,10 @@ import classnames from 'classnames';
 const debug = require('debug')('app:components:User');  // eslint-disable-line no-unused-vars
 
 export default function User({ username, className, ...props }) {
-  const pClass = classnames('User', className);
+  const wrapClass = classnames('User', className);
 
   return (
-    <p className={pClass} {...props}>/u/{username}</p>
+    <span className={wrapClass} {...props}>/u/{username}</span>
   );
 }
 

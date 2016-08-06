@@ -5,7 +5,8 @@ import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
-
+import Confirm from '../../components/Confirm';
+import User from '../../components/User';
 export class LiveAppContributors extends Component {
   render() {
     return (
@@ -14,7 +15,7 @@ export class LiveAppContributors extends Component {
         <LayoutInnerRow>
           <h1>Contributors</h1>
           <div className="alert alert-warning">
-            you are a contributor to this live channel. | <a href="#">leave</a>
+            you are a contributor to this live channel. | <Confirm value="leave" btnClass="btn btn-link" />
           </div>
 
           <div>
@@ -22,8 +23,8 @@ export class LiveAppContributors extends Component {
             <table>
               <tbody>
                 <tr>
-                  <td>/u/user</td>
-                  <td><a href="#">remove</a></td>
+                  <td><User username="user" /></td>
+                  <td><Confirm value="remove" btnClass="btn btn-link" /></td>
                   <td>full permissions</td>
                   <td>(<a href="#">change</a>)</td>
                 </tr>
@@ -38,7 +39,9 @@ export class LiveAppContributors extends Component {
                 <tr>
                   <td><input type="text" /></td>
                   <td>full permissions(<a href="#">change</a>)</td>
-                  <td><button>invite</button></td>
+                  <td>
+                    <button>invite</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -51,7 +54,7 @@ export class LiveAppContributors extends Component {
               <tbody>
                 <tr>
                   <td>/u/admin</td>
-                  <td><a href="#">remove</a></td>
+                  <td><Confirm value="remove" btnClass="btn btn-link" /></td>
                   <td>full permissions</td>
                   <td>(<a href="#">change</a>)</td>
                 </tr>
