@@ -7,7 +7,7 @@ const debug = require('debug')('app:components:User');  // eslint-disable-line n
 
 export default function User({ username, className, ...props }) {
   const wrapClass = classnames('User', className);
-  const attrs = _.omit(props, ['isFetching', 'perms']);
+  const attrs = _.omit(props, ['isFetching', 'channel_permissions']);
 
   return (
     <span className={wrapClass} {...attrs}>/u/{username}</span>

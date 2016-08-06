@@ -16,15 +16,9 @@ logger = logging.getLogger(__name__)
 
 class LiveChannelManager(models.Manager):
     def create_channel(self, *, user):
-        channel = self.create()
-        group = Group.objects.create(name='full_channel.%s' % channel.slug)
-        perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
-                 'change_channel_settings', 'add_channel_messages']
-        [assign_perm(perm, group, channel) for perm in perms]
+        channel = self.create().add_perms(user, 'full')
 
-        user.groups.add(group)
-        channel.save()
-        logger.info('channel created channel=%s user=%s group=%s', channel, user, group)
+        logger.info('channel created channel=%s user=%s group=%s', channel, user)
         return channel
 
 
@@ -69,6 +63,14 @@ class LiveChannel(TimeStampedModel, StatusModel):
                 if cls.objects.filter(slug=slug).exists():
                     continue
             return slug
+
+    def add_perms(self, user, perms):
+        if 'full' in perms:
+            perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
+                     'change_channel_settings', 'add_channel_messages']
+            [assign_perm(perm, user, self) for perm in perms]
+            self.save()
+            return self
 
     def __str__(self):
         LiveChannelClass = self.__class__

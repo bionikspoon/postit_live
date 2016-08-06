@@ -9,14 +9,14 @@ from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from guardian.shortcuts import get_perms
+from django.views.decorators.http import require_http_methods
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
-from postit_live.live.models import LiveChannel
 from .forms import UserAuthenticationForm, UserRegistrationForm
-from .serializers import UserSerializer
+from .serializers import UserDetailsSerializer
+from ..live.models import LiveChannel
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -38,15 +38,12 @@ def logout(request):
     return redirect('home')
 
 
-@sensitive_post_parameters()
+@sensitive_post_parameters('password1', 'password2')
 @csrf_protect
 @never_cache
-def register(request):
-    redirect_to = request.POST.get(REDIRECT_FIELD_NAME, request.GET.get(REDIRECT_FIELD_NAME, ''))
-
-    if request.method != 'POST':
-        query = '?next=%s' % redirect_to if redirect_to else ''
-        return redirect(reverse('user:login') + query)
+@require_http_methods(['POST'])
+def create(request):
+    redirect_to = request.POST.get(REDIRECT_FIELD_NAME, '') or request.GET.get(REDIRECT_FIELD_NAME, '')
 
     form = UserRegistrationForm(request, data=request.POST)
     if not form.is_valid():
@@ -57,7 +54,7 @@ def register(request):
         redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
 
     user = form.save(login=True)
-    logger.info('user created and logged in user=%s', user)
+    logger.info('user created. user=%s', user)
     return redirect(redirect_to)
 
 
@@ -87,7 +84,7 @@ def password_reset_complete(request):
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserDetailsSerializer
 
     def get_serializer_context(self):
         context = super(UserViewSet, self).get_serializer_context()
@@ -95,7 +92,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.GET.get('channel_slug', None):
             slug = self.request.GET['channel_slug']
             channel = LiveChannel.objects.get(slug=slug)
-            context['perms'] = get_perms(self.request.user, channel)
+            context['channel'] = channel
         return context
 
     @list_route(methods=['get'])

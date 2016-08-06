@@ -99,6 +99,10 @@ LiveAppChannel.propTypes = {
     createMessage: PropTypes.func.isRequired,
   }).isRequired,
 
+  can: PropTypes.shape({
+    addMessage: PropTypes.bool.isRequired,
+    editMessage: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -106,7 +110,6 @@ function mapStateToProps(state) {
     meta: state.live.meta,
     messages: sortedMessagesSelector(state),
     channel: state.live.channel,
-    user: { username: 'admin' },
 
     can: permissionSelector(state),
   };

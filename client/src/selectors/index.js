@@ -11,23 +11,22 @@ function sortedMessages(messages) {
   return _.orderBy(messages, 'created', 'desc');
 }
 
-const statePerms = state => state.live.currentUser.perms;
-const stateUsername = state => state.live.currentUser.username;
+const stateCurrentUser = state => state.live.currentUser;
 
 export const permissionSelector = createSelector(
-  [statePerms, stateUsername],
-  (perms, username) => new Can(perms, username)
+  stateCurrentUser,
+  user => new Can(user)
 );
 
-function Can(perms = [], username = null) {
+function Can({ channel_permissions, username }) {
   const can = this;
-
-  can.closeChannel = perms.includes(perm.CLOSE_CHANNEL);
-  can.editContributors = perms.includes(perm.EDIT_CONTRIBUTORS);
-  can.editSettings = perms.includes(perm.EDIT_SETTINGS);
-  can.editMessage = perms.includes(perm.EDIT_MESSAGES);
-  can.addMessage = perms.includes(perm.ADD_MESSAGES);
+  can.closeChannel = channel_permissions.includes(perm.CLOSE_CHANNEL);
+  can.editContributors = channel_permissions.includes(perm.EDIT_CONTRIBUTORS);
+  can.editSettings = channel_permissions.includes(perm.EDIT_SETTINGS);
+  can.editMessage = channel_permissions.includes(perm.EDIT_MESSAGES);
+  can.addMessage = channel_permissions.includes(perm.ADD_MESSAGES);
   can.logout = username && username.length;
   can.login = !can.logout;
+  can.contribute = !!channel_permissions.length;
   return can;
 }

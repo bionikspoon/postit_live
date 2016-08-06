@@ -24,11 +24,14 @@ const initialState = {
     status: CHANNEL_OPENED,
   },
 
+  contributors: [],
+
   messages: {},
 
   currentUser: {
     isFetching: false,
-    username: null,
+    username: '',
+    channel_permissions: [],
   },
 };
 
@@ -121,12 +124,21 @@ function handleFetchChannelSuccess(state, payload) {
       synced: { $set: true },
     },
     channel: {
-      title: { $set: payload.title },
-      resources: { $set: payload.resources },
-      resources_html: { $set: payload.resources_html },
-      description: { $set: payload.description },
-      description_html: { $set: payload.description_html },
-      contributors_html: { $set: payload.contributors_html },
+      $merge: _.pick(payload, [
+        'title', 'resources', 'resources_html', 'description', 'description_html', 'contributors_html',
+      ]),
+    },
+    contributors: {
+      $set: _.uniqBy( // uniq by id <- concat <- map <- pick
+        state.contributors.concat(
+          payload.contributors.map(
+            contributor => _.pick(
+              contributor, ['id', 'username', 'channel_permissions']
+            )
+          )
+        ),
+        'id'
+      ),
     },
     messages: {
       $merge: messages,
@@ -147,7 +159,7 @@ function handleFetchCurrentUserSuccess(state, payload) {
     currentUser: {
       isFetching: { $set: false },
       username: { $set: payload.username },
-      perms: { $set: payload.channel_permissions },
+      channel_permissions: { $set: payload.channel_permissions },
     },
   });
 }
