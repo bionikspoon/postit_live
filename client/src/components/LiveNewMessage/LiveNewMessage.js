@@ -15,7 +15,8 @@ class LiveNewMessage extends Component {
   }
 
   render() {
-    const { submitting, fields: { body } } = this.props;
+    const { perm, submitting, fields: { body } } = this.props;
+    if (!perm) return null;
     return (
       <LayoutInnerRow className="LiveNewMessage">
         <form className="form" onSubmit={this.handleSubmit}>
@@ -40,6 +41,7 @@ class LiveNewMessage extends Component {
 
 export default reduxForm({ form: 'LiveNewMessage', fields: ['body'] })(LiveNewMessage);
 LiveNewMessage.propTypes = {
+  perm: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   resetForm: PropTypes.func.isRequired,
   fields: PropTypes.shape({ body: PropTypes.object.isRequired }).isRequired,

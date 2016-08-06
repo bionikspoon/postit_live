@@ -4,6 +4,7 @@ import LiveNav from '../../components/LiveNav';
 import * as liveActions from '../../actions/liveActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { permissionSelector } from '../../selectors';
 
 class LiveApp extends Component {
   componentDidMount() {
@@ -43,6 +44,7 @@ function mapStateToProps(state, props) {
     meta: state.live.meta,
     slug: props.params.slug,
     pathname: props.location.pathname,
+    can: permissionSelector(state),
   };
 }
 

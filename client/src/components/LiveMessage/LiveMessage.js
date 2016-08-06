@@ -26,8 +26,17 @@ export default class LiveMessage extends Component {
     return <Confirm onClick={this.deleteMessage} btnClass="btn btn-secondary btn-sm Confirm" value="delete" />;
   }
 
+  renderButtons({ perms }) {
+    if (!perms) return null;
+    return (
+      <div className="buttonrow">
+        {this.renderStrikeButton()} {this.renderDeleteButton()}
+      </div>
+    );
+  }
+
   render() {
-    const { created, body_html, author, status } = this.props;
+    const { created, body_html, author, status, perms } = this.props;
     const moment = <Moment date={created} />;
     const spanClass = classnames('body-text', status);
 
@@ -38,9 +47,7 @@ export default class LiveMessage extends Component {
 
           <User {...author} />
         </div>
-        <div className="buttonrow">
-          {this.renderStrikeButton()} {this.renderDeleteButton()}
-        </div>
+        {this.renderButtons({ perms })}
       </LayoutInnerRow>
     );
   }

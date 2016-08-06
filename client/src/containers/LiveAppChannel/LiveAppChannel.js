@@ -9,7 +9,7 @@ import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
-import { getSortedMessages } from '../../selectors';
+import { getSortedMessages, permissionSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
@@ -56,7 +56,7 @@ export class LiveAppChannel extends Component {
   }
 
   render() {
-    const { channel, messages, meta, actions } = this.props;
+    const { channel, messages, meta, actions, can } = this.props;
 
     return (
       <div className="LiveAppChannel">
@@ -66,9 +66,12 @@ export class LiveAppChannel extends Component {
 
           <LiveStatus channelStatus={channel.status} {...meta} />
 
-          <LiveNewMessage form="new-message" onSubmit={this.createMessage} />
+          <LiveNewMessage form="new-message" onSubmit={this.createMessage} perm={can.addMessage} />
 
-          {messages.map(message => (<LiveMessage key={message.id} actions={actions} {...message} />))}
+
+          {messages.map(message => (
+            <LiveMessage key={message.id} actions={actions} perms={can.editMessage} {...message} />
+          ))}
         </LayoutRow>
 
       </div>
@@ -95,6 +98,7 @@ LiveAppChannel.propTypes = {
   actions: PropTypes.shape({
     createMessage: PropTypes.func.isRequired,
   }).isRequired,
+
 };
 
 function mapStateToProps(state) {
@@ -103,6 +107,8 @@ function mapStateToProps(state) {
     messages: getSortedMessages(state),
     channel: state.live.channel,
     user: { username: 'admin' },
+
+    can: permissionSelector(state),
   };
 }
 
