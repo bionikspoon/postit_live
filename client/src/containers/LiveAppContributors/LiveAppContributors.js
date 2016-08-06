@@ -20,13 +20,12 @@ export class LiveAppContributors extends Component {
 
           <div>
             <h2>current contributors</h2>
-            <table>
+            <table className="table table-sm table-hover">
               <tbody>
                 <tr>
                   <td><User username="user" /></td>
                   <td><Confirm value="remove" btnClass="btn btn-link" /></td>
-                  <td>full permissions</td>
-                  <td>(<a href="#">change</a>)</td>
+                  <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
                 </tr>
               </tbody>
             </table>
@@ -34,33 +33,19 @@ export class LiveAppContributors extends Component {
 
           <div>
             <h2>invite contributor</h2>
-            <table>
+            <table className="table  table-sm">
               <tbody>
                 <tr>
                   <td><input type="text" /></td>
-                  <td>full permissions(<a href="#">change</a>)</td>
-                  <td>
-                    <button>invite</button>
+                  <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+                  <td className="text-xs-center">
+                    <Confirm value="invite" btnClass="btn btn-secondary" />
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-
-          <div>
-            <h2>invited contributors</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td>/u/admin</td>
-                  <td><Confirm value="remove" btnClass="btn btn-link" /></td>
-                  <td>full permissions</td>
-                  <td>(<a href="#">change</a>)</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
 
         </LayoutInnerRow>
 
