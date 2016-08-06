@@ -27,7 +27,7 @@ function Can(perms = [], username = null) {
   can.editSettings = perms.includes(perm.EDIT_SETTINGS);
   can.editMessage = perms.includes(perm.EDIT_MESSAGES);
   can.addMessage = perms.includes(perm.ADD_MESSAGES);
-  can.login = username === null;
-  can.logout = username !== null;
+  can.logout = username && username.length;
+  can.login = !can.logout;
   return can;
 }

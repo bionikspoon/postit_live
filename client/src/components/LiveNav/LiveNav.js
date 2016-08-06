@@ -45,7 +45,6 @@ export default class LiveNav extends Component {
     if (!show) return null;
 
     const { currentUser } = this.props;
-    debug('currentUser', currentUser);
 
     return (
       <span>
@@ -57,6 +56,17 @@ export default class LiveNav extends Component {
           <span className="nav-link">logged in as <User {...currentUser} /></span>
         </li>
       </span>
+    );
+  }
+
+  renderLogin({ show }) {
+    if (!show) return null;
+    const loginLink = `/login/?next=${this.base()}`;
+    return (
+      <li className="nav-item pull-xs-right">
+        <a href={loginLink} className="nav-link">login</a>
+      </li>
+
     );
   }
 
@@ -72,6 +82,8 @@ export default class LiveNav extends Component {
         {this.renderContributorsTab({ show: can.editContributors })}
 
         {this.renderLogout({ show: can.logout })}
+
+        {this.renderLogin({ show: can.login })}
       </ul>
     );
   }
