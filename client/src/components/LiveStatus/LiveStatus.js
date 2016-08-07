@@ -1,7 +1,7 @@
 import './LiveStatus.scss';
 import React, { PropTypes, Component } from 'react';
-import * as chanTypes from '../../constants/ChannelStatus';
-import * as connTypes from '../../constants/ConnectionStatus';
+import * as chanTypes from '../../constants/channelStatus';
+import * as connTypes from '../../constants/connectionStatus';
 import LayoutInnerRow from '../LayoutInnerRow';
 import classnames from 'classnames';
 import _ from 'lodash';

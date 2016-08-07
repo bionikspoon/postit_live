@@ -33,8 +33,8 @@ export default function configureStore(initialState) {
   const store = createStore(rootReducer, initialState, enhancer);
 
   if (module.hot) {
-    module.hot.accept('../reducers', () =>
-      store.replaceReducer(require('../reducers').default) // eslint-disable-line global-require
+    module.hot.accept('../modules', () =>
+      store.replaceReducer(require('../modules').default) // eslint-disable-line global-require
     );
   }
 

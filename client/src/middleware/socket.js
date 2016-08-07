@@ -1,7 +1,7 @@
 import { updateConnectionStatus } from '../modules/live';
 import * as socketActions from '../modules/socket';
 import Socket from '../utils/socket';
-import { CONNECTION_OPENED, CONNECTION_CLOSED, CONNECTION_RECONNECTING } from '../constants/ConnectionStatus';
+import { CONNECTION_OPENED, CONNECTION_CLOSED, CONNECTION_RECONNECTING } from '../constants/connectionStatus';
 import _ from 'lodash';
 const debug = require('debug')('app:middleware:socket');
 

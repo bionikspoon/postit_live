@@ -2,8 +2,8 @@ import { createAction, handleActions } from 'redux-actions';
 import { parseResponse, checkStatus, FETCH_OPTIONS } from '../../utils/fetch';
 import update from 'react-addons-update';
 import _ from 'lodash';
-import { CONNECTION_CLOSED } from '../../constants/ConnectionStatus';
-import { CHANNEL_OPENED } from '../../constants/ChannelStatus';
+import { CONNECTION_CLOSED } from '../../constants/connectionStatus';
+import { CHANNEL_OPENED } from '../../constants/channelStatus';
 const debug = require('debug')('app:modules:live:index');  // eslint-disable-line no-unused-vars
 
 const CREATE_MESSAGE = 'app/live/message/CREATE_MESSAGE';
