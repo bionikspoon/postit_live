@@ -70,6 +70,13 @@ export default function reducer(state = initialState, action = {}) {
     case types.FETCH_CURRENT_USER_FAILURE:
       return handleFetchCurrentUserFailure(state, action.payload);
 
+    case types.ADD_CONTRIBUTOR:
+      return handleAddContributor(state, action.payload);
+    case types.UPDATE_CONTRIBUTOR:
+      return handleUpdateContributor(state, action.payload);
+    case types.DELETE_CONTRIBUTOR:
+      return handleDeleteContributor(state, action.payload);
+
     default:
       return state;
   }
@@ -129,16 +136,7 @@ function handleFetchChannelSuccess(state, payload) {
       ]),
     },
     contributors: {
-      $set: _.uniqBy( // uniq by id <- concat <- map <- pick
-        state.contributors.concat(
-          payload.contributors.map(
-            contributor => _.pick(
-              contributor, ['id', 'username', 'channel_permissions']
-            )
-          )
-        ),
-        'id'
-      ),
+      $apply: setContributors(payload.contributors),
     },
     messages: {
       $merge: messages,
@@ -166,4 +164,27 @@ function handleFetchCurrentUserSuccess(state, payload) {
 
 function handleFetchCurrentUserFailure(state, payload) {
   return update(state, { currentUser: { isFetching: { $set: false } } });
+}
+
+function handleAddContributor(state, payload) {
+  return update(state, {
+    contributors: {
+      $apply: setContributors([payload.contributor]),
+    },
+  });
+}
+
+function handleUpdateContributor(state, payload) {
+  return state;
+}
+
+function handleDeleteContributor(state, payload) {
+  return state;
+}
+
+function setContributors(payloadContributors = []) {
+  return stateContributors => {
+    const newContributors = payloadContributors.map(_.partialRight(_.pick, ['id', 'username', 'channel_permissions']));
+    return _.uniqBy(stateContributors.concat(newContributors), 'id');
+  };
 }

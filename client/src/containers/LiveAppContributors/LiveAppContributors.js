@@ -8,8 +8,17 @@ import LayoutInnerRow from '../../components/LayoutInnerRow';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
 import { permissionSelector } from '../../selectors';
-
+import { reduxForm } from 'redux-form';
+import autobind from 'autobind-decorator';
+const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 export class LiveAppContributors extends Component {
+  @autobind
+  handleAddContributor(data) {
+    debug('data', data);
+    const { actions } = this.props;
+    actions.addContributor(data);
+  }
+
   renderContributorMessage({ show }) {
     if (!show) return null;
 
@@ -51,20 +60,8 @@ export class LiveAppContributors extends Component {
 
           <div>
             <h2>add contributor</h2>
-            <table className="table  table-sm">
-              <tbody>
-                <tr>
-                  <td><input type="text" /></td>
-                  <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
-                  <td className="text-xs-center">
-                    <Confirm value="add" btnClass="btn btn-secondary" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <AddContributorForm onSubmit={this.handleAddContributor} form="add-contributor" />
           </div>
-
-
         </LayoutInnerRow>
 
       </LayoutRow>
@@ -78,6 +75,37 @@ LiveAppContributors.propTypes = {
     contribute: PropTypes.bool.isRequired,
   }).isRequired,
 };
+
+class AddContributorForm extends Component {
+  @autobind
+  handleSubmit(...args) {
+    const { resetForm, handleSubmit } = this.props;
+    resetForm();
+    return handleSubmit(...args);
+  }
+
+  render() {
+    const { fields:{ username } } = this.props;
+    return (
+      <form className="AddContributorForm" onSubmit={this.handleSubmit}>
+        <table className="table  table-sm">
+          <tbody>
+            <tr>
+              <td><input type="text" {...username} /></td>
+              <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+
+              <td className="text-xs-center">
+
+                <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    );
+  }
+}
+AddContributorForm = reduxForm({ form: 'AddContributorForm', fields: ['username'] })(AddContributorForm);
 
 function mapStateToProps(state) {
   return {

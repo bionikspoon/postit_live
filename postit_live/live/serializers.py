@@ -39,7 +39,6 @@ class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
         context = self.context.copy()
         context['channel'] = channel
         users = UserListSerializer(channel.contributors, many=True, context=context)
-        logger.debug('users.data=%s', users.data)
         return users.data
 
     class Meta:

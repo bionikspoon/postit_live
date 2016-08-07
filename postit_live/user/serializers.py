@@ -40,6 +40,15 @@ class UserListSerializer(UserBaseSerializer):
 
 
 class UserSocketSerializer(serializers.ModelSerializer):
+    channel_permissions = serializers.SerializerMethodField()
+
+    def get_channel_permissions(self, user):
+        channel = self.context.get('channel', None)
+        if channel is None:
+            return
+
+        return get_perms(user, channel)
+
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'channel_permissions',)
