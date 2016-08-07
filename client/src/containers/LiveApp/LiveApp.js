@@ -2,9 +2,10 @@ import './LiveApp.scss';
 import React, { PropTypes, Component } from 'react';
 import LiveNav from '../../components/LiveNav';
 import * as liveActions from '../../modules/live';
+import * as socketActions from '../../modules/socket';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { permissionSelector } from '../../selectors';
+import { currentUserSelector } from '../../selectors';
 
 class LiveApp extends Component {
   componentDidMount() {
@@ -12,8 +13,8 @@ class LiveApp extends Component {
 
     const { slug, actions } = this.props;
     const { location } = window;
-    actions.fetchChannel({ slug, location });
-    actions.fetchCurrentUser({ slug, location });
+    actions.live.fetchChannel({ slug, location });
+    actions.live.fetchCurrentUser({ slug, location });
   }
 
   render() {
@@ -34,8 +35,10 @@ LiveApp.propTypes = {
   children: PropTypes.element.isRequired,
   slug: PropTypes.string.isRequired,
   actions: PropTypes.shape({
-    fetchChannel: PropTypes.func.isRequired,
-    fetchCurrentUser: PropTypes.func.isRequired,
+    live: PropTypes.shape({
+      fetchChannel: PropTypes.func.isRequired,
+      fetchCurrentUser: PropTypes.func.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -44,15 +47,16 @@ function mapStateToProps(state, props) {
     meta: state.live.meta,
     slug: props.params.slug,
     pathname: props.location.pathname,
-    can: permissionSelector(state),
-    currentUser: state.live.currentUser,
+    currentUser: currentUserSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions };
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: {
+      live: bindActionCreators(liveActions, dispatch),
+      socket: bindActionCreators(socketActions, dispatch),
+    },
   };
 }
 

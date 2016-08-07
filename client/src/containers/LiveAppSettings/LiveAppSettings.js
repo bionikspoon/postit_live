@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
-import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../modules/live';
+import * as socketActions from '../../modules/socket';
 import { reduxForm } from 'redux-form';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
@@ -59,10 +59,10 @@ LiveAppSettings.propTypes = {
     resources: PropTypes.object.isRequired,
   }).isRequired,
   values: PropTypes.object.isRequired,
-  actions: PropTypes.shape({
-    updateChannel: PropTypes.func.isRequired,
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  // actions: PropTypes.shape({
+  //   updateChannel: PropTypes.func.isRequired,
+  //   push: PropTypes.func.isRequired,
+  // }).isRequired,
   slug: PropTypes.string.isRequired,
 };
 
@@ -74,9 +74,11 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions, ...socketActions, push };
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: {
+      live: bindActionCreators(liveActions, dispatch),
+      socket: bindActionCreators(socketActions, dispatch),
+    },
   };
 }
 const formConfig = { form: 'LiveAppSettings', fields: ['title', 'description', 'resources'] };

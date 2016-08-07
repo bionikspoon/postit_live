@@ -14,12 +14,12 @@ const ALERT_CLASS = {
 
 export default class LiveStatus extends Component {
   renderOpened() {
-    const { subscribers, connectionStatus } = this.props;
-    const alertClass = classnames('alert', ALERT_CLASS[connectionStatus]);
+    const { channel, meta } = this.props;
+    const alertClass = classnames('alert', ALERT_CLASS[meta.connectionStatus]);
 
     return (
       <LayoutInnerRow className="LiveStatus">
-        <div className={alertClass}>live ~{subscribers} viewers</div>
+        <div className={alertClass}>live ~{channel.subscribers} viewers</div>
       </LayoutInnerRow>
     );
   }
@@ -35,15 +35,19 @@ export default class LiveStatus extends Component {
   }
 
   render() {
-    const { channelStatus } = this.props;
-    return channelStatus === chanTypes.CHANNEL_OPENED
+    const { channel } = this.props;
+    return channel.status === chanTypes.CHANNEL_OPENED
       ? this.renderOpened()
       : this.renderClosed();
   }
 }
 
 LiveStatus.propTypes = {
-  channelStatus: PropTypes.oneOf(_.values(chanTypes)).isRequired,
-  connectionStatus: PropTypes.oneOf(_.values(connTypes)).isRequired,
-  subscribers: PropTypes.number.isRequired,
+  channel: PropTypes.shape({
+    subscribers: PropTypes.number.isRequired,
+    status: PropTypes.oneOf(_.values(chanTypes)).isRequired,
+  }).isRequired,
+  meta: PropTypes.shape({
+    connectionStatus: PropTypes.oneOf(_.values(connTypes)).isRequired,
+  }).isRequired,
 };

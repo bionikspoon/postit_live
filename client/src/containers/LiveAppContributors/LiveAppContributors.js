@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../modules/live';
+import * as socketActions from '../../modules/socket';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
-import { permissionSelector } from '../../selectors';
+import { currentUserSelector, contributorsSelector } from '../../selectors';
 import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
@@ -40,14 +40,14 @@ export class LiveAppContributors extends Component {
   }
 
   render() {
-    const { can, contributors } = this.props;
+    const { currentUser, contributors } = this.props;
     return (
       <LayoutRow className="LiveAppContributors">
 
         <LayoutInnerRow>
           <h1>Contributors</h1>
 
-          {this.renderContributorMessage({ show: can.contribute })}
+          {this.renderContributorMessage({ show: currentUser.can.contribute })}
 
           <div>
             <h2>current contributors</h2>
@@ -71,8 +71,11 @@ export class LiveAppContributors extends Component {
 
 LiveAppContributors.propTypes = {
   contributors: PropTypes.array.isRequired,
-  can: PropTypes.shape({
-    contribute: PropTypes.bool.isRequired,
+
+  currentUser: PropTypes.shape({
+    can: PropTypes.shape({
+      contribute: PropTypes.bool.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -109,15 +112,17 @@ AddContributorForm = reduxForm({ form: 'AddContributorForm', fields: ['username'
 
 function mapStateToProps(state) {
   return {
-    contributors: state.live.contributors,
-    can: permissionSelector(state),
+    contributors: contributorsSelector(state),
+    currentUser: currentUserSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions, ...socketActions };
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: {
+      live: bindActionCreators(liveActions, dispatch),
+      socket: bindActionCreators(socketActions, dispatch),
+    },
   };
 }
 

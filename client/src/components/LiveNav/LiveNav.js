@@ -71,31 +71,35 @@ export default class LiveNav extends Component {
   }
 
   render() {
-    const { can } = this.props;
+    const { currentUser } = this.props;
 
     return (
       <ul className="nav nav-tabs LiveNav">
         {this.renderChannelTab()}
 
-        {this.renderSettingsTab({ show: can.editSettings })}
+        {this.renderSettingsTab({ show: currentUser.can.editSettings })}
 
-        {this.renderContributorsTab({ show: can.editContributors })}
+        {this.renderContributorsTab({ show: currentUser.can.editContributors })}
 
-        {this.renderLogout({ show: can.logout })}
+        {this.renderLogout({ show: currentUser.can.logout })}
 
-        {this.renderLogin({ show: can.login })}
+        {this.renderLogin({ show: currentUser.can.login })}
       </ul>
     );
   }
 }
 
 LiveNav.propTypes = {
-  can: PropTypes.shape({
-    editSettings: PropTypes.bool.isRequired,
-    editContributors: PropTypes.bool.isRequired,
-  }).isRequired,
+
   slug: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUser: PropTypes.shape({
+    can: PropTypes.shape({
+      editSettings: PropTypes.bool.isRequired,
+      editContributors: PropTypes.bool.isRequired,
+      logout: PropTypes.bool.isRequired,
+      login: PropTypes.bool.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 

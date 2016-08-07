@@ -9,15 +9,15 @@ from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerialize
 
 logger = logging.getLogger(__name__)
 
-CREATE_MESSAGE = 'live.CREATE_MESSAGE'
-STRIKE_MESSAGE = 'live.STRIKE_MESSAGE'
-DELETE_MESSAGE = 'live.DELETE_MESSAGE'
-UPDATE_CHANNEL = 'live.UPDATE_CHANNEL'
-CLOSE_CHANNEL = 'live.CLOSE_CHANNEL'
-ADD_CONTRIBUTOR = 'live.ADD_CONTRIBUTOR'
-DELETE_CONTRIBUTOR = 'live.DELETE_CONTRIBUTOR'
-UPDATE_CONTRIBUTOR = 'live.UPDATE_CONTRIBUTOR'
-ACCESS_DENIED = 'live.ACCESS_DENIED'
+CREATE_MESSAGE = 'app/live/message/CREATE_MESSAGE'
+STRIKE_MESSAGE = 'app/live/message/STRIKE_MESSAGE'
+DELETE_MESSAGE = 'app/live/message/DELETE_MESSAGE'
+UPDATE_CHANNEL = 'app/live/channel/UPDATE_CHANNEL'
+CLOSE_CHANNEL = 'app/live/channel/CLOSE_CHANNEL'
+ADD_CONTRIBUTOR = 'app/live/contributor/ADD_CONTRIBUTOR'
+DELETE_CONTRIBUTOR = 'app/live/contributor/DELETE_CONTRIBUTOR'
+UPDATE_CONTRIBUTOR = 'app/live/contributor/UPDATE_CONTRIBUTOR'
+ACCESS_DENIED = 'app/error/ACCESS_DENIED'
 
 User = get_user_model()
 handle = ActionDispatcher(access_denied=ACCESS_DENIED)

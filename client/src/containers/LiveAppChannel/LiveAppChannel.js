@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../modules/live';
+import * as socketActions from '../../modules/socket';
 import LiveTitle from '../../components/LiveTitle';
 import LiveStatus from '../../components/LiveStatus';
 import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
-import { sortedMessagesSelector, permissionSelector } from '../../selectors';
+import { sortedMessagesSelector, currentUserSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
@@ -18,7 +18,7 @@ export class LiveAppChannel extends Component {
   createMessage({ body }) {
     const { actions } = this.props;
 
-    actions.createMessage({ body });
+    actions.socket.createMessage({ body });
   }
 
   renderSidebar() {
@@ -56,7 +56,7 @@ export class LiveAppChannel extends Component {
   }
 
   render() {
-    const { channel, messages, meta, actions, can } = this.props;
+    const { channel, messages, meta, actions, currentUser } = this.props;
 
     return (
       <div className="LiveAppChannel">
@@ -64,13 +64,13 @@ export class LiveAppChannel extends Component {
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
-          <LiveStatus channelStatus={channel.status} {...meta} />
+          <LiveStatus channel={channel} meta={meta} />
 
-          <LiveNewMessage form="new-message" onSubmit={this.createMessage} perm={can.addMessage} />
+          <LiveNewMessage form="new-message" onSubmit={this.createMessage} perm={currentUser.can.addMessage} />
 
 
           {messages.map(message => (
-            <LiveMessage key={message.id} actions={actions} perms={can.editMessage} {...message} />
+            <LiveMessage key={message.id} actions={actions.socket} perms={currentUser.can.editMessage} {...message} />
           ))}
         </LayoutRow>
 
@@ -96,13 +96,19 @@ LiveAppChannel.propTypes = {
   }).isRequired,
 
   actions: PropTypes.shape({
-    createMessage: PropTypes.func.isRequired,
+    socket: PropTypes.shape({
+      createMessage: PropTypes.func.isRequired,
+    }).isRequired,
+    live: PropTypes.object.isRequired,
   }).isRequired,
 
-  can: PropTypes.shape({
-    addMessage: PropTypes.bool.isRequired,
-    editMessage: PropTypes.bool.isRequired,
+  currentUser: PropTypes.shape({
+    can: PropTypes.shape({
+      addMessage: PropTypes.bool.isRequired,
+      editMessage: PropTypes.bool.isRequired,
+    }).isRequired,
   }).isRequired,
+
 };
 
 function mapStateToProps(state) {
@@ -111,14 +117,16 @@ function mapStateToProps(state) {
     messages: sortedMessagesSelector(state),
     channel: state.live.channel,
 
-    can: permissionSelector(state),
+    currentUser: currentUserSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions, ...socketActions };
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: {
+      live: bindActionCreators(liveActions, dispatch),
+      socket: bindActionCreators(socketActions, dispatch),
+    },
   };
 }
 

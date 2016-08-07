@@ -83,7 +83,7 @@ export default handleActions({
         ]),
       },
       contributors: {
-        $apply: setContributors(payload.contributors),
+        $merge: payload.contributors || {},
       },
       messages: {
         $merge: messages,

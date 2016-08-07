@@ -1,7 +1,8 @@
-import * as types from '../constants/SocketActionTypes';
-import * as actions from '../actions/liveActions';
+import { updateConnectionStatus } from '../modules/live';
+import * as socketActions from '../modules/socket';
 import Socket from '../utils/socket';
 import { CONNECTION_OPENED, CONNECTION_CLOSED, CONNECTION_RECONNECTING } from '../constants/ConnectionStatus';
+import _ from 'lodash';
 const debug = require('debug')('app:middleware:socket');
 
 class LiveSocket extends Socket {
@@ -16,7 +17,7 @@ class LiveSocket extends Socket {
 
   onopen(event) {
     super.onopen(event);
-    const action = actions.updateConnectionStatus({ connectionStatus: CONNECTION_OPENED });
+    const action = updateConnectionStatus({ connectionStatus: CONNECTION_OPENED });
     this.dispatch(action);
 
     debug('dispatched type=%s payload=', action.type, action.payload);
@@ -26,7 +27,7 @@ class LiveSocket extends Socket {
     super.onclose(event);
 
     const connectionStatus = event.wasClean ? CONNECTION_CLOSED : CONNECTION_RECONNECTING;
-    const action = actions.updateConnectionStatus({ connectionStatus });
+    const action = updateConnectionStatus({ connectionStatus });
     const state = this.store.getState();
 
     if (connectionStatus !== state.live.meta.connectionStatus) {
@@ -37,9 +38,13 @@ class LiveSocket extends Socket {
 }
 
 export default function connect(store) {
-  const { protocol, host, pathname } = window.location;
-  const socket = new LiveSocket(store, { protocol, host, pathname: `${pathname.split('/').slice(0, 3).join('/')}/` });
-  const middlewareActions = Object.keys(types).map(type => types[type]);
+  const { protocol, host } = window.location;
+  const pathname = `${window.location.pathname.split('/').slice(0, 3).join('/')}/`;
+  const socket = new LiveSocket(store, { protocol, host, pathname });
+  const middlewareActions =
+    _.values(socketActions)
+      .map(action => action.toString())
+      .filter(action => !action.startsWith('function'));
 
   socket.open();
   return next => action => {
