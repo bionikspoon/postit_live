@@ -36,7 +36,7 @@ export class LiveAppChannel extends Component {
           </div>
         </LiveAside>
 
-        <LiveAside title="resources" render={!!channel.resources.length}>
+        <LiveAside title="resources" show={!!channel.resources.length}>
           <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />
         </LiveAside>
 
@@ -60,17 +60,17 @@ export class LiveAppChannel extends Component {
 
     return (
       <div className="LiveAppChannel">
-        <LayoutRow ><LiveTitle {...channel} /></LayoutRow>
+        <LayoutRow ><LiveTitle channel={channel} /></LayoutRow>
 
         <LayoutRow sidebar={this.renderSidebar()}>
 
           <LiveStatus channel={channel} meta={meta} />
 
-          <LiveNewMessage form="new-message" onSubmit={this.createMessage} perm={currentUser.can.addMessage} />
+          <LiveNewMessage form="new-message" onSubmit={this.createMessage} show={currentUser.can.addMessage} />
 
 
           {messages.map(message => (
-            <LiveMessage key={message.id} actions={actions.socket} perms={currentUser.can.editMessage} {...message} />
+            <LiveMessage key={message.id} actions={actions.socket} editable={currentUser.can.editMessage} message={message} />
           ))}
         </LayoutRow>
 

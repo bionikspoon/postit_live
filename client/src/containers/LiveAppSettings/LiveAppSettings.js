@@ -17,7 +17,7 @@ export class LiveAppSettings extends Component {
   @autobind
   handleSubmit(data) {
     const { slug, actions } = this.props;
-    actions.updateChannel(data);
+    actions.socket.updateChannel(data);
     actions.push(`/live/${slug}/`);
   }
 
@@ -59,10 +59,13 @@ LiveAppSettings.propTypes = {
     resources: PropTypes.object.isRequired,
   }).isRequired,
   values: PropTypes.object.isRequired,
-  // actions: PropTypes.shape({
-  //   updateChannel: PropTypes.func.isRequired,
-  //   push: PropTypes.func.isRequired,
-  // }).isRequired,
+
+  actions: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+    socket: PropTypes.shape({
+      updateChannel: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
   slug: PropTypes.string.isRequired,
 };
 
@@ -78,6 +81,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       live: bindActionCreators(liveActions, dispatch),
       socket: bindActionCreators(socketActions, dispatch),
+      push: bindActionCreators(push, dispatch),
     },
   };
 }

@@ -53,7 +53,7 @@ export default class LiveNav extends Component {
         </li>
 
         <li className="nav-item pull-xs-right">
-          <span className="nav-link">logged in as <User {...currentUser} /></span>
+          <span className="nav-link">logged in as <User user={currentUser} /></span>
         </li>
       </span>
     );

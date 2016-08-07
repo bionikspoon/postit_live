@@ -1,10 +1,8 @@
 import './LiveAside.scss';
-import React, { PropTypes, Component } from 'react';
-import _ from 'lodash';
+import React, { PropTypes } from 'react';
 
-export default function LiveAside({ title, children, render }) {
-  render = _.isUndefined(render) ? true : render; // eslint-disable-line no-param-reassign
-  return render
+export default function LiveAside({ title, children, show }) {
+  return show
     ? (
     <div className="row LiveAside">
       <aside className="col-xs">
@@ -17,7 +15,8 @@ export default function LiveAside({ title, children, render }) {
     : null;
 }
 LiveAside.propTypes = {
-  render: PropTypes.bool,
+  show: PropTypes.bool,
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
 };
+LiveAside.defaultProps = { show: true };
