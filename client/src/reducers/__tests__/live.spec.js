@@ -2,7 +2,7 @@ import expect, { createSpy, spyOn, isSpy } from 'expect';
 import liveReducer from '../live';
 import * as types from '../../constants/LiveActionTypes';
 
-describe('live reducer', () => {
+xdescribe('live reducer', () => {
   let initialState;
   beforeEach(() => {initialState = getInitialState()});
 

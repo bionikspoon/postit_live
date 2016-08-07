@@ -1,21 +1,20 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistState } from 'redux-devtools';
-import thunkMiddleware from 'redux-thunk';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
-import rootReducer from '../reducers';
+import rootReducer from '../modules';
 import DevTools from '../containers/DevTools';
-import socketMiddleware from '../middleware/socket';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import createLogger from 'redux-logger';
-
+import promiseMiddleware from 'redux-promise';
 export default function configureStore(initialState) {
   const middleware = applyMiddleware(
-    thunkMiddleware,
+    promiseMiddleware,
+    // thunkMiddleware,
     reduxImmutableStateInvariant(),
     routerMiddleware(browserHistory),
-    socketMiddleware,
-    createLogger({ duration: true, collapsed: true, diff: true, predicate: ignore('redux-form') })
+    // socketMiddleware,
+    createLogger({ duration: true, collapsed: true, diff: true })
   );
 
   const getDebugSessionKey = () => {

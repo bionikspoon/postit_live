@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import * as socketActions from '../../actions/socketActions';
-import * as liveActions from '../../actions/liveActions';
+import * as liveActions from '../../modules/live';
 import { reduxForm } from 'redux-form';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';

@@ -1,19 +1,19 @@
 import './LiveApp.scss';
 import React, { PropTypes, Component } from 'react';
 import LiveNav from '../../components/LiveNav';
-import * as liveActions from '../../actions/liveActions';
+import * as liveActions from '../../modules/live';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { permissionSelector } from '../../selectors';
 
 class LiveApp extends Component {
   componentDidMount() {
-    const { slug, meta, actions } = this.props;
+    if (this.props.meta.synced && window) return;
+
+    const { slug, actions } = this.props;
     const { location } = window;
-    if (!meta.synced) {
-      actions.fetchChannel({ slug, location });
-      actions.fetchCurrentUser({ slug, location });
-    }
+    actions.fetchChannel({ slug, location });
+    actions.fetchCurrentUser({ slug, location });
   }
 
   render() {
