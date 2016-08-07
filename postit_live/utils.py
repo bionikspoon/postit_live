@@ -110,5 +110,7 @@ class ActionDispatcher(object):
     def dispatch(self, action_type, payload=None, *, groups):
         action = json_dumps({'type': action_type, 'payload': payload})
         [group.send({'text': action}) for group in groups]
+        # GROUP LENGTH
+        # len(groups[0].channel_layer.channel_layer.group_channels(groups[0].name))
 
         logger.debug('dispatch type=%s payload=%s', action_type, payload)

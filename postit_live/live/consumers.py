@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth import get_user_model
 
+from postit_live.user.serializers import UserSocketSerializer
 from postit_live.utils import ConsumerMixin, SerializerWebsocketConsumer, ActionDispatcher
 from .models import LiveChannel
 from .serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
@@ -95,7 +96,15 @@ def close_chanel(payload, *, channel, **_):
 
 @handle.action(ADD_CONTRIBUTOR, perm='change_channel_contributors')
 def add_contributor(payload, *, channel, **_):
-    pass
+    try:
+        user = User.objects.get(username=payload['username'])
+    except User.DoesNotExist:
+        logger.error('user does not exit username=%s', payload['username'])
+        return {}
+    channel.add_perms(user, 'full')
+    contributor = UserSocketSerializer(user, context={'channel': channel})
+    logger.debug('added perms contributor=%s', contributor)
+    return {'contributor': contributor.data}
 
 
 @handle.action(DELETE_CONTRIBUTOR, perm='change_channel_contributors')

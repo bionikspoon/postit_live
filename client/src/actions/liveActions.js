@@ -60,3 +60,14 @@ export function fetchCurrentUser(payload) {
       });
   };
 }
+export function addContributor(payload) {
+  return { type: types.ADD_CONTRIBUTOR, payload };
+}
+
+export function updateContributor(payload) {
+  return { type: types.UPDATE_CONTRIBUTOR, payload };
+}
+
+export function deleteContributor(payload) {
+  return { type: types.DELETE_CONTRIBUTOR, payload };
+}

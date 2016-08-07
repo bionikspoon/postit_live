@@ -5,60 +5,63 @@ import * as socketActions from '../../actions/socketActions';
 import * as liveActions from '../../actions/liveActions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
-
+import Confirm from '../../components/Confirm';
+import User from '../../components/User';
+import { permissionSelector } from '../../selectors';
+import { reduxForm } from 'redux-form';
+import autobind from 'autobind-decorator';
+const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 export class LiveAppContributors extends Component {
+  @autobind
+  handleAddContributor(data) {
+    debug('data', data);
+    const { actions } = this.props;
+    actions.addContributor(data);
+  }
+
+  renderContributorMessage({ show }) {
+    if (!show) return null;
+
+    return (
+      <div className="alert alert-warning">
+        you are a contributor to this live channel. | <Confirm value="leave" btnClass="btn btn-link" />
+      </div>
+    );
+  }
+
+  renderContributorRow({ contributor }) {
+    return (
+      <tr key={contributor.id}>
+        <td><User {...contributor} /></td>
+        <td><Confirm value="remove" btnClass="btn btn-link" /></td>
+        <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+      </tr>
+    );
+  }
+
   render() {
+    const { can, contributors } = this.props;
     return (
       <LayoutRow className="LiveAppContributors">
 
         <LayoutInnerRow>
           <h1>Contributors</h1>
-          <div className="alert alert-warning">
-            you are a contributor to this live channel. | <a href="#">leave</a>
-          </div>
+
+          {this.renderContributorMessage({ show: can.contribute })}
 
           <div>
             <h2>current contributors</h2>
-            <table>
+            <table className="table table-sm table-hover">
               <tbody>
-                <tr>
-                  <td>/u/user</td>
-                  <td><a href="#">remove</a></td>
-                  <td>full permissions</td>
-                  <td>(<a href="#">change</a>)</td>
-                </tr>
+                {contributors.map(contributor => this.renderContributorRow({ contributor }))}
               </tbody>
             </table>
           </div>
 
           <div>
-            <h2>invite contributor</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td><input type="text" /></td>
-                  <td>full permissions(<a href="#">change</a>)</td>
-                  <td><button>invite</button></td>
-                </tr>
-              </tbody>
-            </table>
+            <h2>add contributor</h2>
+            <AddContributorForm onSubmit={this.handleAddContributor} form="add-contributor" />
           </div>
-
-
-          <div>
-            <h2>invited contributors</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td>/u/admin</td>
-                  <td><a href="#">remove</a></td>
-                  <td>full permissions</td>
-                  <td>(<a href="#">change</a>)</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
         </LayoutInnerRow>
 
       </LayoutRow>
@@ -66,10 +69,49 @@ export class LiveAppContributors extends Component {
   }
 }
 
-LiveAppContributors.propTypes = {};
+LiveAppContributors.propTypes = {
+  contributors: PropTypes.array.isRequired,
+  can: PropTypes.shape({
+    contribute: PropTypes.bool.isRequired,
+  }).isRequired,
+};
 
-function mapStateToProps(state, props) {
-  return {};
+class AddContributorForm extends Component {
+  @autobind
+  handleSubmit(...args) {
+    const { resetForm, handleSubmit } = this.props;
+    resetForm();
+    return handleSubmit(...args);
+  }
+
+  render() {
+    const { fields:{ username } } = this.props;
+    return (
+      <form className="AddContributorForm" onSubmit={this.handleSubmit}>
+        <table className="table  table-sm">
+          <tbody>
+            <tr>
+              <td><input type="text" {...username} /></td>
+              <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+
+              <td className="text-xs-center">
+
+                <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    );
+  }
+}
+AddContributorForm = reduxForm({ form: 'AddContributorForm', fields: ['username'] })(AddContributorForm);
+
+function mapStateToProps(state) {
+  return {
+    contributors: state.live.contributors,
+    can: permissionSelector(state),
+  };
 }
 
 function mapDispatchToProps(dispatch) {

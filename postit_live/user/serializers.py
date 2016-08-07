@@ -2,20 +2,30 @@
 import logging
 
 from django.contrib.auth import get_user_model
+from guardian.shortcuts import get_perms
 from rest_framework import serializers
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserBaseSerializer(serializers.HyperlinkedModelSerializer):
     channel_permissions = serializers.SerializerMethodField()
 
-    def get_channel_permissions(self, *args):
-        return self.context.get('perms', [])
+    def get_channel_permissions(self, user):
+        channel = self.context.get('channel', None)
+        if channel is None:
+            return
+
+        return get_perms(user, channel)
 
     class Meta:
+        abstract = True
         model = User
+
+
+class UserDetailsSerializer(UserBaseSerializer):
+    class Meta(UserBaseSerializer.Meta):
         extra_kwargs = {'url': {'view_name': 'api:user-detail'}}
         fields = (
             'url', 'id', 'last_login', 'is_superuser', 'username', 'first_name', 'last_name', 'email', 'is_staff',
@@ -23,7 +33,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
+class UserListSerializer(UserBaseSerializer):
+    class Meta(UserBaseSerializer.Meta):
+        extra_kwargs = {'url': {'view_name': 'api:user-detail'}}
+        fields = ('url', 'id', 'username', 'channel_permissions',)
+
+
 class UserSocketSerializer(serializers.ModelSerializer):
+    channel_permissions = serializers.SerializerMethodField()
+
+    def get_channel_permissions(self, user):
+        channel = self.context.get('channel', None)
+        if channel is None:
+            return
+
+        return get_perms(user, channel)
+
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'channel_permissions',)

@@ -45,6 +45,7 @@ function mapStateToProps(state, props) {
     slug: props.params.slug,
     pathname: props.location.pathname,
     can: permissionSelector(state),
+    currentUser: state.live.currentUser,
   };
 }
 

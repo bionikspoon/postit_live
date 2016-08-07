@@ -1,8 +1,12 @@
 # coding=utf-8
+import logging
+
 from rest_framework import serializers
 
-from postit_live.user.serializers import UserSocketSerializer
+from postit_live.user.serializers import UserSocketSerializer, UserListSerializer
 from .models import LiveChannel, LiveMessage, Activity
+
+logger = logging.getLogger(__name__)
 
 
 class LiveMessageSerializer(serializers.HyperlinkedModelSerializer):
@@ -29,11 +33,20 @@ class LiveMessageSocketSerializer(serializers.ModelSerializer):
 
 class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
     messages = LiveMessageSerializer(many=True)
+    contributors = serializers.SerializerMethodField()
+
+    def get_contributors(self, channel):
+        context = self.context.copy()
+        context['channel'] = channel
+        users = UserListSerializer(channel.contributors, many=True, context=context)
+        return users.data
 
     class Meta:
         model = LiveChannel
         extra_kwargs = {
             'url': {'view_name': 'api:channel-detail', 'lookup_field': 'slug'},
+            'contributors': {'fields': ('id', 'username', 'channel_permissions')}
+
         }
 
 
