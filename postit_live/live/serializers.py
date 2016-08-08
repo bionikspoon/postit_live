@@ -51,10 +51,13 @@ class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LiveChannelSocketSerializer(serializers.ModelSerializer):
+    contributors = UserSocketSerializer(many=True)
+
     class Meta:
         model = LiveChannel
         fields = (
-            'title', 'resources', 'resources_html', 'description', 'description_html', 'status', 'contributors_html'
+            'pk', 'slug', 'title', 'resources', 'resources_html', 'description', 'description_html', 'status',
+            'contributors', 'contributors_html'
         )
 
 

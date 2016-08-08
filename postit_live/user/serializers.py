@@ -45,7 +45,7 @@ class UserSocketSerializer(serializers.ModelSerializer):
     def get_channel_permissions(self, user):
         channel = self.context.get('channel', None)
         if channel is None:
-            return
+            return None
 
         return get_perms(user, channel)
 

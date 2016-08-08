@@ -6,7 +6,7 @@ from channels.binding.websockets import WebsocketBinding
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
 
-from postit_live.live.serializers import LiveMessageSocketSerializer
+from postit_live.live.serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
 from .models import LiveChannel, LiveMessage
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,14 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-class Demultiplexer(WebsocketDemultiplexer):
+class SessionDemultiplexerMixin(object):
+    def receive(self, content, **kwargs):
+        content['payload']['kwargs'] = self.kwargs
+        content['payload']['user'] = pickle.dumps(self.message.user)
+        return super().receive(content, **kwargs)
+
+
+class Demultiplexer(SessionDemultiplexerMixin, WebsocketDemultiplexer):
     http_user = True
     channel_session_user = True
     mapping = {
@@ -31,12 +38,20 @@ class Demultiplexer(WebsocketDemultiplexer):
 
     def receive(self, content, **kwargs):
         logger.debug('content received content=%s', content)
-        content['payload']['kwargs'] = self.kwargs
-        content['payload']['user'] = pickle.dumps(self.message.user)
         return super().receive(content, **kwargs)
 
 
-class LiveChannelBinding(WebsocketBinding):
+class SessionBindingMixin(object):
+    def deserialize(self, message):
+        if message.content.get('user'):
+            setattr(message, 'user', pickle.loads(message.content.pop('user')))
+        if message.content.get('kwargs'):
+            self.kwargs = message.content.pop('kwargs')
+
+        return super().deserialize(message)
+
+
+class LiveChannelBinding(SessionBindingMixin, WebsocketBinding):
     model = LiveChannel
     stream = 'LiveChannel'
     fields = ['__all__']  # TODO
@@ -47,13 +62,28 @@ class LiveChannelBinding(WebsocketBinding):
     def has_permission(self, user, action, pk):
         logger.debug('LiveChannel has permission? user=%s action=%s pk=%s', user, action, pk)
 
-        channel = LiveChannel.objects.get(pk=pk)
-
         # TODO
         return True
 
+    def serialize_data(self, instance):
+        serializer = LiveChannelSocketSerializer(instance, context={'channel': instance})
+        return serializer.data
 
-class LiveMessageBinding(WebsocketBinding):
+    def deserialize(self, message):
+        action, pk, data = super().deserialize(message)
+
+        slug = self.kwargs['slug']
+        self.channel = LiveChannel.objects.get(slug=slug)
+        return action, pk, data
+
+    def update(self, pk, data):
+        for name in data.keys():
+            setattr(self.channel, name, data[name])
+        self.channel.save()
+        logger.debug('updated channel=%s', self.channel)
+
+
+class LiveMessageBinding(SessionBindingMixin, WebsocketBinding):
     model = LiveMessage
     stream = 'LiveMessage'
     fields = ['__all__']  # TODO
@@ -77,11 +107,9 @@ class LiveMessageBinding(WebsocketBinding):
         logger.debug('created message=%s', messsage)
 
     def deserialize(self, message):
-        if message.content.get('user'):
-            setattr(message, 'user', pickle.loads(message.content.pop('user')))
-        if message.content.get('kwargs'):
-            self.kwargs = message.content.pop('kwargs')
-            slug = self.kwargs['slug']
-            self.channel = LiveChannel.objects.get(slug=slug)
+        action, pk, data = super().deserialize(message)
 
-        return super().deserialize(message)
+        slug = self.kwargs['slug']
+        self.channel = LiveChannel.objects.get(slug=slug)
+
+        return action, pk, data

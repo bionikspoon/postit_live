@@ -54,6 +54,9 @@ export function socketMessage({ action, data, model, pk }) {
         update: updateMessage,
         delete: deleteMessage,
       },
+      'live.livechannel': {
+        update: updateChannel,
+      },
     };
 
     const method = methods[model][action];
@@ -71,8 +74,16 @@ export default handleActions({
   [deleteMessage]: (state, { payload: { pk } }) =>
     update(state, { messages: { $set: _.omit(state.messages, [pk]) } }),
 
-  [updateChannel]: (state, { payload }) =>
-    update(state, { channel: { $merge: payload } }),
+  [updateChannel]: (state, { payload: { data } }) =>
+    update(state, {
+      channel: { $merge: _.omit(data, ['contributors']) },
+      contributors: {
+        $merge: data.contributors.reduce(
+          (all, user) => update(all, { [user.username]: { $set: user } }),
+          {}
+        ),
+      },
+    }),
 
   [fetchChannel]: (state, { payload }) => {
     const messages = payload.messages.reduce((obj, message) =>
@@ -91,7 +102,6 @@ export default handleActions({
 
     return update(state, {
       meta: {
-        isFetching: { $set: false },
         synced: { $set: true },
       },
       channel: {
@@ -100,7 +110,10 @@ export default handleActions({
         ]),
       },
       contributors: {
-        $merge: payload.contributors || {},
+        $merge: payload.contributors.reduce(
+          (all, user) => update(all, { [user.username]: { $set: user } }),
+          {}
+        ),
       },
       messages: {
         $merge: messages,
@@ -111,7 +124,6 @@ export default handleActions({
   [fetchCurrentUser]: (state, { payload }) =>
     update(state, {
       currentUser: {
-        isFetching: { $set: false },
         username: { $set: payload.username },
         channel_permissions: { $set: payload.channel_permissions },
       },
