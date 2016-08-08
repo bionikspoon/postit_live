@@ -10,13 +10,13 @@ import User from '../../components/User';
 import { currentUserSelector, contributorsSelector } from '../../selectors';
 import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
+import _ from 'lodash';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 export class LiveAppContributors extends Component {
   @autobind
   handleAddContributor(data) {
-    debug('data', data);
     const { actions } = this.props;
-    actions.addContributor(data);
+    actions.socket.addContributor(data);
   }
 
   renderContributorMessage({ show }) {
@@ -24,44 +24,59 @@ export class LiveAppContributors extends Component {
 
     return (
       <div className="alert alert-warning">
-        you are a contributor to this live channel. | <Confirm value="leave" btnClass="btn btn-link" />
+        you are a contributor to this live channel. |&nbsp;
+
+        <Confirm value="leave" btnClass="btn btn-link" onClick={_.identity} />
       </div>
     );
   }
 
+  @autobind
   renderContributorRow({ contributor }) {
+    const { actions } = this.props;
+    const deleteContributor = actions.socket.deleteContributor.bind(this, { username: contributor.username });
     return (
-      <tr key={contributor.id}>
-        <td><User {...contributor} /></td>
-        <td><Confirm value="remove" btnClass="btn btn-link" /></td>
+      <tr key={contributor.username}>
+        <td><User user={contributor} /></td>
+        <td><Confirm value="remove" btnClass="btn btn-link" onClick={deleteContributor} /></td>
         <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
       </tr>
     );
   }
 
+  renderContributorRows() {
+    const { contributors } = this.props;
+    return (
+      <tbody>
+        {contributors.map(contributor => this.renderContributorRow({ key: contributor.username, contributor }))}
+      </tbody>
+    );
+  }
+
   render() {
-    const { currentUser, contributors } = this.props;
+    const { currentUser } = this.props;
     return (
       <LayoutRow className="LiveAppContributors">
 
         <LayoutInnerRow>
-          <h1>Contributors</h1>
-
-          {this.renderContributorMessage({ show: currentUser.can.contribute })}
-
           <div>
-            <h2>current contributors</h2>
-            <table className="table table-sm table-hover">
-              <tbody>
-                {contributors.map(contributor => this.renderContributorRow({ contributor }))}
-              </tbody>
-            </table>
+            <h1>Contributors</h1>
+
+            {this.renderContributorMessage({ show: currentUser.can.contribute })}
+
+            <div>
+              <h2>current contributors</h2>
+              <table className="table table-sm table-hover">
+                {this.renderContributorRows()}
+              </table>
+            </div>
+
+            <div>
+              <h2>add contributor</h2>
+              <AddContributorForm onSubmit={this.handleAddContributor} form="add-contributor" />
+            </div>
           </div>
 
-          <div>
-            <h2>add contributor</h2>
-            <AddContributorForm onSubmit={this.handleAddContributor} form="add-contributor" />
-          </div>
         </LayoutInnerRow>
 
       </LayoutRow>

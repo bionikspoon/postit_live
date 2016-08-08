@@ -37,7 +37,7 @@ export const deleteMessage = createAction(DELETE_MESSAGE, (
 
 const UPDATE_CHANNEL = 'app/socket/channel/UPDATE_CHANNEL';
 export const updateChannel = createAction(UPDATE_CHANNEL, (
-  ({ ...data }) => ({
+  data => ({
     stream: 'LiveChannel',
     payload: {
       action: 'update',
@@ -47,12 +47,28 @@ export const updateChannel = createAction(UPDATE_CHANNEL, (
 ));
 
 const ADD_CONTRIBUTOR = 'app/socket/contributor/ADD_CONTRIBUTOR';
-export const addContributor = createAction(ADD_CONTRIBUTOR);
+export const addContributor = createAction(ADD_CONTRIBUTOR, (
+  data => ({
+    stream: 'LiveChannelContributor',
+    payload: {
+      action: 'create',
+      data,
+    },
+  })
+));
 
 const UPDATE_CONTRIBUTOR = 'app/socket/contributor/UPDATE_CONTRIBUTOR';
 export const updateContributor = createAction(UPDATE_CONTRIBUTOR);
 
 const DELETE_CONTRIBUTOR = 'app/socket/contributor/DELETE_CONTRIBUTOR';
-export const deleteContributor = createAction(DELETE_CONTRIBUTOR);
+export const deleteContributor = createAction(DELETE_CONTRIBUTOR, (
+  data => ({
+    stream: 'LiveChannelContributor',
+    payload: {
+      action: 'delete',
+      data,
+    },
+  })
+));
 
 export default handleActions({});

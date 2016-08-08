@@ -78,7 +78,7 @@ export default handleActions({
     update(state, {
       channel: { $merge: _.omit(data, ['contributors']) },
       contributors: {
-        $merge: data.contributors.reduce(
+        $set: data.contributors.reduce(
           (all, user) => update(all, { [user.username]: { $set: user } }),
           {}
         ),

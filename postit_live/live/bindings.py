@@ -26,6 +26,7 @@ class Demultiplexer(SessionDemultiplexerMixin, WebsocketDemultiplexer):
     channel_session_user = True
     mapping = {
         'LiveChannel': 'binding.LiveChannel',
+        'LiveChannelContributor': 'binding.LiveChannelContributor',
         'LiveMessage': 'binding.LiveMessage',
     }
 
@@ -51,19 +52,9 @@ class SessionBindingMixin(object):
         return super().deserialize(message)
 
 
-class LiveChannelBinding(SessionBindingMixin, WebsocketBinding):
+class LiveChannelMixin(SessionBindingMixin):
     model = LiveChannel
-    stream = 'LiveChannel'
     fields = ['__all__']  # TODO
-
-    def group_names(self, channel, action):
-        return ['live-%s' % channel.slug]
-
-    def has_permission(self, user, action, pk):
-        logger.debug('LiveChannel has permission? user=%s action=%s pk=%s', user, action, pk)
-
-        # TODO
-        return True
 
     def serialize_data(self, instance):
         serializer = LiveChannelSocketSerializer(instance, context={'channel': instance})
@@ -76,11 +67,57 @@ class LiveChannelBinding(SessionBindingMixin, WebsocketBinding):
         self.channel = LiveChannel.objects.get(slug=slug)
         return action, pk, data
 
+
+class LiveChannelBinding(LiveChannelMixin, WebsocketBinding):
+    stream = 'LiveChannel'
+
+    def group_names(self, channel, action):
+        return ['live-%s' % channel.slug]
+
+    def has_permission(self, user, action, pk):
+        logger.debug('LiveChannel has permission? user=%s action=%s pk=%s', user, action, pk)
+
+        # TODO
+        return True
+
     def update(self, pk, data):
         for name in data.keys():
             setattr(self.channel, name, data[name])
         self.channel.save()
         logger.debug('updated channel=%s', self.channel)
+
+
+class LiveChannelContributorBinding(LiveChannelMixin, WebsocketBinding):
+    stream = 'LiveChannelContributor'
+
+    @classmethod
+    def trigger_outbound(cls, instance, action):
+        pass
+
+    def has_permission(self, user, action, pk):
+        logger.debug('LiveChannelContributor has permission? user=%s action=%s pk=%s', user, action, pk)
+
+        # TODO
+        return True
+
+    def create(self, data):
+        logger.debug('create data=%s', data)
+        try:
+            user = User.objects.get(**data)
+            self.channel.add_perms(user, 'full')  # TODO get perms
+
+            logger.debug('permission granted user=%s channel=%s', user, self.channel)
+        except User.DoesNotExist:
+            pass
+
+    def delete(self, _):
+        try:
+            user = User.objects.get(**self.data)
+            self.channel.remove_perms(user)
+
+            logger.debug('permission revoked user=%s channel=%s', user, self.channel)
+        except User.DoesNotExist:
+            pass
 
 
 class LiveMessageBinding(SessionBindingMixin, WebsocketBinding):
