@@ -45,21 +45,23 @@ export default class FormGroupPermissions extends Component {
   renderDropdown() {
     const { expanded } = this.state;
     if (!expanded) return null;
+    const { onSave } = this.props;
 
     const permissions = this.props;
-    if (permissions.addMessage) {
-      permissions.addMessage.label = 'message ← add';
-      permissions.closeChannel.label = 'channel ← close';
-      permissions.editContributors.label = 'contributors ← edit';
-      permissions.editMessage.label = 'message ← edit';
-      permissions.editSettings.label = 'settings ← edit';
-    }
+    permissions.addMessage.label = 'message ← add';
+    permissions.closeChannel.label = 'channel ← close';
+    permissions.editContributors.label = 'contributors ← edit';
+    permissions.editMessage.label = 'message ← edit';
+    permissions.editSettings.label = 'settings ← edit';
+
     return (
       <div className="form-group dropdown-menu dropdown-menu-right">
 
         {_.values(permissions)
-          .filter(permission => permission.label && permission.label.length)
+          .filter(permission => permission && permission.label && permission.label.length)
           .map((permission, index) => this.renderPermission({ permission, index }))}
+
+        {onSave ? <button>save</button> : null}
       </div>
     );
   }
