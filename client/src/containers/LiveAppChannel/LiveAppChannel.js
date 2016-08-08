@@ -70,7 +70,7 @@ export class LiveAppChannel extends Component {
 
 
           {messages.map(message => (
-            <LiveMessage key={message.id} actions={actions.socket} editable={currentUser.can.editMessage} message={message} />
+            <LiveMessage key={message.pk} actions={actions.socket} editable={currentUser.can.editMessage} message={message} />
           ))}
         </LayoutRow>
 
@@ -84,7 +84,7 @@ LiveAppChannel.propTypes = {
   meta: PropTypes.object.isRequired,
 
   messages: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    pk: PropTypes.string.isRequired,
   })).isRequired,
 
   channel: PropTypes.shape({

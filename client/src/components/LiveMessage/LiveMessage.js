@@ -10,9 +10,9 @@ export default class LiveMessage extends Component {
   constructor(props) {
     super(props);
 
-    const { message: { id }, actions } = this.props;
-    this.strikeMessage = actions.strikeMessage.bind(this, { id });
-    this.deleteMessage = actions.deleteMessage.bind(this, { id });
+    const { message: { pk }, actions } = this.props;
+    this.strikeMessage = actions.strikeMessage.bind(this, { pk });
+    this.deleteMessage = actions.deleteMessage.bind(this, { pk });
   }
 
   renderStrikeButton() {
@@ -58,7 +58,7 @@ LiveMessage.propTypes = {
   editable: PropTypes.bool.isRequired,
 
   message: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    pk: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
     body_html: PropTypes.string.isRequired,
     author: PropTypes.object.isRequired,

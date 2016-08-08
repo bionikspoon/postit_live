@@ -1,4 +1,4 @@
-import { updateConnectionStatus } from '../modules/live';
+import { updateConnectionStatus, socketMessage } from '../modules/live';
 import * as socketActions from '../modules/socket';
 import Socket from '../utils/socket';
 import { CONNECTION_OPENED, CONNECTION_CLOSED, CONNECTION_RECONNECTING } from '../constants/connectionStatus';
@@ -8,11 +8,8 @@ const debug = require('debug')('app:middleware:socket');
 class LiveSocket extends Socket {
   onmessage(event) {
     super.onmessage(event);
-
-    const action = JSON.parse(event.data);
+    const action = socketMessage(JSON.parse(event.data).payload);
     this.dispatch(action);
-
-    debug('dispatched type=%s payload=', action.type, action.payload);
   }
 
   onopen(event) {
@@ -20,7 +17,7 @@ class LiveSocket extends Socket {
     const action = updateConnectionStatus({ connectionStatus: CONNECTION_OPENED });
     this.dispatch(action);
 
-    debug('dispatched type=%s payload=', action.type, action.payload);
+    // debug('dispatched type=%s payload=', action.type, action.payload);
   }
 
   onclose(event) {
@@ -39,7 +36,7 @@ class LiveSocket extends Socket {
 
 export default function connect(store) {
   const { protocol, host } = window.location;
-  const pathname = `${window.location.pathname.split('/').slice(0, 3).join('/')}/`;
+  const pathname = `${window.location.pathname.split('/').slice(0, 3).join('/')}/`; // /live/[slug]/
   const socket = new LiveSocket(store, { protocol, host, pathname });
   const middlewareActions =
     _.values(socketActions)
@@ -49,9 +46,10 @@ export default function connect(store) {
   socket.open();
   return next => action => {
     if (!middlewareActions.includes(action.type)) return next(action);
+    const message = next(action);
+    socket.send(JSON.stringify(message.payload));
+    // debug('socket message sent message=', message);
 
-    socket.send(JSON.stringify(action));
-
-    return next(action);
+    return message;
   };
 }

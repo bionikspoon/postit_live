@@ -14,7 +14,7 @@ class LiveMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = LiveMessage
-        fields = ('id', 'author', 'body', 'body_html', 'created', 'status')
+        fields = ('pk', 'author', 'body', 'body_html', 'created', 'status')
         extra_kwargs = {
             'url': {'view_name': 'api:message-detail'},
             'author': {'view_name': 'api:user-detail'},
@@ -27,7 +27,7 @@ class LiveMessageSocketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LiveMessage
-        fields = ('id', 'author', 'body', 'body_html', 'status', 'created')
+        fields = ('pk', 'author', 'body', 'body_html', 'status', 'created')
         depth = 2
 
 
@@ -45,7 +45,7 @@ class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
         model = LiveChannel
         extra_kwargs = {
             'url': {'view_name': 'api:channel-detail', 'lookup_field': 'slug'},
-            'contributors': {'fields': ('id', 'username', 'channel_permissions')}
+            'contributors': {'fields': ('pk', 'username', 'channel_permissions')}
 
         }
 

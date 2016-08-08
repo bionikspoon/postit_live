@@ -9,6 +9,9 @@ const debug = require('debug')('app:modules:live:index');  // eslint-disable-lin
 const CREATE_MESSAGE = 'app/live/message/CREATE_MESSAGE';
 export const createMessage = createAction(CREATE_MESSAGE);
 
+const UPDATE_MESSAGE = 'app/live/message/UPDATE_MESSAGE';
+export const updateMessage = createAction(UPDATE_MESSAGE);
+
 const STRIKE_MESSAGE = 'app/live/message/STRIKE_MESSAGE';
 export const strikeMessage = createAction(STRIKE_MESSAGE);
 
@@ -44,15 +47,30 @@ export const updateContributor = createAction(UPDATE_CONTRIBUTOR);
 const DELETE_CONTRIBUTOR = 'app/live/contributor/DELETE_CONTRIBUTOR';
 export const deleteContributor = createAction(DELETE_CONTRIBUTOR);
 
+export function socketMessage({ action, data, model, pk }) {
+  return dispatch => {
+    debug('action=%s model=%s pk=%s data=', action, model, pk, data);
+    const methods = {
+      'live.livemessage': {
+        create: createMessage,
+        update: updateMessage,
+      },
+    };
+
+    const method = methods[model][action];
+    dispatch(method({ pk, data }));
+  };
+}
+
 export default handleActions({
-  [createMessage]: (state, { payload: { message } }) =>
-    update(state, { messages: { [message.id]: { $set: message } } }),
+  [createMessage]: (state, { payload: { pk, data } }) =>
+    update(state, { messages: { [pk]: { $set: data } } }),
 
-  [strikeMessage]: (state, { payload: { id } }) =>
-    update(state, { messages: { [id]: { status: { $set: 'stricken' } } } }),
+  [strikeMessage]: (state, { payload: { pk } }) =>
+    update(state, { messages: { [pk]: { status: { $set: 'stricken' } } } }),
 
-  [deleteMessage]: (state, { payload: { id } }) =>
-    update(state, { messages: { $set: _.omit(state.messages, [id]) } }),
+  [deleteMessage]: (state, { payload: { pk } }) =>
+    update(state, { messages: { $set: _.omit(state.messages, [pk]) } }),
 
   [updateChannel]: (state, { payload }) =>
     update(state, { channel: { $merge: payload } }),
@@ -60,14 +78,14 @@ export default handleActions({
   [fetchChannel]: (state, { payload }) => {
     const messages = payload.messages.reduce((obj, message) =>
       update(obj, {
-        [message.id]: {
+        [message.pk]: {
           $set: {
             author: { username: message.author.username },
             body: message.body,
             body_html: message.body_html,
             created: message.created,
             status: message.status,
-            id: message.id,
+            pk: message.pk,
           },
         },
       }), {});
@@ -111,6 +129,7 @@ export default handleActions({
 
   [deleteContributor]: (state, { payload }) =>
     update(state, { contributors: { $set: _.omit(state.contributors, [payload.username]) } }),
+
 }, initialState());
 
 function initialState() {
@@ -143,6 +162,7 @@ function initialState() {
     },
   };
 }
+
 function handleFetchChannelRequest(state) {
   return update(state, { meta: { isFetching: { $set: true } } });
 }
@@ -150,14 +170,14 @@ function handleFetchChannelRequest(state) {
 function handleFetchChannelSuccess(state, payload) {
   const messages = payload.messages.reduce((obj, message) =>
     update(obj, {
-      [message.id]: {
+      [message.pk]: {
         $set: {
           author: { username: message.author.username },
           body: message.body,
           body_html: message.body_html,
           created: message.created,
           status: message.status,
-          id: message.id,
+          pk: message.pk,
         },
       },
     }), {});
@@ -221,7 +241,7 @@ function handleDeleteContributor(state, payload) {
 
 function setContributors(payloadContributors = []) {
   return stateContributors => {
-    const newContributors = payloadContributors.map(_.partialRight(_.pick, ['id', 'username', 'channel_permissions']));
-    return _.uniqBy(stateContributors.concat(newContributors), 'id');
+    const newContributors = payloadContributors.map(_.partialRight(_.pick, ['pk', 'username', 'channel_permissions']));
+    return _.uniqBy(stateContributors.concat(newContributors), 'pk');
   };
 }
