@@ -8,7 +8,7 @@ export default function User({ user: { username }, className, ...props }) {
   const wrapClass = classnames('User', className);
 
   return (
-    <span className={wrapClass} {...props}>/u/{username}</span>
+    <code className={wrapClass} {...props}>/u/{username}</code>
   );
 }
 
