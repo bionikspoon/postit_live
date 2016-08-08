@@ -8,7 +8,9 @@ const debug = require('debug')('app:middleware:socket');
 class LiveSocket extends Socket {
   onmessage(event) {
     super.onmessage(event);
-    const action = socketMessage(JSON.parse(event.data).payload);
+
+    const payload = JSON.parse(event.data).payload;
+    const action = socketMessage(payload);
     this.dispatch(action);
   }
 

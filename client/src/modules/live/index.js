@@ -12,9 +12,6 @@ export const createMessage = createAction(CREATE_MESSAGE);
 const UPDATE_MESSAGE = 'app/live/message/UPDATE_MESSAGE';
 export const updateMessage = createAction(UPDATE_MESSAGE);
 
-const STRIKE_MESSAGE = 'app/live/message/STRIKE_MESSAGE';
-export const strikeMessage = createAction(STRIKE_MESSAGE);
-
 const DELETE_MESSAGE = 'app/live/message/DELETE_MESSAGE';
 export const deleteMessage = createAction(DELETE_MESSAGE);
 
@@ -50,10 +47,12 @@ export const deleteContributor = createAction(DELETE_CONTRIBUTOR);
 export function socketMessage({ action, data, model, pk }) {
   return dispatch => {
     debug('action=%s model=%s pk=%s data=', action, model, pk, data);
+    debug('data', data);
     const methods = {
       'live.livemessage': {
         create: createMessage,
         update: updateMessage,
+        delete: deleteMessage,
       },
     };
 
@@ -66,8 +65,8 @@ export default handleActions({
   [createMessage]: (state, { payload: { pk, data } }) =>
     update(state, { messages: { [pk]: { $set: data } } }),
 
-  [strikeMessage]: (state, { payload: { pk } }) =>
-    update(state, { messages: { [pk]: { status: { $set: 'stricken' } } } }),
+  [updateMessage]: (state, { payload: { pk, data } }) =>
+    update(state, { messages: { [pk]: { $merge: data } } }),
 
   [deleteMessage]: (state, { payload: { pk } }) =>
     update(state, { messages: { $set: _.omit(state.messages, [pk]) } }),

@@ -28,7 +28,7 @@ class UserDetailsSerializer(UserBaseSerializer):
     class Meta(UserBaseSerializer.Meta):
         extra_kwargs = {'url': {'view_name': 'api:user-detail'}}
         fields = (
-            'url', 'id', 'last_login', 'is_superuser', 'username', 'first_name', 'last_name', 'email', 'is_staff',
+            'url', 'pk', 'last_login', 'is_superuser', 'username', 'first_name', 'last_name', 'email', 'is_staff',
             'is_active', 'date_joined', 'channel_permissions',
         )
 
@@ -36,7 +36,7 @@ class UserDetailsSerializer(UserBaseSerializer):
 class UserListSerializer(UserBaseSerializer):
     class Meta(UserBaseSerializer.Meta):
         extra_kwargs = {'url': {'view_name': 'api:user-detail'}}
-        fields = ('url', 'id', 'username', 'channel_permissions',)
+        fields = ('url', 'pk', 'username', 'channel_permissions',)
 
 
 class UserSocketSerializer(serializers.ModelSerializer):
@@ -51,4 +51,4 @@ class UserSocketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'channel_permissions',)
+        fields = ('pk', 'username', 'channel_permissions',)

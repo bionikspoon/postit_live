@@ -6,6 +6,7 @@ from channels.binding.websockets import WebsocketBinding
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
 
+from postit_live.live.serializers import LiveMessageSocketSerializer
 from .models import LiveChannel, LiveMessage
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,10 @@ class LiveMessageBinding(WebsocketBinding):
     def group_names(self, message, action):
         channel = message.channel
         return ['live-%s' % channel.slug]
+
+    def serialize_data(self, instance):
+        serializer = LiveMessageSocketSerializer(instance, context={'channel': instance.channel})
+        return serializer.data
 
     def has_permission(self, user, action, pk):
         logger.debug('LiveMessage has permission? user=%s action=%s pk=%s', user, action, pk)

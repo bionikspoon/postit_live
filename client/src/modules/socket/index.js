@@ -13,10 +13,27 @@ export const createMessage = createAction(CREATE_MESSAGE, (
 ));
 
 const STRIKE_MESSAGE = 'app/socket/message/STRIKE_MESSAGE';
-export const strikeMessage = createAction(STRIKE_MESSAGE);
+export const strikeMessage = createAction(STRIKE_MESSAGE, (
+  ({ pk }) => ({
+    stream: 'LiveMessage',
+    payload: {
+      action: 'update',
+      pk,
+      data: { status: 'stricken' },
+    },
+  })
+));
 
 const DELETE_MESSAGE = 'app/socket/message/DELETE_MESSAGE';
-export const deleteMessage = createAction(DELETE_MESSAGE);
+export const deleteMessage = createAction(DELETE_MESSAGE, (
+  ({ pk }) => ({
+    stream: 'LiveMessage',
+    payload: {
+      action: 'delete',
+      pk,
+    },
+  })
+));
 
 const UPDATE_CHANNEL = 'app/socket/channel/UPDATE_CHANNEL';
 export const updateChannel = createAction(UPDATE_CHANNEL);
