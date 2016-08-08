@@ -1,27 +1,46 @@
 import './Confirm.scss';
 import React, { PropTypes, Component } from 'react';
-const BUTTON_CLASS = 'btn btn-secondary btn-sm Confirm';
-
-export default class ButtonConfirm extends Component {
+import autobind from 'autobind-decorator';
+const debug = require('debug')('app:components:Confirm');  // eslint-disable-line no-unused-vars
+export default class Confirm extends Component {
   constructor(props) {
     super(props);
-    this.openConfirmation = this.openConfirmation.bind(this);
-    this.closeConfirmation = this.closeConfirmation.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.state = { showDialogue: false };
+
+    this.state = { expanded: false };
+    this.intervals = [];
   }
 
-  openConfirmation() {
-    this.setState({ showDialogue: true });
+  componentWillUnmount() {
+    this.intervals.forEach(interval => clearInterval(interval));
   }
 
-  closeConfirmation() {
-    this.setState({ showDialogue: false });
+  @autobind
+  setTimeout(func, delay) {
+    this.intervals.push(setTimeout(func.bind(this), delay));
   }
 
+  @autobind
+  expand() {
+    this.setState({ expanded: true });
+    this.setTimeout(() => this.refs.yes.focus(), 0);
+  }
+
+  @autobind
+  collapse() {
+    this.setState({ expanded: false });
+  }
+
+  @autobind
   handleClick(event) {
-    this.closeConfirmation();
-    this.props.onClick(event);
+    const { onClick } = this.props;
+    this.collapse();
+    onClick(event);
+  }
+
+  @autobind
+  handleBlur(event) {
+    const { currentTarget } = event;
+    this.setTimeout(() => (currentTarget.contains(document.activeElement) ? null : this.collapse(event)), 0);
   }
 
   renderConfirm() {
@@ -29,9 +48,9 @@ export default class ButtonConfirm extends Component {
     return (
       <span className="confirmation">
         <span>are you sure? </span>
-        <button type="button" onClick={this.handleClick} className={btnClass}>yes</button>
+        <button type="button" onClick={this.handleClick} ref="yes" className={btnClass}>yes</button>
         <span> / </span>
-        <button type="button" onClick={this.closeConfirmation} className={btnClass}>no</button>
+        <button type="button" onClick={this.collapse} className={btnClass}>no</button>
       </span>
     );
   }
@@ -39,16 +58,20 @@ export default class ButtonConfirm extends Component {
   renderButton() {
     const { value, btnClass } = this.props;
     return (
-      <button type="button" onClick={this.openConfirmation} className={btnClass}>{value}</button>
+      <button type="button" onClick={this.expand} className={btnClass}>{value}</button>
     );
   }
 
   render() {
-    return this.state.showDialogue ? this.renderConfirm() : this.renderButton();
+    return (
+      <div className="Confirm" onBlur={this.handleBlur}>
+        {this.state.expanded ? this.renderConfirm() : this.renderButton()}
+      </div>
+    );
   }
 
 }
-ButtonConfirm.propTypes = {
+Confirm.propTypes = {
   btnClass: PropTypes.string,
   value: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,

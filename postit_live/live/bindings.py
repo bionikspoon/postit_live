@@ -103,8 +103,8 @@ class LiveChannelContributorBinding(LiveChannelMixin, WebsocketBinding):
     def create(self, data):
         logger.debug('create data=%s', data)
         try:
-            user = User.objects.get(**data)
-            self.channel.add_perms(user, 'full')  # TODO get perms
+            user = User.objects.get(username=data['username'])
+            self.channel.add_perms(user, data['permissions'])  # TODO get perms
 
             logger.debug('permission granted user=%s channel=%s', user, self.channel)
         except User.DoesNotExist:

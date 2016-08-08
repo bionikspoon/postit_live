@@ -7,6 +7,7 @@ import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
+import FormGroupPermissions from '../../components/FormGroupPermissions';
 import { currentUserSelector, contributorsSelector } from '../../selectors';
 import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
@@ -14,9 +15,18 @@ import _ from 'lodash';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 export class LiveAppContributors extends Component {
   @autobind
-  handleAddContributor(data) {
+  handleAddContributor({ permissions, ...data }) {
     const { actions } = this.props;
-    actions.socket.addContributor(data);
+
+    const names = {
+      addMessage: 'add_channel_messages',
+      closeChannel: 'change_channel_close',
+      editContributors: 'change_channel_contributors',
+      editMessage: 'change_channel_messages',
+      editSettings: 'change_channel_settings',
+    };
+    const perms = _.keys(permissions).filter(key => permissions[key]).map(key => names[key]);
+    actions.socket.addContributor({ permissions: perms, ...data });
   }
 
   renderContributorMessage({ show }) {
@@ -39,7 +49,7 @@ export class LiveAppContributors extends Component {
       <tr key={contributor.username}>
         <td><User user={contributor} /></td>
         <td><Confirm value="remove" btnClass="btn btn-link" onClick={deleteContributor} /></td>
-        <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+        <td className="text-xs-right">{/*<FormGroupPermissions />*/}</td>
       </tr>
     );
   }
@@ -98,19 +108,21 @@ class AddContributorForm extends Component {
   @autobind
   handleSubmit(...args) {
     const { resetForm, handleSubmit } = this.props;
-    resetForm();
+    debug('this.props', this.props);
+
+    // resetForm();
     return handleSubmit(...args);
   }
 
   render() {
-    const { fields:{ username } } = this.props;
+    const { fields:{ username, permissions }, values } = this.props;
     return (
       <form className="AddContributorForm" onSubmit={this.handleSubmit}>
         <table className="table  table-sm">
           <tbody>
             <tr>
               <td><input type="text" {...username} /></td>
-              <td className="text-xs-right">full permissions (<a href="#">change</a>)</td>
+              <td className="text-xs-right"><FormGroupPermissions {...permissions} values={values.permissions} /></td>
 
               <td className="text-xs-center">
 
@@ -123,7 +135,27 @@ class AddContributorForm extends Component {
     );
   }
 }
-AddContributorForm = reduxForm({ form: 'AddContributorForm', fields: ['username'] })(AddContributorForm);
+AddContributorForm = reduxForm({
+  form: 'AddContributorForm',
+  fields: [
+    'username',
+    'permissions.closeChannel',
+    'permissions.editContributors',
+    'permissions.editSettings',
+    'permissions.editMessage',
+    'permissions.addMessage',
+  ],
+}, () => ({
+  initialValues: {
+    permissions: {
+      closeChannel: true,
+      editContributors: true,
+      editSettings: true,
+      editMessage: true,
+      addMessage: true,
+    },
+  },
+}))(AddContributorForm);
 
 function mapStateToProps(state) {
   return {
