@@ -3,36 +3,33 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as liveActions from '../../modules/live';
 import * as socketActions from '../../modules/socket';
+import { PERMISSION_METHOD_NAMES } from '../../constants/permissions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import Confirm from '../../components/Confirm';
-import User from '../../components/User';
-import FormGroupPermissions from '../../components/FormGroupPermissions';
 import { currentUserSelector, contributorsSelector } from '../../selectors';
-import { reduxForm } from 'redux-form';
+import ContributorForm from '../../components/ContributorForm';
 import autobind from 'autobind-decorator';
 import _ from 'lodash';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 
-const PERMISSION_NAMES = {
-  addMessage: 'add_channel_messages',
-  closeChannel: 'change_channel_close',
-  editContributors: 'change_channel_contributors',
-  editMessage: 'change_channel_messages',
-  editSettings: 'change_channel_settings',
-};
 export class LiveAppContributors extends Component {
   @autobind
   handleAddContributor({ permissions, ...data }) {
     const { actions } = this.props;
 
-    const perms = _.keys(permissions).filter(key => permissions[key]).map(key => PERMISSION_NAMES[key]);
+    const perms = _.keys(permissions).filter(key => permissions[key]).map(key => PERMISSION_METHOD_NAMES[key]);
     actions.socket.addContributor({ permissions: perms, ...data });
   }
 
   @autobind
   handleUpdateContributor({ permissions, ...data }) {
+    debug('permissions=%o data=', permissions, data);
+  }
 
+  @autobind
+  handleDeleteContributor({ permissions, ...data }) {
+    debug('permissions=%o data=', permissions, data);
   }
 
   renderContributorMessage({ show }) {
@@ -47,49 +44,21 @@ export class LiveAppContributors extends Component {
     );
   }
 
-  @autobind
-  renderContributorRow({ contributor }) {
-    const { actions } = this.props;
-    const deleteContributor = actions.socket.deleteContributor.bind(this, { username: contributor.username });
-    return (
-      <tr key={contributor.username}>
-        <td><User user={contributor} /></td>
-        <td><Confirm value="remove" btnClass="btn btn-link" onClick={deleteContributor} /></td>
-        <td className="text-xs-right">{/*<FormGroupPermissions />*/}</td>
-      </tr>
-    );
-  }
-
-  @autobind
-  renderContributorForm({ contributor }) {
-    debug('contributor', contributor);
-    const { actions } = this.props;
-    return (
-      <AddContributorForm
-        key={contributor.username}
-        formKey={contributor.username}
-        action="update"
-        onSubmit={this.handleAddContributor}
-        form="update-contributor"
-        initialValues={{ username: contributor.username, permissions: contributor.can }}
-      />
-    );
-  }
-
-  renderContributorRows() {
-    const { contributors } = this.props;
-    return (
-      <tbody>
-        {contributors.map(contributor => this.renderContributorRow({ contributor }))}
-      </tbody>
-    );
-  }
-
   renderContributorForms() {
     const { contributors } = this.props;
     return (
       <div>
-        {contributors.map(contributor => this.renderContributorForm({ contributor }))}
+        {contributors.map(contributor => (
+          <ContributorForm
+            key={contributor.username}
+            formKey={contributor.username}
+            action="update"
+            onSubmit={this.handleUpdateContributor}
+            onDelete={this.handleDeleteContributor}
+            form="update-contributor"
+            initialValues={{ username: contributor.username, permissions: contributor.can }}
+          />
+        ))}
       </div>
     );
   }
@@ -117,18 +86,19 @@ export class LiveAppContributors extends Component {
             {this.renderContributorMessage({ show: currentUser.can.contribute })}
 
             <div>
-              <h2>current contributors</h2>{this.renderContributorForms()}
-              <table className="table table-sm table-hover">
-                {this.renderContributorRows()}
-              </table>
+              <h2>current contributors</h2>
+
+              {this.renderContributorForms()}
             </div>
 
             <div>
               <h2>add contributor</h2>
-              <AddContributorForm onSubmit={this.handleAddContributor}
+              <ContributorForm
+                onSubmit={this.handleAddContributor}
                 form="add-contributor"
                 action="create"
-                initialValues={initialValues} />
+                initialValues={initialValues}
+              />
             </div>
           </div>
 
@@ -139,8 +109,7 @@ export class LiveAppContributors extends Component {
   }
 }
 
-LiveAppContributors
-  .propTypes = {
+LiveAppContributors.propTypes = {
   contributors: PropTypes.array.isRequired,
 
   currentUser: PropTypes.shape({
@@ -148,62 +117,13 @@ LiveAppContributors
       contribute: PropTypes.bool.isRequired,
     }).isRequired,
   }).isRequired,
+
+  actions: PropTypes.shape({
+    socket: PropTypes.shape({
+      addContributor: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
-
-class AddContributorForm extends Component {
-  @autobind
-  handleSubmit(...args) {
-    const { resetForm, handleSubmit } = this.props;
-    handleSubmit(...args);
-    resetForm();
-  }
-
-  render() {
-    const { fields:{ username, permissions }, values, action } = this.props;
-    return (
-      <form className="AddContributorForm" onSubmit={this.handleSubmit}>
-        <table className="table  table-sm">
-          <tbody>
-            <tr>
-              <td>
-                {action === 'create' ? <input type="text" {...username} /> : null}
-
-                {values.username && values.username.length ? <User user={{ username: values.username }} /> : null}
-              </td>
-
-              {action === 'update'
-                ? <td><Confirm value="remove" btnClass="btn btn-link" onClick={() => null} /></td>
-                : null}
-
-              <td className="text-xs-right"><FormGroupPermissions {...permissions} values={values.permissions}
-                onSave={action === 'update' ? () => null : null} /></td>
-
-              {action === 'create'
-                ? (
-                <td className="text-xs-center">
-                  <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
-                </td>
-              )
-                : null}
-
-            </tr>
-          </tbody>
-        </table>
-      </form>
-    );
-  }
-}
-AddContributorForm = reduxForm({
-  form: 'AddContributorForm',
-  fields: [
-    'username',
-    'permissions.closeChannel',
-    'permissions.editContributors',
-    'permissions.editSettings',
-    'permissions.editMessage',
-    'permissions.addMessage',
-  ],
-})(AddContributorForm);
 
 function mapStateToProps(state) {
   return {

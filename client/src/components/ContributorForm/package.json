@@ -1,0 +1,6 @@
+{
+  "name": "ContributorForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ContributorForm.js"
+}

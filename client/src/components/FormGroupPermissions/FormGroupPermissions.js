@@ -2,6 +2,7 @@ import './FormGroupPermissions.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
 import classnames from 'classnames';
+import { PERMISSION_METHOD_DESCRIPTIONS } from '../../constants/permissions';
 import _ from 'lodash';
 const debug = require('debug')('app:components:FormGroupPermissions');  // eslint-disable-line no-unused-vars
 
@@ -45,7 +46,7 @@ export default class FormGroupPermissions extends Component {
   renderDropdown() {
     const { expanded } = this.state;
     if (!expanded) return null;
-    const { onSave } = this.props;
+    const { onSubmit } = this.props;
 
     const permissions = this.props;
     permissions.addMessage.label = 'message ← add';
@@ -61,23 +62,17 @@ export default class FormGroupPermissions extends Component {
           .filter(permission => permission && permission.label && permission.label.length)
           .map((permission, index) => this.renderPermission({ permission, index }))}
 
-        {onSave ? <button>save</button> : null}
+        {onSubmit ? <button>save</button> : null}
       </div>
     );
   }
 
   renderSummary() {
     const values = this.props.values;
-    const names = {
-      addMessage: 'add message',
-      closeChannel: 'close channel',
-      editContributors: 'edit contributors',
-      editMessage: 'edit message',
-      editSettings: 'edit settings',
-    };
+
     const summaryText = _.values(values).every(_.identity)
       ? 'full permissions'
-      : _.keys(values).filter(key => values[key]).map(key => names[key]).join(', ');
+      : _.keys(values).filter(key => values[key]).map(key => PERMISSION_METHOD_DESCRIPTIONS[key]).join(', ');
     return (
       <span>{summaryText}</span>
     );
@@ -115,10 +110,12 @@ FormGroupPermissions.propTypes = {
   editSettings: PropTypes.object.isRequired,
 
   values: PropTypes.shape({
-    addMessage: PropTypes.object.isRequired,
-    closeChannel: PropTypes.object.isRequired,
-    editContributors: PropTypes.object.isRequired,
-    editMessage: PropTypes.object.isRequired,
+    addMessage: PropTypes.bool.isRequired,
+    closeChannel: PropTypes.bool.isRequired,
+    editContributors: PropTypes.bool.isRequired,
+    editMessage: PropTypes.bool.isRequired,
   }).isRequired,
+
+  onSubmit: PropTypes.func,
 };
 
