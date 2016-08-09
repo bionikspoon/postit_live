@@ -9,6 +9,16 @@ import autobind from 'autobind-decorator';
 
 const debug = require('debug')('app:components:ContributorForm');  // eslint-disable-line no-unused-vars
 
+export const INITIAL_VALUES = {
+  permissions: {
+    closeChannel: true,
+    editContributors: true,
+    editSettings: true,
+    editMessage: true,
+    addMessage: true,
+  },
+};
+
 class ContributorForm extends Component {
   @autobind
   handleSubmit(...args) {
@@ -18,7 +28,7 @@ class ContributorForm extends Component {
   }
 
   render() {
-    const { fields:{ username, permissions }, values, action } = this.props;
+    const { fields: { username, permissions }, values, action } = this.props;
     return (
       <form className="AddContributorForm" onSubmit={this.handleSubmit}>
         <table className="table  table-sm">
@@ -78,7 +88,7 @@ ContributorForm.propTypes = {
 
   formKey: PropTypes.string,
 
-  initialValue: PropTypes.object,
+  initialValues: PropTypes.object,
 
   onUpdate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -98,4 +108,5 @@ export default reduxForm({
     'permissions.editMessage',
     'permissions.addMessage',
   ],
+  initialValues: INITIAL_VALUES,
 })(ContributorForm);

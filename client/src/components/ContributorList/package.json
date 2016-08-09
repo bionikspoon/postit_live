@@ -1,0 +1,6 @@
+{
+  "name": "ContributorList",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ContributorList.js"
+}

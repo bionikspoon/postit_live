@@ -6,9 +6,10 @@ import * as socketActions from '../../modules/socket';
 import { PERMISSION_METHOD_NAMES } from '../../constants/permissions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
-import Confirm from '../../components/Confirm';
+import ContributorMessage from '../../components/ContributorMessage';
+import ContributorList from '../../components/ContributorList';
+import ContributorAdd from '../../components/ContributorAdd';
 import { currentUserSelector, contributorsSelector } from '../../selectors';
-import ContributorForm from '../../components/ContributorForm';
 import autobind from 'autobind-decorator';
 import _ from 'lodash';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
@@ -32,50 +33,9 @@ export class LiveAppContributors extends Component {
     debug('permissions=%o data=', permissions, data);
   }
 
-  renderContributorMessage({ show }) {
-    if (!show) return null;
-
-    return (
-      <div className="alert alert-warning">
-        you are a contributor to this live channel. |&nbsp;
-
-        <Confirm value="leave" btnClass="btn btn-link" onClick={_.identity} />
-      </div>
-    );
-  }
-
-  renderContributorForms() {
-    const { contributors } = this.props;
-    return (
-      <div>
-        {contributors.map(contributor => (
-          <ContributorForm
-            key={contributor.username}
-            formKey={contributor.username}
-            action="update"
-            onSubmit={this.handleUpdateContributor}
-            onDelete={this.handleDeleteContributor}
-            form="update-contributor"
-            initialValues={{ username: contributor.username, permissions: contributor.can }}
-          />
-        ))}
-      </div>
-    );
-  }
-
   render() {
-    const { currentUser } = this.props;
-    const initialValues = {
-      initialValues: {
-        permissions: {
-          closeChannel: true,
-          editContributors: true,
-          editSettings: true,
-          editMessage: true,
-          addMessage: true,
-        },
-      },
-    };
+    const { currentUser, contributors } = this.props;
+
     return (
       <LayoutRow className="LiveAppContributors">
 
@@ -83,23 +43,19 @@ export class LiveAppContributors extends Component {
           <div>
             <h1>Contributors</h1>
 
-            {this.renderContributorMessage({ show: currentUser.can.contribute })}
+            <ContributorMessage show={currentUser.can.contribute} onSubmit={this.handleDeleteContributor} />
 
-            <div>
-              <h2>current contributors</h2>
+            <ContributorList
+              contributors={contributors}
+              onUpdate={this.handleUpdateContributor}
+              onDelete={this.handleDeleteContributor}
+            />
 
-              {this.renderContributorForms()}
-            </div>
+            <ContributorAdd
+              contributors={contributors}
+              onSave={this.handleAddContributor}
+            />
 
-            <div>
-              <h2>add contributor</h2>
-              <ContributorForm
-                onSubmit={this.handleAddContributor}
-                form="add-contributor"
-                action="create"
-                initialValues={initialValues}
-              />
-            </div>
           </div>
 
         </LayoutInnerRow>
