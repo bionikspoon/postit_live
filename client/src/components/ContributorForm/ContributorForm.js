@@ -27,44 +27,70 @@ class ContributorForm extends Component {
     resetForm();
   }
 
+  renderUserInput({ show }) {
+    const { fields: { username } } = this.props;
+
+    if (!show) return null;
+
+    return (
+      <input type="text" {...username} />
+    );
+  }
+
+  renderUser({ show }) {
+    const { values: { username } } = this.props;
+
+    if (!show) return null;
+
+    return (
+      <User user={{ username }} />
+    );
+  }
+
+  renderRemoveButton({ show }) {
+    const { onDelete } = this.props;
+
+    if (!show) return null;
+
+    return (
+      <div className="col-xs">
+        <Confirm value="remove" btnClass="btn btn-link" onClick={onDelete} />
+      </div>
+    );
+  }
+
+  renderAddButton({ show }) {
+    if (!show) return null;
+
+    return (
+      <div className="col-xs">
+        <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
+      </div>
+    );
+  }
+
   render() {
-    const { fields: { username, permissions }, values, action } = this.props;
+    const { fields: { permissions }, values, action, onUpdate } = this.props;
     return (
       <form className="AddContributorForm" onSubmit={this.handleSubmit}>
-        <table className="table  table-sm">
-          <tbody>
-            <tr>
-              <td>
-                {action === 'create' ? <input type="text" {...username} /> : null}
+        <div className="row">
 
-                {values.username && values.username.length ? <User user={{ username: values.username }} /> : null}
-              </td>
+          <div className="col-xs">
+            {this.renderUserInput({ show: action === 'create' })}
 
-              {action === 'update'
-                ? <td><Confirm value="remove" btnClass="btn btn-link" onClick={() => null} /></td>
-                : null}
+            {this.renderUser({ show: values.username && values.username.length })}
+          </div>
 
-              <td className="text-xs-right">
+          {this.renderRemoveButton({ show: action === 'update' })}
 
-                <FormGroupPermissions
+          <div className="col-xs-8 text-xs-right">
+            <FormGroupPermissions values={values.permissions} onSave={onUpdate} {...permissions} />
+          </div>
 
-                  {...permissions}
-                  values={values.permissions}
-                  onSave={action === 'update' ? () => null : null}
-                />
-              </td>
+          {this.renderAddButton({ show: action === 'create' })}
 
-              {action === 'create'
-                ? (
-                <td className="text-xs-center">
-                  <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
-                </td>
-              )
-                : null}
 
-            </tr>
-          </tbody>
-        </table>
+        </div>
       </form>
     );
   }

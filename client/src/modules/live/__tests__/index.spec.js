@@ -22,7 +22,7 @@ describe('live reducer', () => {
 
   describe('live/messages', () => {
     const CREATE_MESSAGE = Object.freeze(actions.createMessage({ message: { id: 'a', body: 'hello world' } }));
-    describe('CREATE_MESSAGE', () => {
+    xdescribe('CREATE_MESSAGE', () => {
       let subject;
 
       beforeEach(() => {
@@ -34,16 +34,16 @@ describe('live reducer', () => {
       });
     });
 
-    describe('STRIKE_MESSAGE', () => {
-      let subject;
-      const STRIKE_MESSAGE = actions.strikeMessage({ id: 'a' });
-      beforeEach(() => {
-        subject = reducer(CREATE_MESSAGE, STRIKE_MESSAGE);
-      });
-      it('should strike the message', () => {
-        expect(subject.messages.a.status).toEqual('stricken');
-      });
-    });
+    // xdescribe('STRIKE_MESSAGE', () => {
+    //   let subject;
+    //   const STRIKE_MESSAGE = actions.strikeMessage({ id: 'a' });
+    //   beforeEach(() => {
+    //     subject = reducer(CREATE_MESSAGE, STRIKE_MESSAGE);
+    //   });
+    //   it('should strike the message', () => {
+    //     expect(subject.messages.a.status).toEqual('stricken');
+    //   });
+    // });
 
     describe('DELETE_MESSAGE', () => {
       let subject;
@@ -58,7 +58,7 @@ describe('live reducer', () => {
   });
 
   describe('live/channel', () => {
-    describe('UPDATE_CHANNEL', () => {
+    xdescribe('UPDATE_CHANNEL', () => {
       let subject;
       const UPDATE_CHANNEL = actions.updateChannel({
         title: 'test title',
