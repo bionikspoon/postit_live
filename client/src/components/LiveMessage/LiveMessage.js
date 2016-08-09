@@ -10,24 +10,26 @@ export default class LiveMessage extends Component {
   constructor(props) {
     super(props);
 
-    const { actions, id } = this.props;
-    this.strikeMessage = actions.strikeMessage.bind(this, { id });
-    this.deleteMessage = actions.deleteMessage.bind(this, { id });
+    const { message: { pk }, actions } = this.props;
+    this.strikeMessage = actions.strikeMessage.bind(this, { pk });
+    this.deleteMessage = actions.deleteMessage.bind(this, { pk });
   }
 
   renderStrikeButton() {
-    const { status } = this.props;
+    const { message: { status } } = this.props;
     return status === 'stricken'
       ? <span>stricken</span>
       : <Confirm onClick={this.strikeMessage} btnClass="btn btn-secondary btn-sm Confirm" value="strike" />;
   }
 
   renderDeleteButton() {
-    return <Confirm onClick={this.deleteMessage} btnClass="btn btn-secondary btn-sm Confirm" value="delete" />;
+    return (
+      <Confirm onClick={this.deleteMessage} btnClass="btn btn-secondary btn-sm Confirm" value="delete" />
+    );
   }
 
-  renderButtons({ perms }) {
-    if (!perms) return null;
+  renderButtons({ editable }) {
+    if (!editable) return null;
     return (
       <div className="buttonrow">
         {this.renderStrikeButton()} {this.renderDeleteButton()}
@@ -36,7 +38,7 @@ export default class LiveMessage extends Component {
   }
 
   render() {
-    const { created, body_html, author, status, perms } = this.props;
+    const { editable, message: { created, body_html, author, status } } = this.props;
     const moment = <Moment date={created} />;
     const spanClass = classnames('body-text', status);
 
@@ -45,19 +47,24 @@ export default class LiveMessage extends Component {
         <div className="body">
           <span className={spanClass} dangerouslySetInnerHTML={{ __html: body_html }} />
 
-          <User {...author} />
+          <User user={author} />
         </div>
-        {this.renderButtons({ perms })}
+        {this.renderButtons({ editable })}
       </LayoutInnerRow>
     );
   }
 }
 LiveMessage.propTypes = {
-  id: PropTypes.string.isRequired,
-  created: PropTypes.string.isRequired,
-  body_html: PropTypes.string.isRequired,
-  author: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
-  status: PropTypes.oneOf(['visible', 'stricken']).isRequired,
+  editable: PropTypes.bool.isRequired,
+
+  message: PropTypes.shape({
+    pk: PropTypes.string.isRequired,
+    created: PropTypes.string.isRequired,
+    body_html: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
+    status: PropTypes.string.isRequired,
+  }).isRequired,
+
   actions: PropTypes.shape({
     strikeMessage: PropTypes.func.isRequired,
     deleteMessage: PropTypes.func.isRequired,

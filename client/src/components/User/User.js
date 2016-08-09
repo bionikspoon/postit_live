@@ -1,21 +1,19 @@
 import './User.scss';
 import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
-import _ from 'lodash';
 
 const debug = require('debug')('app:components:User');  // eslint-disable-line no-unused-vars
 
-export default function User({ username, className, ...props }) {
+export default function User({ user: { username }, className, ...props }) {
   const wrapClass = classnames('User', className);
-  const attrs = _.omit(props, ['isFetching', 'channel_permissions']);
 
   return (
-    <span className={wrapClass} {...attrs}>/u/{username}</span>
+    <code className={wrapClass} {...props}>/u/{username}</code>
   );
 }
 
 User.propTypes = {
-  username: PropTypes.string.isRequired,
+  user: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
   className: PropTypes.string,
 };
 

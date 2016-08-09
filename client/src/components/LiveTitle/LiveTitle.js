@@ -2,7 +2,7 @@ import './LiveTitle.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
 
-export default function LiveTitle({ title, description_html }) {
+export default function LiveTitle({ channel: { title, description_html } }) {
   return (
     <LayoutInnerRow className="LiveTitle">
       <h1>{title}</h1>
@@ -11,6 +11,9 @@ export default function LiveTitle({ title, description_html }) {
   );
 }
 LiveTitle.propTypes = {
-  title: PropTypes.string.isRequired,
-  description_html: PropTypes.string.isRequired,
+  channel: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description_html: PropTypes.string.isRequired,
+  }).isRequired,
+
 };

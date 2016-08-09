@@ -8,7 +8,7 @@
   },
   "main": "postit_live/static/postit_live/index.js",
   "scripts": {
-    "test": "env NODE_ENV=test karma start",
+    "test": "env NODE_ENV=test DEBUG=app:* karma start",
     "test:watch": "npm test -- --auto-watch --no-single-run",
     "webpack": "webpack --progress",
     "build": "env NODE_ENV=production npm run webpack",
@@ -31,7 +31,9 @@
     "react-router": "3.0.0-alpha.2",
     "react-router-redux": "4.0.5",
     "redux": "3.5.2",
+    "redux-actions": "0.10.1",
     "redux-form": "5.3.2",
+    "redux-promise": "0.5.3",
     "redux-thunk": "2.1.0"
   },
   "devDependencies": {

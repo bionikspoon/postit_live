@@ -1,0 +1,6 @@
+{
+  "name": "ContributorMessage",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ContributorMessage.js"
+}

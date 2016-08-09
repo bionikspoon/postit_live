@@ -21,7 +21,7 @@ export default class Moment extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.intervalId);
+    clearInterval(this.interval);
   }
 
   setInterval(func, time) {

@@ -1,25 +1,27 @@
 import './LiveApp.scss';
 import React, { PropTypes, Component } from 'react';
 import LiveNav from '../../components/LiveNav';
-import * as liveActions from '../../actions/liveActions';
+import * as liveActions from '../../modules/live';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { permissionSelector } from '../../selectors';
+import { currentUserSelector } from '../../selectors';
 
 class LiveApp extends Component {
   componentDidMount() {
-    const { slug, meta, actions } = this.props;
+    const { slug, actions, meta } = this.props;
+
+    if (meta.synced && window) return;
+
     const { location } = window;
-    if (!meta.synced) {
-      actions.fetchChannel({ slug, location });
-      actions.fetchCurrentUser({ slug, location });
-    }
+    actions.live.fetchChannel({ slug, location });
+    actions.live.fetchCurrentUser({ slug, location });
   }
 
   render() {
+    const { slug, pathname, currentUser } = this.props;
     return (
       <div className="container-fluid LiveApp" role="main">
-        <LiveNav {...this.props} />
+        <LiveNav {...{ slug, pathname, currentUser }} />
 
         {this.props.children}
       </div>
@@ -28,14 +30,16 @@ class LiveApp extends Component {
 }
 
 LiveApp.propTypes = {
-  meta: PropTypes.shape({
-    synced: PropTypes.bool.isRequired,
-  }).isRequired,
+  meta: PropTypes.shape({ synced: PropTypes.bool.isRequired }).isRequired,
   children: PropTypes.element.isRequired,
   slug: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
   actions: PropTypes.shape({
-    fetchChannel: PropTypes.func.isRequired,
-    fetchCurrentUser: PropTypes.func.isRequired,
+    live: PropTypes.shape({
+      fetchChannel: PropTypes.func.isRequired,
+      fetchCurrentUser: PropTypes.func.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -44,15 +48,15 @@ function mapStateToProps(state, props) {
     meta: state.live.meta,
     slug: props.params.slug,
     pathname: props.location.pathname,
-    can: permissionSelector(state),
-    currentUser: state.live.currentUser,
+    currentUser: currentUserSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...liveActions };
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: {
+      live: bindActionCreators(liveActions, dispatch),
+    },
   };
 }
 

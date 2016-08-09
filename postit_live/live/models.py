@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db import transaction
-from guardian.shortcuts import assign_perm, get_users_with_perms
+from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
 from haikunator import Haikunator
 from markdown import markdown
 from model_utils import Choices
@@ -68,9 +68,17 @@ class LiveChannel(TimeStampedModel, StatusModel):
         if 'full' in perms:
             perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
                      'change_channel_settings', 'add_channel_messages']
-            [assign_perm(perm, user, self) for perm in perms]
-            self.save()
-            return self
+        [assign_perm(perm, user, self) for perm in perms]
+        self.save()
+        return self
+
+    def remove_perms(self, user):
+        perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
+                 'change_channel_settings', 'add_channel_messages']
+
+        [remove_perm(perm, user, self) for perm in perms]
+        self.save()
+        return self
 
     def __str__(self):
         LiveChannelClass = self.__class__

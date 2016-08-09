@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import a11y from 'react-a11y';
 
 const { beforeEach, afterEach } = global;
+beforeEach(() => { localStorage.setItem('debug', '*'); });
 beforeEach(() => a11y(React, { ReactDOM, throw: true }));
 afterEach(() => a11y.restoreAll());
 
