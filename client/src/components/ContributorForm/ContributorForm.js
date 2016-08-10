@@ -1,23 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
+import FormGroupText from '../../components/FormGroupText';
 import FormGroupPermissions from '../../components/FormGroupPermissions';
-import { reduxForm } from 'redux-form';
+import * as userUtils from '../../utils/user';
+import { reduxForm, propTypes } from 'redux-form';
 import autobind from 'autobind-decorator';
 
 const debug = require('debug')('app:components:ContributorForm');  // eslint-disable-line no-unused-vars
-
-export const INITIAL_VALUES = {
-  permissions: {
-    closeChannel: true,
-    editContributors: true,
-    editSettings: true,
-    editMessage: true,
-    addMessage: true,
-  },
-};
 
 class ContributorForm extends Component {
   @autobind
@@ -28,22 +18,12 @@ class ContributorForm extends Component {
   }
 
   renderUserInput({ show }) {
-    const { fields: { username } } = this.props;
+    const { fields: { user: { username } } } = this.props;
 
     if (!show) return null;
 
     return (
-      <input type="text" {...username} />
-    );
-  }
-
-  renderUser({ show }) {
-    const { values: { username } } = this.props;
-
-    if (!show) return null;
-
-    return (
-      <User user={{ username }} />
+      <FormGroupText id="ContributorForm-user" {...username} />
     );
   }
 
@@ -70,7 +50,10 @@ class ContributorForm extends Component {
   }
 
   render() {
-    const { fields: { permissions }, values, action, onUpdate } = this.props;
+    const { fields, action, onUpdate } = this.props;
+    const user = userUtils.fromForm(fields.user);
+    debug('user', user);
+
     return (
       <form className="AddContributorForm" onSubmit={this.handleSubmit}>
         <div className="row">
@@ -78,61 +61,52 @@ class ContributorForm extends Component {
           <div className="col-xs">
             {this.renderUserInput({ show: action === 'create' })}
 
-            {this.renderUser({ show: values.username && values.username.length })}
+            <User user={user} />
           </div>
 
           {this.renderRemoveButton({ show: action === 'update' })}
 
           <div className="col-xs-8 text-xs-right">
-            <FormGroupPermissions values={values.permissions} onSave={onUpdate} {...permissions} />
+            <FormGroupPermissions values={{ user }} onSave={onUpdate} user={fields.user} />
           </div>
 
           {this.renderAddButton({ show: action === 'create' })}
-
 
         </div>
       </form>
     );
   }
 }
+
 ContributorForm.propTypes = {
+
   resetForm: PropTypes.func,
-
   handleSubmit: PropTypes.func,
-
   fields: PropTypes.shape({
-    username: PropTypes.string,
-    permissions: PropTypes.array,
+    user: PropTypes.shape({
+      username: PropTypes.object,
+      can: PropTypes.object,
+    }),
   }),
-
   values: PropTypes.shape({
-    username: PropTypes.string,
-    permissions: PropTypes.array,
+    user: PropTypes.shape({
+      username: PropTypes.string,
+      permissions: PropTypes.string,
+    }),
   }),
-
-  form: PropTypes.string,
-
-  formKey: PropTypes.string,
-
-  initialValues: PropTypes.object,
-
   onUpdate: PropTypes.func,
   onDelete: PropTypes.func,
-
-  onSubmit: PropTypes.func.isRequired,
-
-  action: PropTypes.oneOf(['create', 'update']).isRequired,
+  action: PropTypes.oneOf(['create', 'update']),
 };
 
 export default reduxForm({
   form: 'ContributorForm',
   fields: [
-    'username',
-    'permissions.closeChannel',
-    'permissions.editContributors',
-    'permissions.editSettings',
-    'permissions.editMessage',
-    'permissions.addMessage',
+    'user.username',
+    'user.can.closeChannel',
+    'user.can.editContributors',
+    'user.can.editSettings',
+    'user.can.editMessage',
+    'user.can.addMessage',
   ],
-  initialValues: INITIAL_VALUES,
 })(ContributorForm);

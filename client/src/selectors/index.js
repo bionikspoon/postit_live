@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import * as perm from '../constants/permissions';
 import _ from 'lodash';
+import * as user from '../utils/user';
 const debug = require('debug')('app:selectors:index');  // eslint-disable-line no-unused-vars
 
 const stateMessages = state => state.live.messages;
@@ -12,29 +12,12 @@ export const sortedMessagesSelector = createSelector(
 const stateContributors = state => state.live.contributors;
 export const contributorsSelector = createSelector(
   stateContributors,
-  contributors => _.values(contributors).map(userFactory)
+  contributors => _.values(contributors).map(userFromStateUser)
 );
 
 const stateCurrentUser = state => state.live.currentUser;
-export const currentUserSelector = createSelector(stateCurrentUser, userFactory);
+export const currentUserSelector = createSelector(stateCurrentUser, userFromStateUser);
 
-function userFactory(user) { return new User(user); }
-function User({ channel_permissions, username }) {
-  const user = this;
-  user.username = username;
-  user.can = new Can();
-  return user;
-
-  function Can() {
-    const can = this;
-    can.closeChannel = channel_permissions.includes(perm.CLOSE_CHANNEL);
-    can.editContributors = channel_permissions.includes(perm.EDIT_CONTRIBUTORS);
-    can.editSettings = channel_permissions.includes(perm.EDIT_SETTINGS);
-    can.editMessage = channel_permissions.includes(perm.EDIT_MESSAGES);
-    can.addMessage = channel_permissions.includes(perm.ADD_MESSAGES);
-    can.logout = !!(username && username.length);
-    can.login = !can.logout;
-    can.contribute = !!channel_permissions.length;
-    return can;
-  }
+function userFromStateUser({ username, channel_permissions }) {
+  return user.fromPermissionNames(username, channel_permissions);
 }

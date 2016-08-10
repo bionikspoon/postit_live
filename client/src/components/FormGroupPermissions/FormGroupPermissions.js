@@ -1,9 +1,9 @@
 import './FormGroupPermissions.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
-import classnames from 'classnames';
-import { PERMISSION_METHOD_DESCRIPTIONS } from '../../constants/permissions';
+import * as userUtils from '../../utils/user';
 import _ from 'lodash';
+import classnames from 'classnames';
 const debug = require('debug')('app:components:FormGroupPermissions');  // eslint-disable-line no-unused-vars
 
 export default class FormGroupPermissions extends Component {
@@ -33,11 +33,15 @@ export default class FormGroupPermissions extends Component {
     this.interval = setTimeout(() => (currentTarget.contains(document.activeElement) ? null : this.collapse(event)), 0);
   }
 
-  renderPermission({ permission, index }) {
+  renderPermission({ permission, label, index }) {
+    const attrs = _.omit(permission, [
+      'initialValue', 'autofill', 'onUpdate', 'valid', 'invalid', 'dirty', 'pristine', 'active', 'touched', 'visited',
+      'autofilled',
+    ]);
     return (
       <div key={index} className="form-check">
         <label className="form-check-label" tabIndex={index}>
-          <input className="form-check-input" type="checkbox" {...permission} /> {permission.label}
+          <input className="form-check-input" type="checkbox" {...attrs} /> {label}
         </label>
       </div>
     );
@@ -46,46 +50,29 @@ export default class FormGroupPermissions extends Component {
   renderDropdown() {
     const { expanded } = this.state;
     if (!expanded) return null;
-    const { onSubmit } = this.props;
-
-    const permissions = this.props;
-    permissions.addMessage.label = 'message ← add';
-    permissions.closeChannel.label = 'channel ← close';
-    permissions.editContributors.label = 'contributors ← edit';
-    permissions.editMessage.label = 'message ← edit';
-    permissions.editSettings.label = 'settings ← edit';
+    const { onSubmit, user } = this.props;
 
     return (
       <div className="form-group dropdown-menu dropdown-menu-right">
 
-        {_.values(permissions)
-          .filter(permission => permission && permission.label && permission.label.length)
-          .map((permission, index) => this.renderPermission({ permission, index }))}
+        {userUtils.mapField(user).map(field => this.renderPermission(field))}
 
         {onSubmit ? <button>save</button> : null}
       </div>
     );
   }
 
-  renderSummary() {
-    const values = this.props.values;
-
-    const summaryText = _.values(values).every(_.identity)
-      ? 'full permissions'
-      : _.keys(values).filter(key => values[key]).map(key => PERMISSION_METHOD_DESCRIPTIONS[key]).join(', ');
-    return (
-      <span>{summaryText}</span>
-    );
-  }
-
   render() {
     const { expanded } = this.state;
+    const { user } = this.props.values;
     const divClass = classnames('dropdown', { open: expanded }, 'FormGroupPermissions');
-
+    debug('this.props.values.user.can', this.props.values.user.can);
+    debug('this.props.values.user.can.closeChannel', this.props.values.user.can.closeChannel);
+    debug('user.can', user.can);
     return (
       <div className={divClass} onBlur={this.handleBlur}>
         <div>
-          {this.renderSummary()}&nbsp;
+          {userUtils.permissionSummary(user)}&nbsp;
 
           (
           <button
@@ -103,19 +90,11 @@ export default class FormGroupPermissions extends Component {
 }
 
 FormGroupPermissions.propTypes = {
-  addMessage: PropTypes.object.isRequired,
-  closeChannel: PropTypes.object.isRequired,
-  editContributors: PropTypes.object.isRequired,
-  editMessage: PropTypes.object.isRequired,
-  editSettings: PropTypes.object.isRequired,
-
   values: PropTypes.shape({
-    addMessage: PropTypes.bool.isRequired,
-    closeChannel: PropTypes.bool.isRequired,
-    editContributors: PropTypes.bool.isRequired,
-    editMessage: PropTypes.bool.isRequired,
+    user: userUtils.propTypes(),
   }).isRequired,
 
   onSubmit: PropTypes.func,
+  user: PropTypes.object.isRequired,
 };
 

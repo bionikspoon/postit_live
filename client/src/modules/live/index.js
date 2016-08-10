@@ -47,7 +47,6 @@ export const deleteContributor = createAction(DELETE_CONTRIBUTOR);
 export function socketMessage({ action, data, model, pk }) {
   return dispatch => {
     debug('action=%s model=%s pk=%s data=', action, model, pk, data);
-    debug('data', data);
     const methods = {
       'live.livemessage': {
         create: createMessage,

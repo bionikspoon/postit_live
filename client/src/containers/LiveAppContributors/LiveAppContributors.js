@@ -3,23 +3,24 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as liveActions from '../../modules/live';
 import * as socketActions from '../../modules/socket';
-import { PERMISSION_METHOD_NAMES } from '../../constants/permissions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import ContributorMessage from '../../components/ContributorMessage';
 import ContributorList from '../../components/ContributorList';
 import ContributorAdd from '../../components/ContributorAdd';
+import * as userUtils from '../../utils/user';
 import { currentUserSelector, contributorsSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
-import _ from 'lodash';
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 
 export class LiveAppContributors extends Component {
   @autobind
-  handleAddContributor({ permissions, ...data }) {
+  handleAddContributor({ user, ...data }) {
+    debug('add contributor user=%o data=', user, data);
+
     const { actions } = this.props;
 
-    const perms = _.keys(permissions).filter(key => permissions[key]).map(key => PERMISSION_METHOD_NAMES[key]);
+    const perms = userUtils.toPermissionNames(user);
     actions.socket.addContributor({ permissions: perms, ...data });
   }
 
@@ -43,7 +44,10 @@ export class LiveAppContributors extends Component {
           <div>
             <h1>Contributors</h1>
 
-            <ContributorMessage show={currentUser.can.contribute} onSubmit={this.handleDeleteContributor} />
+            <ContributorMessage
+              show={currentUser.can.contribute}
+              onSubmit={this.handleDeleteContributor}
+            />
 
             <ContributorList
               contributors={contributors}
@@ -51,10 +55,7 @@ export class LiveAppContributors extends Component {
               onDelete={this.handleDeleteContributor}
             />
 
-            <ContributorAdd
-              contributors={contributors}
-              onSave={this.handleAddContributor}
-            />
+            <ContributorAdd onSave={this.handleAddContributor} />
 
           </div>
 
