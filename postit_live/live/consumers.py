@@ -1,12 +1,13 @@
 # coding=utf-8
+import json
 import logging
 import pickle
 
+from channels import Group
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
-
 User = get_user_model()
 
 
@@ -24,6 +25,7 @@ class Demultiplexer(SessionDemultiplexerMixin, WebsocketDemultiplexer):
         'LiveChannel': 'binding.LiveChannel',
         'LiveChannelContributor': 'binding.LiveChannelContributor',
         'LiveMessage': 'binding.LiveMessage',
+        'Activity': 'consumer.Activity',
     }
 
     def connection_groups(self, slug=None):
@@ -36,3 +38,20 @@ class Demultiplexer(SessionDemultiplexerMixin, WebsocketDemultiplexer):
     def receive(self, content, **kwargs):
         logger.debug('content received content=%s', content)
         return super().receive(content, **kwargs)
+
+
+def activity_consumer(message):
+    group = Group('live-%s' % message['slug'])
+    content = {
+        'stream': 'Activity',
+        'payload': {
+            'model': 'live.livechannel.subscribers',
+            'action': 'update',
+            'data': {
+                'slug': message['slug'],
+                'subscribers': len(group.channel_layer.channel_layer.group_channels(group.name))
+            }
+        }
+    }
+    group.send({'text': json.dumps(content)})
+    logger.debug('Activity sent payload=%s', content['payload'])

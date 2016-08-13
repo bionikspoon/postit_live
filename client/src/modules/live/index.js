@@ -25,6 +25,9 @@ export const fetchChannel = createAction(FETCH_CHANNEL, ({ location, slug }) =>
     .then(parseResponse)
 );
 
+const UPDATE_CHANNEL_SUBSCRIBERS = 'app/live/channel/UPDATE_CHANNEL_SUBSCRIBERS';
+export const updateChannelSubscribers = createAction(UPDATE_CHANNEL_SUBSCRIBERS);
+
 const FETCH_CURRENT_USER = 'app/live/currentUser/FETCH_CURRENT_USER';
 export const fetchCurrentUser = createAction(FETCH_CURRENT_USER, ({ location, slug }) =>
   fetch(`${location.origin}/api/users/current/?channel_slug=${slug}`, FETCH_OPTIONS)
@@ -56,6 +59,9 @@ export function socketMessage({ action, data, model, pk }) {
       'live.livechannel': {
         update: updateChannel,
       },
+      'live.livechannel.subscribers': {
+        update: updateChannelSubscribers,
+      },
     };
 
     const method = methods[model][action];
@@ -83,6 +89,17 @@ export default handleActions({
         ),
       },
     }),
+
+  [updateChannelSubscribers]: (state, { payload: { data: { subscribers } } }) => {
+    debug('subscribers', subscribers);
+    return update(state, {
+      channel: {
+        subscribers: {
+          $set: subscribers,
+        },
+      },
+    });
+  },
 
   [fetchChannel]: (state, { payload }) => {
     const messages = payload.messages.reduce((obj, message) =>

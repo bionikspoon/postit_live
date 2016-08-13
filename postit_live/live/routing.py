@@ -3,8 +3,8 @@ import logging
 
 from channels import route, route_class
 
-from .consumers import Demultiplexer
 from .bindings import LiveChannelBinding, LiveMessageBinding, LiveChannelContributorBinding
+from .consumers import Demultiplexer, activity_consumer
 
 logger = logging.getLogger(__name__)
 
@@ -13,4 +13,5 @@ channel_routing = [
     route('binding.LiveChannel', LiveChannelBinding.consumer),
     route('binding.LiveChannelContributor', LiveChannelContributorBinding.consumer),
     route('binding.LiveMessage', LiveMessageBinding.consumer),
+    route('consumer.Activity', activity_consumer)
 ]

@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 from __future__ import absolute_import, unicode_literals
 
+from datetime import timedelta
+
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (postit_live/config/settings/common.py - 3 = postit_live/)
@@ -39,14 +41,15 @@ THIRD_PARTY_APPS = (
     'guardian',
     'crispy_forms',  # Form layouts
     'rest_framework',
+    'djcelery',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'postit_live.live',
-    'postit_live.user',
-    'postit_live.api',
+    'postit_live.live.apps.LiveConfig',
+    'postit_live.user.apps.UserConfig',
+    'postit_live.api.apps.ApiConfig',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -246,18 +249,19 @@ WEBPACK_LOADER = {
         'STATS_FILE': STATS_FILE
     }
 }
-
-# Your common stuff: Below this line define 3rd party library settings
+# CHANNELS
+# ------------------------------------------------------------------------------
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
-            'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 3)]
+            'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 2)]
         },
         'ROUTING': 'config.routing.channel_routing'
     }
 }
-
+# DJANGO REST FRAMEWORK
+# ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         # TODO FIX THIS
@@ -265,3 +269,16 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 5,
 }
+
+# CELERY
+# ------------------------------------------------------------------------------
+CELERY_RESULT_BACKEND = 'djcelery.backends.cache:CacheBackend'
+CELERYBEAT_SCHEDULE = {
+    'ping-activity-every-60-seconds': {
+        'task': 'postit_live.live.tasks.ping_activity',
+        'schedule': timedelta(seconds=60)
+    }
+}
+BROKER_URL = env('CLOUDAMQP_URL')
+
+# Your common stuff: Below this line define 3rd party library settings

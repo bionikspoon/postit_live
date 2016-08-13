@@ -85,3 +85,4 @@ shell.ipynb
 .ipynb_checkpoints/
 
 .old
+celerybeat-schedule
