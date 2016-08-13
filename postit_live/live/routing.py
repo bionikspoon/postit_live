@@ -1,8 +1,7 @@
 # coding=utf-8
 import logging
 
-from channels import route
-from channels import route_class
+from channels import route, route_class
 
 from .bindings import LiveChannelBinding, LiveMessageBinding, Demultiplexer, LiveChannelContributorBinding
 

@@ -5,7 +5,6 @@ import pickle
 from channels.binding.websockets import WebsocketBinding
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
-from django.db import transaction
 
 from postit_live.live.serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
 from .models import LiveChannel, LiveMessage

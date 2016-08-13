@@ -252,7 +252,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
-            'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 3)]
+            'hosts': ['{0}/{1}'.format(env('REDIS_URL'), 0)]
         },
         'ROUTING': 'config.routing.channel_routing'
     }
@@ -260,6 +260,7 @@ CHANNEL_LAYERS = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
+        # TODO FIX THIS
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
     'PAGE_SIZE': 5,
