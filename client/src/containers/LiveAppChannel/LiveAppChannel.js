@@ -100,7 +100,6 @@ LiveAppChannel.propTypes = {
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
     discussions_html: PropTypes.string.isRequired,
-    contributors_html: PropTypes.string.isRequired,
   }).isRequired,
 
   actions: PropTypes.shape({
