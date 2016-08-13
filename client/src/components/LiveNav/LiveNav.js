@@ -2,6 +2,7 @@ import './LiveNav.scss';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
+import Confirm from '../Confirm';
 import User from '../User';
 
 const debug = require('debug')('app:containers:LiveNav');  // eslint-disable-line no-unused-vars
@@ -43,13 +44,13 @@ export default class LiveNav extends Component {
 
   renderLogout({ show }) {
     if (!show) return null;
-
     const { currentUser } = this.props;
+    const handleClick = () => (window ? (window.location.pathname = '/logout/') : null);
 
     return (
       <span>
         <li className="nav-item pull-xs-right">
-          <a href="/logout/" className="nav-link">logout</a>
+          <Confirm value="logout" btnClass="btn btn-link" className="nav-link" align="right" onClick={handleClick} />
         </li>
 
         <li className="nav-item pull-xs-right">
@@ -71,7 +72,7 @@ export default class LiveNav extends Component {
   }
 
   render() {
-    const { hasPerm } = this.props;
+    const { hasPerm, currentUser } = this.props;
 
     return (
       <ul className="nav nav-tabs LiveNav">
@@ -81,9 +82,9 @@ export default class LiveNav extends Component {
 
         {this.renderContributorsTab({ show: hasPerm.editContributors })}
 
-        {this.renderLogout({ show: hasPerm.logout })}
+        {this.renderLogout({ show: !!currentUser.username.length })}
 
-        {this.renderLogin({ show: hasPerm.login })}
+        {this.renderLogin({ show: !currentUser.username.length })}
       </ul>
     );
   }
@@ -93,13 +94,12 @@ LiveNav.propTypes = {
 
   slug: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
-  // currentUser: PropTypes.shape({
-  //   can: PropTypes.shape({
-  //     editSettings: PropTypes.bool.isRequired,
-  //     editContributors: PropTypes.bool.isRequired,
-  //     logout: PropTypes.bool.isRequired,
-  //     login: PropTypes.bool.isRequired,
-  //   }).isRequired,
-  // }).isRequired,
+  hasPerm: PropTypes.shape({
+    editSettings: PropTypes.bool.isRequired,
+    editContributors: PropTypes.bool.isRequired,
+  }).isRequired,
+  currentUser: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 };
 

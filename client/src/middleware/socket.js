@@ -18,8 +18,6 @@ class LiveSocket extends Socket {
     super.onopen(event);
     const action = updateConnectionStatus({ connectionStatus: CONNECTION_OPENED });
     this.dispatch(action);
-
-    // debug('dispatched type=%s payload=', action.type, action.payload);
   }
 
   onclose(event) {
@@ -50,7 +48,6 @@ export default function connect(store) {
     if (!middlewareActions.includes(action.type)) return next(action);
     const message = next(action);
     socket.send(JSON.stringify(message.payload));
-    // debug('socket message sent message=', message);
 
     return message;
   };

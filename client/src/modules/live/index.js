@@ -25,6 +25,9 @@ export const fetchChannel = createAction(FETCH_CHANNEL, ({ location, slug }) =>
     .then(parseResponse)
 );
 
+const UPDATE_CHANNEL_SUBSCRIBERS = 'app/live/channel/UPDATE_CHANNEL_SUBSCRIBERS';
+export const updateChannelSubscribers = createAction(UPDATE_CHANNEL_SUBSCRIBERS);
+
 const FETCH_CURRENT_USER = 'app/live/currentUser/FETCH_CURRENT_USER';
 export const fetchCurrentUser = createAction(FETCH_CURRENT_USER, ({ location, slug }) =>
   fetch(`${location.origin}/api/users/current/?channel_slug=${slug}`, FETCH_OPTIONS)
@@ -56,6 +59,9 @@ export function socketMessage({ action, data, model, pk }) {
       'live.livechannel': {
         update: updateChannel,
       },
+      'live.livechannel.subscribers': {
+        update: updateChannelSubscribers,
+      },
     };
 
     const method = methods[model][action];
@@ -84,6 +90,17 @@ export default handleActions({
       },
     }),
 
+  [updateChannelSubscribers]: (state, { payload: { data: { subscribers } } }) => {
+    debug('subscribers', subscribers);
+    return update(state, {
+      channel: {
+        subscribers: {
+          $set: subscribers,
+        },
+      },
+    });
+  },
+
   [fetchChannel]: (state, { payload }) => {
     const messages = payload.messages.reduce((obj, message) =>
       update(obj, {
@@ -105,7 +122,7 @@ export default handleActions({
       },
       channel: {
         $merge: _.pick(payload, [
-          'title', 'resources', 'resources_html', 'description', 'description_html', 'contributors_html',
+          'title', 'resources', 'resources_html', 'description', 'description_html',
         ]),
       },
       contributors: {
@@ -158,7 +175,6 @@ function initialState() {
       description_html: '',
       discussions: 'no discussions yet. [start one](#)',
       discussions_html: '<p>no discussions yet. <a href="#">start one</a></p>',
-      contributors_html: '',
       status: CHANNEL_OPENED,
     },
 
@@ -170,88 +186,5 @@ function initialState() {
       username: '',
       channel_permissions: [],
     },
-  };
-}
-
-function handleFetchChannelRequest(state) {
-  return update(state, { meta: { isFetching: { $set: true } } });
-}
-
-function handleFetchChannelSuccess(state, payload) {
-  const messages = payload.messages.reduce((obj, message) =>
-    update(obj, {
-      [message.pk]: {
-        $set: {
-          author: { username: message.author.username },
-          body: message.body,
-          body_html: message.body_html,
-          created: message.created,
-          status: message.status,
-          pk: message.pk,
-        },
-      },
-    }), {});
-
-  return update(state, {
-    meta: {
-      isFetching: { $set: false },
-      synced: { $set: true },
-    },
-    channel: {
-      $merge: _.pick(payload, [
-        'title', 'resources', 'resources_html', 'description', 'description_html', 'contributors_html',
-      ]),
-    },
-    contributors: {
-      $apply: setContributors(payload.contributors),
-    },
-    messages: {
-      $merge: messages,
-    },
-  });
-}
-
-function handleFetchChannelFailure(state, payload) {
-  return update(state, { meta: { isFetching: { $set: false } } });
-}
-
-function handleFetchCurrentUserRequest(state) {
-  return update(state, { currentUser: { isFetching: { $set: true } } });
-}
-
-function handleFetchCurrentUserSuccess(state, payload) {
-  return update(state, {
-    currentUser: {
-      isFetching: { $set: false },
-      username: { $set: payload.username },
-      channel_permissions: { $set: payload.channel_permissions },
-    },
-  });
-}
-
-function handleFetchCurrentUserFailure(state, payload) {
-  return update(state, { currentUser: { isFetching: { $set: false } } });
-}
-
-function handleAddContributor(state, payload) {
-  return update(state, {
-    contributors: {
-      $apply: setContributors([payload.contributor]),
-    },
-  });
-}
-
-function handleUpdateContributor(state, payload) {
-  return state;
-}
-
-function handleDeleteContributor(state, payload) {
-  return state;
-}
-
-function setContributors(payloadContributors = []) {
-  return stateContributors => {
-    const newContributors = payloadContributors.map(_.partialRight(_.pick, ['pk', 'username', 'channel_permissions']));
-    return _.uniqBy(stateContributors.concat(newContributors), 'pk');
   };
 }

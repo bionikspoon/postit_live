@@ -12,3 +12,11 @@ services:
     - "5432:5432"
     environment:
     - DEBUG=true
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: localhost
+    ports:
+    - "5672:5672"
+    - "8081:15672"
+    environment:
+    - DEBUG=true

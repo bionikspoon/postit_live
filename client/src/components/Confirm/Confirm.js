@@ -69,12 +69,13 @@ export default class Confirm extends Component {
   }
 
   render() {
-    const { value, btnClass } = this.props;
+    const { value, btnClass, className } = this.props;
     const { expanded } = this.state;
     const divClass = classnames('dropdown', { open: expanded }, 'Confirm');
+    const buttonClass = classnames(btnClass, className);
     return (
       <div className={divClass} onBlur={this.handleBlur}>
-        <button type="button" onClick={this.expand} className={btnClass}>{value}</button>
+        <button type="button" onClick={this.expand} className={buttonClass}>{value}</button>
 
         {this.renderConfirm({ show: expanded })}
       </div>
@@ -86,5 +87,6 @@ Confirm.propTypes = {
   btnClass: PropTypes.string,
   value: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
   align: PropTypes.oneOf(['left', 'right']),
 };

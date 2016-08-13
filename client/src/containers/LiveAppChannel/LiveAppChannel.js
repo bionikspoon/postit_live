@@ -9,7 +9,7 @@ import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
-import { sortedMessages} from '../../selectors';
+import User from '../../components/User';
 import autobind from 'autobind-decorator';
 import * as selector from '../../selectors';
 
@@ -24,7 +24,7 @@ export class LiveAppChannel extends Component {
   }
 
   renderSidebar() {
-    const { channel } = this.props;
+    const { channel, contributors } = this.props;
 
     return (
       <div className="LiveAppChannel--sidebar">
@@ -47,7 +47,13 @@ export class LiveAppChannel extends Component {
         </LiveAside>
 
         <LiveAside title="updated by">
-          <div dangerouslySetInnerHTML={{ __html: channel.contributors_html }} />
+          <ul>
+            {contributors.map(contributor => (
+              <li key={contributor.username}>
+                <User user={contributor} />
+              </li>
+            ))}
+          </ul>
         </LiveAside>
 
         <LiveAside>
@@ -59,7 +65,6 @@ export class LiveAppChannel extends Component {
 
   render() {
     const { channel, messages, meta, actions, hasPerm } = this.props;
-    debug('hasPerm', hasPerm);
 
     return (
       <div className="LiveAppChannel">
@@ -95,7 +100,6 @@ LiveAppChannel.propTypes = {
     resources: PropTypes.string.isRequired,
     resources_html: PropTypes.string.isRequired,
     discussions_html: PropTypes.string.isRequired,
-    contributors_html: PropTypes.string.isRequired,
   }).isRequired,
 
   actions: PropTypes.shape({
@@ -105,20 +109,23 @@ LiveAppChannel.propTypes = {
     live: PropTypes.object.isRequired,
   }).isRequired,
 
-  // currentUser: PropTypes.shape({
-  //   can: PropTypes.shape({
-  //     addMessage: PropTypes.bool.isRequired,
-  //     editMessage: PropTypes.bool.isRequired,
-  //   }).isRequired,
-  // }).isRequired,
+  hasPerm: PropTypes.shape({
+    addMessage: PropTypes.bool.isRequired,
+    editMessage: PropTypes.bool.isRequired,
+  }).isRequired,
+
+  contributors: PropTypes.arrayOf(
+    PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired
+  ).isRequired,
 
 };
 
 function mapStateToProps(state) {
   return {
     meta: state.live.meta,
-    messages: sortedMessages(state),
+    messages: selector.sortedMessages(state),
     channel: state.live.channel,
+    contributors: selector.contributors(state),
 
     currentUser: state.live.currentUser,
     hasPerm: selector.hasPerm(state),
