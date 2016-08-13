@@ -1,15 +1,17 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-import promiseMiddleware from 'redux-promise';
+import middlewarePromise from 'redux-promise';
+import middlewareThunk from 'redux-thunk';
 import rootReducer from '../modules';
 import middlewareSocket from '../middleware/socket';
 
 export default function configureStore(initialState) {
   const middleware = applyMiddleware(
-    promiseMiddleware,
+    middlewarePromise,
+    middlewareThunk,
     routerMiddleware(browserHistory),
-    middlewareSocket
+    middlewareSocket,
   );
   const enhancer = compose(middleware);
 
