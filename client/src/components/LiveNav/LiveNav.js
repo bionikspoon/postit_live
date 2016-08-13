@@ -71,7 +71,8 @@ export default class LiveNav extends Component {
   }
 
   render() {
-    const { hasPerm } = this.props;
+    const { hasPerm, currentUser } = this.props;
+    debug('this.props', this.props);
 
     return (
       <ul className="nav nav-tabs LiveNav">
@@ -81,9 +82,9 @@ export default class LiveNav extends Component {
 
         {this.renderContributorsTab({ show: hasPerm.editContributors })}
 
-        {this.renderLogout({ show: hasPerm.logout })}
+        {this.renderLogout({ show: !!currentUser.username.length })}
 
-        {this.renderLogin({ show: hasPerm.login })}
+        {this.renderLogin({ show: !currentUser.username.length })}
       </ul>
     );
   }
@@ -93,13 +94,12 @@ LiveNav.propTypes = {
 
   slug: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
-  // currentUser: PropTypes.shape({
-  //   can: PropTypes.shape({
-  //     editSettings: PropTypes.bool.isRequired,
-  //     editContributors: PropTypes.bool.isRequired,
-  //     logout: PropTypes.bool.isRequired,
-  //     login: PropTypes.bool.isRequired,
-  //   }).isRequired,
-  // }).isRequired,
+  hasPerm: PropTypes.shape({
+    editSettings: PropTypes.bool.isRequired,
+    editContributors: PropTypes.bool.isRequired,
+  }).isRequired,
+  currentUser: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
