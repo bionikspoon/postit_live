@@ -47,7 +47,7 @@ django-webpack-loader~=0.3.0
 
 # Your custom requirements go here
 haikunator~=2.0.0
-channels~=0.17.1
+channels==0.17.2
 asgi-redis~=0.14.0
 
 django-filter~=0.13.0
