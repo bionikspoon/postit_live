@@ -12,24 +12,8 @@ const PERMISSIONS = [
   { value: 'add_channel_messages', label: 'add messages' },
 ];
 export default class FormGroupPermissions extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { expanded: false };
-  }
-
   componentWillUnmount() {
     clearInterval(this.interval);
-  }
-
-  @autobind
-  expand() {
-    this.setState({ expanded: true });
-  }
-
-  @autobind
-  collapse() {
-    this.setState({ expanded: false });
   }
 
   @autobind
@@ -40,7 +24,6 @@ export default class FormGroupPermissions extends Component {
       if (currentTarget.contains(document.activeElement)) return;
       const { onBlur, value } = this.props;
 
-      this.collapse();
       onBlur(value);
     }, 0);
   }
@@ -57,19 +40,22 @@ export default class FormGroupPermissions extends Component {
 
   renderSummary() {
     const { value } = this.props;
+    const summary = () => {
+      if (value.length === PERMISSIONS.length) return 'full';
+      if (value.length === 0) return 'none';
+      return PERMISSIONS
+        .filter((permission) => value.includes(permission.value))
+        .map(({ label }) => label)
+        .join(', ');
+    };
     return (
-      <small>
-        {PERMISSIONS
-          .filter((permission) => value.includes(permission.value))
-          .map(({ label }) => label)
-          .join(', ')}
-      </small>
+      <small>{summary()}</small>
     );
   }
 
   renderDropdown() {
-    const { expanded } = this.state;
-    if (!expanded) return null;
+    const { active } = this.props;
+    if (!active) return null;
     const { onSubmit, name, value } = this.props;
 
     return (
@@ -98,17 +84,16 @@ export default class FormGroupPermissions extends Component {
   }
 
   render() {
-    const { expanded } = this.state;
-    const { onFocus } = this.props;
-    const divClass = classnames('dropdown', { open: expanded }, 'FormGroupPermissions');
-    const handleClick = expanded ? this.collapse : this.expand;
+    // const { expanded } = this.state;
+    const { onFocus, active } = this.props;
+    const divClass = classnames('dropdown', { open: active }, 'FormGroupPermissions');
     return (
       <div className={divClass} onBlur={this.handleBlur} onFocus={onFocus}>
         <div>
           {this.renderSummary()}&nbsp;
 
           (
-          <button className="btn btn-link" type="button" onClick={handleClick}>change</button>
+          <button className="btn btn-link" type="button">change</button>
           )
         </div>
 
@@ -125,5 +110,6 @@ FormGroupPermissions.propTypes = {
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.array.isRequired,
+  active: PropTypes.bool.isRequired,
 };
 
