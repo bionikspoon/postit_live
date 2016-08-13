@@ -10,13 +10,13 @@ export default function ContributorList({ contributors, onUpdate, onDelete }) {
 
       {contributors.map(user => {
         debug('user', user);
-        debug('user.can', user.can);
         return (
           <ContributorForm
             key={user.username}
             formKey={user.username}
             action="update"
             onSubmit={onUpdate}
+            onUpdate={onUpdate}
             onDelete={onDelete}
             initialValues={{ user }}
           />
@@ -29,7 +29,7 @@ ContributorList.propTypes = {
   contributors: PropTypes.arrayOf(
     PropTypes.shape({
       username: PropTypes.string.isRequired,
-      can: PropTypes.object.isRequired,
+      channel_permissions: PropTypes.array.isRequired,
     }).isRequired
   ).isRequired,
 

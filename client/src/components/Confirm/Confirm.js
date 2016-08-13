@@ -27,6 +27,9 @@ export default class Confirm extends Component {
   }
 
   @autobind
+  focus(...args) { return this.expand(...args); }
+
+  @autobind
   collapse() {
     this.setState({ expanded: false });
   }

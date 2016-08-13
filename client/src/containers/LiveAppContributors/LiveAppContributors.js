@@ -15,27 +15,22 @@ const debug = require('debug')('app:containers:LiveAppContributors');  // eslint
 
 export class LiveAppContributors extends Component {
   @autobind
-  handleAddContributor({ user, ...data }) {
-    debug('add contributor user=%o data=', user, data);
-
-    const { actions } = this.props;
-
-    // actions.socket.addContributor({ permissions: perms, ...data });
+  handleAddContributor(data) {
+    debug('handleAddContributor data', data);
   }
 
   @autobind
-  handleUpdateContributor({ permissions, ...data }) {
-    debug('permissions=%o data=', permissions, data);
+  handleUpdateContributor(data) {
+    debug('handleUpdateContributor data', data);
   }
 
   @autobind
-  handleDeleteContributor({ permissions, ...data }) {
-    debug('permissions=%o data=', permissions, data);
+  handleDeleteContributor(data) {
+    debug('handleDeleteContributor data', data);
   }
 
   render() {
-    const { hasPerm, contributors } = this.props;
-    debug('contributors', contributors);
+    const { hasPerm, contributors, currentUser } = this.props;
     return (
       <LayoutRow className="LiveAppContributors">
 
@@ -45,7 +40,8 @@ export class LiveAppContributors extends Component {
 
             <ContributorMessage
               show={hasPerm.canContribute}
-              onSubmit={this.handleDeleteContributor}
+              onDelete={this.handleDeleteContributor}
+              currentUser={currentUser}
             />
 
             <ContributorList
@@ -66,13 +62,11 @@ export class LiveAppContributors extends Component {
 }
 
 LiveAppContributors.propTypes = {
-  // contributors: PropTypes.array.isRequired,
+  hasPerm: PropTypes.shape({ canContribute: PropTypes.bool.isRequired }).isRequired,
 
-  currentUser: PropTypes.shape({
-    // can: PropTypes.shape({
-    //   contribute: PropTypes.bool.isRequired,
-    // }).isRequired,
-  }).isRequired,
+  contributors: PropTypes.array.isRequired,
+
+  currentUser: PropTypes.object.isRequired,
 
   actions: PropTypes.shape({
     socket: PropTypes.shape({

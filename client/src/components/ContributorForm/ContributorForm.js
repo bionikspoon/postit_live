@@ -11,7 +11,13 @@ class ContributorForm extends Component {
   @autobind
   focusConfirm(event) {
     event.preventDefault();
-    this.confirm.expand();
+
+    const { onUpdate, handleSubmit } = this.props;
+    if (onUpdate) {
+      handleSubmit(onUpdate)(event);
+      return;
+    }
+    this.submit.focus();
   }
 
   @autobind
@@ -19,6 +25,13 @@ class ContributorForm extends Component {
     const { resetForm, handleSubmit } = this.props;
     handleSubmit(...args);
     resetForm();
+  }
+
+  @autobind
+  handleDelete() {
+    const { onDelete, values } = this.props;
+
+    onDelete(values);
   }
 
   renderUser({ showInput }) {
@@ -49,23 +62,24 @@ class ContributorForm extends Component {
 
     return (
       <div className="col-xs">
-        <Confirm value="remove" btnClass="btn btn-link" onClick={onDelete} />
+        <Confirm value="remove" btnClass="btn btn-link" onClick={this.handleDelete} />
       </div>
     );
   }
 
   renderPermissions() {
-    const { fields: { user: { channel_permissions } } } = this.props;
+    const { fields: { user: { channel_permissions } }, onUpdate } = this.props;
+
     return (
       <div className="col-xs-7 text-xs-right">
-        <FormGroupPermissions{...channel_permissions} />
+        <FormGroupPermissions{...channel_permissions} onUpdate={onUpdate ? this.focusConfirm : null} />
       </div>
     );
   }
 
   renderAddButton({ show }) {
     if (!show) return null;
-    const ref = confirm => (this.confirm = confirm);
+    const ref = submit => (this.submit = submit);
 
     return (
       <div className="col-xs text-xs-right">

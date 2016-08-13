@@ -56,7 +56,7 @@ export default class FormGroupPermissions extends Component {
   renderDropdown() {
     const { active } = this.props;
     if (!active) return null;
-    const { onSubmit, name, value } = this.props;
+    const { onUpdate, name, value } = this.props;
 
     return (
       <div className="dropdown-menu dropdown-menu-right">
@@ -78,7 +78,8 @@ export default class FormGroupPermissions extends Component {
           </div>
         ))}
 
-        {onSubmit ? <button onClick={onSubmit}>save</button> : null}
+        {onUpdate ? <button onClick={onUpdate}>save</button> : null}
+
       </div>
     );
   }
@@ -106,8 +107,8 @@ export default class FormGroupPermissions extends Component {
 FormGroupPermissions.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func,
   name: PropTypes.string.isRequired,
   value: PropTypes.array.isRequired,
   active: PropTypes.bool.isRequired,
