@@ -16,17 +16,20 @@ const debug = require('debug')('app:containers:LiveAppContributors');  // eslint
 export class LiveAppContributors extends Component {
   @autobind
   handleAddContributor(data) {
-    debug('handleAddContributor data', data);
+    const { actions } = this.props;
+    actions.socket.addContributor(data.user);
   }
 
   @autobind
   handleUpdateContributor(data) {
-    debug('handleUpdateContributor data', data);
+    const { actions } = this.props;
+    actions.socket.updateContributor(data.user);
   }
 
   @autobind
   handleDeleteContributor(data) {
-    debug('handleDeleteContributor data', data);
+    const { actions } = this.props;
+    actions.socket.deleteContributor(data.user);
   }
 
   render() {
