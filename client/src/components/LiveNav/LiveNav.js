@@ -73,7 +73,6 @@ export default class LiveNav extends Component {
 
   render() {
     const { hasPerm, currentUser } = this.props;
-    debug('this.props', this.props);
 
     return (
       <ul className="nav nav-tabs LiveNav">
