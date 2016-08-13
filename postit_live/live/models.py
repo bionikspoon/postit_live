@@ -37,17 +37,12 @@ class LiveChannel(TimeStampedModel, StatusModel):
     resources = models.TextField()
     resources_html = models.TextField(editable=False)
 
-    contributors_html = models.TextField(editable=False)
-
     def save(self, **kwargs):
         if not self.slug:
             LiveChannelClass = self.__class__
             self.slug = LiveChannelClass.create_slug()
         self.resources_html = markdown(self.resources)
         self.description_html = markdown(self.description or '')
-
-        contributors = '\n'.join(['- /u/%s' % contributor.username for contributor in self.contributors])
-        self.contributors_html = markdown(contributors)
 
         return super().save(**kwargs)
 

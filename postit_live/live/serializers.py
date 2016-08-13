@@ -56,7 +56,7 @@ class LiveChannelSocketSerializer(serializers.ModelSerializer):
         model = LiveChannel
         fields = (
             'pk', 'slug', 'title', 'resources', 'resources_html', 'description', 'description_html', 'status',
-            'contributors', 'contributors_html'
+            'contributors'
         )
 
 
