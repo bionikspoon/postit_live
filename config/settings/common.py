@@ -280,5 +280,5 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 BROKER_URL = env('CLOUDAMQP_URL')
-
+CELERY_ACCEPT_CONTENT = ['pickle']
 # Your common stuff: Below this line define 3rd party library settings
