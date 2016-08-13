@@ -105,7 +105,7 @@ export default handleActions({
       },
       channel: {
         $merge: _.pick(payload, [
-          'title', 'resources', 'resources_html', 'description', 'description_html', 'contributors_html',
+          'title', 'resources', 'resources_html', 'description', 'description_html',
         ]),
       },
       contributors: {
