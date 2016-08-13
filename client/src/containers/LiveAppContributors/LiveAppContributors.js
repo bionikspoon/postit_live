@@ -8,9 +8,9 @@ import LayoutInnerRow from '../../components/LayoutInnerRow';
 import ContributorMessage from '../../components/ContributorMessage';
 import ContributorList from '../../components/ContributorList';
 import ContributorAdd from '../../components/ContributorAdd';
-import * as userUtils from '../../utils/user';
-import { currentUserSelector, contributorsSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
+import * as selector from '../../selectors';
+
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 
 export class LiveAppContributors extends Component {
@@ -20,8 +20,7 @@ export class LiveAppContributors extends Component {
 
     const { actions } = this.props;
 
-    const perms = userUtils.toPermissionNames(user);
-    actions.socket.addContributor({ permissions: perms, ...data });
+    // actions.socket.addContributor({ permissions: perms, ...data });
   }
 
   @autobind
@@ -35,7 +34,7 @@ export class LiveAppContributors extends Component {
   }
 
   render() {
-    const { currentUser, contributors } = this.props;
+    const { hasPerm, contributors } = this.props;
 
     return (
       <LayoutRow className="LiveAppContributors">
@@ -45,15 +44,15 @@ export class LiveAppContributors extends Component {
             <h1>Contributors</h1>
 
             <ContributorMessage
-              show={currentUser.can.contribute}
+              show={hasPerm.canContribute}
               onSubmit={this.handleDeleteContributor}
             />
 
-            <ContributorList
-              contributors={contributors}
-              onUpdate={this.handleUpdateContributor}
-              onDelete={this.handleDeleteContributor}
-            />
+            {/*<ContributorList*/}
+              {/*contributors={contributors}*/}
+              {/*onUpdate={this.handleUpdateContributor}*/}
+              {/*onDelete={this.handleDeleteContributor}*/}
+            {/*/>*/}
 
             <ContributorAdd onSave={this.handleAddContributor} />
 
@@ -67,12 +66,12 @@ export class LiveAppContributors extends Component {
 }
 
 LiveAppContributors.propTypes = {
-  contributors: PropTypes.array.isRequired,
+  // contributors: PropTypes.array.isRequired,
 
   currentUser: PropTypes.shape({
-    can: PropTypes.shape({
-      contribute: PropTypes.bool.isRequired,
-    }).isRequired,
+    // can: PropTypes.shape({
+    //   contribute: PropTypes.bool.isRequired,
+    // }).isRequired,
   }).isRequired,
 
   actions: PropTypes.shape({
@@ -84,8 +83,8 @@ LiveAppContributors.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    contributors: contributorsSelector(state),
-    currentUser: currentUserSelector(state),
+    currentUser: state.live.currentUser,
+    hasPerm: selector.hasPerm(state),
   };
 }
 

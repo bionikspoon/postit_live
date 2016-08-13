@@ -3,10 +3,8 @@ import Confirm from '../../components/Confirm';
 import User from '../../components/User';
 import FormGroupText from '../../components/FormGroupText';
 import FormGroupPermissions from '../../components/FormGroupPermissions';
-import * as userUtils from '../../utils/user';
 import { reduxForm, propTypes } from 'redux-form';
 import autobind from 'autobind-decorator';
-
 const debug = require('debug')('app:components:ContributorForm');  // eslint-disable-line no-unused-vars
 
 class ContributorForm extends Component {
@@ -15,6 +13,17 @@ class ContributorForm extends Component {
     const { resetForm, handleSubmit } = this.props;
     handleSubmit(...args);
     resetForm();
+  }
+
+  renderUser({ showInput }) {
+    const { values } = this.props;
+    return (
+      <div className="col-xs-3">
+        {this.renderUserInput({ show: showInput })}
+
+        <User user={values.user} />
+      </div>
+    );
   }
 
   renderUserInput({ show }) {
@@ -39,6 +48,15 @@ class ContributorForm extends Component {
     );
   }
 
+  renderPermissions() {
+    const { fields: { user: { channel_permissions } } } = this.props;
+    return (
+      <div className="col-xs-7 text-xs-right">
+        <FormGroupPermissions{...channel_permissions} />
+      </div>
+    );
+  }
+
   renderAddButton({ show }) {
     if (!show) return null;
 
@@ -50,25 +68,17 @@ class ContributorForm extends Component {
   }
 
   render() {
-    const { fields, action, onUpdate } = this.props;
-    const user = userUtils.fromForm(fields.user);
-    debug('user', user);
+    const { action } = this.props;
 
     return (
       <form className="AddContributorForm" onSubmit={this.handleSubmit}>
         <div className="row">
 
-          <div className="col-xs">
-            {this.renderUserInput({ show: action === 'create' })}
-
-            <User user={user} />
-          </div>
+          {this.renderUser({ showInput: action === 'create' })}
 
           {this.renderRemoveButton({ show: action === 'update' })}
 
-          <div className="col-xs-8 text-xs-right">
-            <FormGroupPermissions values={{ user }} onSave={onUpdate} user={fields.user} />
-          </div>
+          {this.renderPermissions()}
 
           {this.renderAddButton({ show: action === 'create' })}
 
@@ -103,10 +113,6 @@ export default reduxForm({
   form: 'ContributorForm',
   fields: [
     'user.username',
-    'user.can.closeChannel',
-    'user.can.editContributors',
-    'user.can.editSettings',
-    'user.can.editMessage',
-    'user.can.addMessage',
+    'user.channel_permissions',
   ],
 })(ContributorForm);

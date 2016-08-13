@@ -1,13 +1,21 @@
 import './ContributorAdd.scss';
 import React, { PropTypes, Component } from 'react';
 import ContributorForm from '../ContributorForm';
-import * as userUtils from '../../utils/user';
 const debug = require('debug')('app:components:ContributorAdd');  // eslint-disable-line no-unused-vars
-
-const initialValues = userUtils.withFullPermissions();
+const initialValues = {
+  user: {
+    username: '',
+    channel_permissions: [
+      'change_channel_close',
+      'change_channel_contributors',
+      'change_channel_settings',
+      'change_channel_messages',
+      'add_channel_messages',
+    ],
+  },
+};
 
 export default function ContributorAdd({ onSave }) {
-  debug('initialValues', initialValues);
   return (
     <div>
       <h2>add contributor</h2>

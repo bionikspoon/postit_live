@@ -4,7 +4,7 @@ import LiveNav from '../../components/LiveNav';
 import * as liveActions from '../../modules/live';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { currentUserSelector } from '../../selectors';
+import * as selector from '../../selectors';
 
 class LiveApp extends Component {
   componentDidMount() {
@@ -18,10 +18,10 @@ class LiveApp extends Component {
   }
 
   render() {
-    const { slug, pathname, currentUser } = this.props;
+    const { slug, pathname, currentUser, hasPerm } = this.props;
     return (
       <div className="container-fluid LiveApp" role="main">
-        <LiveNav {...{ slug, pathname, currentUser }} />
+        <LiveNav {...{ slug, pathname, currentUser, hasPerm }} />
 
         {this.props.children}
       </div>
@@ -48,7 +48,8 @@ function mapStateToProps(state, props) {
     meta: state.live.meta,
     slug: props.params.slug,
     pathname: props.location.pathname,
-    currentUser: currentUserSelector(state),
+    currentUser: state.live.currentUser,
+    hasPerm: selector.hasPerm(state),
   };
 }
 

@@ -71,19 +71,19 @@ export default class LiveNav extends Component {
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { hasPerm } = this.props;
 
     return (
       <ul className="nav nav-tabs LiveNav">
         {this.renderChannelTab()}
 
-        {this.renderSettingsTab({ show: currentUser.can.editSettings })}
+        {this.renderSettingsTab({ show: hasPerm.editSettings })}
 
-        {this.renderContributorsTab({ show: currentUser.can.editContributors })}
+        {this.renderContributorsTab({ show: hasPerm.editContributors })}
 
-        {this.renderLogout({ show: currentUser.can.logout })}
+        {this.renderLogout({ show: hasPerm.logout })}
 
-        {this.renderLogin({ show: currentUser.can.login })}
+        {this.renderLogin({ show: hasPerm.login })}
       </ul>
     );
   }
@@ -93,13 +93,13 @@ LiveNav.propTypes = {
 
   slug: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
-  currentUser: PropTypes.shape({
-    can: PropTypes.shape({
-      editSettings: PropTypes.bool.isRequired,
-      editContributors: PropTypes.bool.isRequired,
-      logout: PropTypes.bool.isRequired,
-      login: PropTypes.bool.isRequired,
-    }).isRequired,
-  }).isRequired,
+  // currentUser: PropTypes.shape({
+  //   can: PropTypes.shape({
+  //     editSettings: PropTypes.bool.isRequired,
+  //     editContributors: PropTypes.bool.isRequired,
+  //     logout: PropTypes.bool.isRequired,
+  //     login: PropTypes.bool.isRequired,
+  //   }).isRequired,
+  // }).isRequired,
 };
 
