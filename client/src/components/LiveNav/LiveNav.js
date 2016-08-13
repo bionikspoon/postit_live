@@ -2,6 +2,7 @@ import './LiveNav.scss';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
+import Confirm from '../Confirm';
 import User from '../User';
 
 const debug = require('debug')('app:containers:LiveNav');  // eslint-disable-line no-unused-vars
@@ -43,13 +44,13 @@ export default class LiveNav extends Component {
 
   renderLogout({ show }) {
     if (!show) return null;
-
     const { currentUser } = this.props;
+    const handleClick = () => (window ? (window.location.pathname = '/logout/') : null);
 
     return (
       <span>
         <li className="nav-item pull-xs-right">
-          <a href="/logout/" className="nav-link">logout</a>
+          <Confirm value="logout" btnClass="btn btn-link" className="nav-link" align="right" onClick={handleClick} />
         </li>
 
         <li className="nav-item pull-xs-right">
