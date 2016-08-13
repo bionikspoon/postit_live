@@ -11,7 +11,7 @@ export default function configureStore(initialState) {
     middlewarePromise,
     middlewareThunk,
     routerMiddleware(browserHistory),
-    middlewareSocket,
+    middlewareSocket
   );
   const enhancer = compose(middleware);
 
