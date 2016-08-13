@@ -59,7 +59,7 @@ export default class FormGroupPermissions extends Component {
     const { onSubmit, name, value } = this.props;
 
     return (
-      <div className="form-group dropdown-menu dropdown-menu-right">
+      <div className="dropdown-menu dropdown-menu-right">
 
         {PERMISSIONS.map((permission, index) => (
           <div key={index} className="form-check">

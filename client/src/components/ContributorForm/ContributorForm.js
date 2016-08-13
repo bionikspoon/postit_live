@@ -9,6 +9,12 @@ const debug = require('debug')('app:components:ContributorForm');  // eslint-dis
 
 class ContributorForm extends Component {
   @autobind
+  focusConfirm(event) {
+    event.preventDefault();
+    this.confirm.expand();
+  }
+
+  @autobind
   handleSubmit(...args) {
     const { resetForm, handleSubmit } = this.props;
     handleSubmit(...args);
@@ -59,10 +65,11 @@ class ContributorForm extends Component {
 
   renderAddButton({ show }) {
     if (!show) return null;
+    const ref = confirm => (this.confirm = confirm);
 
     return (
-      <div className="col-xs">
-        <Confirm value="add" btnClass="btn btn-secondary" onClick={this.handleSubmit} />
+      <div className="col-xs text-xs-right">
+        <Confirm value="add" btnClass="btn btn-secondary" align="right" ref={ref} onClick={this.handleSubmit} />
       </div>
     );
   }
@@ -71,7 +78,7 @@ class ContributorForm extends Component {
     const { action } = this.props;
 
     return (
-      <form className="AddContributorForm" onSubmit={this.handleSubmit}>
+      <form className="AddContributorForm" onSubmit={this.focusConfirm}>
         <div className="row">
 
           {this.renderUser({ showInput: action === 'create' })}

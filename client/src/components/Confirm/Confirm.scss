@@ -1,3 +1,6 @@
 .Confirm {
   display: inline-block;
+  &__dropdown {
+    padding: 0;
+  }
 }
