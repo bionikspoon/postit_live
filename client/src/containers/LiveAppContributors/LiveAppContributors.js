@@ -3,47 +3,49 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as liveActions from '../../modules/live';
 import * as socketActions from '../../modules/socket';
-import { PERMISSION_METHOD_NAMES } from '../../constants/permissions';
 import LayoutRow from '../../components/LayoutRow';
 import LayoutInnerRow from '../../components/LayoutInnerRow';
 import ContributorMessage from '../../components/ContributorMessage';
 import ContributorList from '../../components/ContributorList';
 import ContributorAdd from '../../components/ContributorAdd';
-import { currentUserSelector, contributorsSelector } from '../../selectors';
 import autobind from 'autobind-decorator';
-import _ from 'lodash';
+import * as selector from '../../selectors';
+
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
 
 export class LiveAppContributors extends Component {
   @autobind
-  handleAddContributor({ permissions, ...data }) {
+  handleAddContributor(data) {
     const { actions } = this.props;
-
-    const perms = _.keys(permissions).filter(key => permissions[key]).map(key => PERMISSION_METHOD_NAMES[key]);
-    actions.socket.addContributor({ permissions: perms, ...data });
+    actions.socket.addContributor(data.user);
   }
 
   @autobind
-  handleUpdateContributor({ permissions, ...data }) {
-    debug('permissions=%o data=', permissions, data);
+  handleUpdateContributor(data) {
+    const { actions } = this.props;
+    actions.socket.updateContributor(data.user);
   }
 
   @autobind
-  handleDeleteContributor({ permissions, ...data }) {
-    debug('permissions=%o data=', permissions, data);
+  handleDeleteContributor(data) {
+    const { actions } = this.props;
+    actions.socket.deleteContributor(data.user);
   }
 
   render() {
-    const { currentUser, contributors } = this.props;
-
+    const { hasPerm, contributors, currentUser } = this.props;
     return (
       <LayoutRow className="LiveAppContributors">
 
         <LayoutInnerRow>
           <div>
-            <h1>Contributors</h1>
+            <h1>contributors</h1>
 
-            <ContributorMessage show={currentUser.can.contribute} onSubmit={this.handleDeleteContributor} />
+            <ContributorMessage
+              show={hasPerm.canContribute}
+              onDelete={this.handleDeleteContributor}
+              currentUser={currentUser}
+            />
 
             <ContributorList
               contributors={contributors}
@@ -51,10 +53,7 @@ export class LiveAppContributors extends Component {
               onDelete={this.handleDeleteContributor}
             />
 
-            <ContributorAdd
-              contributors={contributors}
-              onSave={this.handleAddContributor}
-            />
+            <ContributorAdd onSave={this.handleAddContributor} />
 
           </div>
 
@@ -66,13 +65,11 @@ export class LiveAppContributors extends Component {
 }
 
 LiveAppContributors.propTypes = {
+  hasPerm: PropTypes.shape({ canContribute: PropTypes.bool.isRequired }).isRequired,
+
   contributors: PropTypes.array.isRequired,
 
-  currentUser: PropTypes.shape({
-    can: PropTypes.shape({
-      contribute: PropTypes.bool.isRequired,
-    }).isRequired,
-  }).isRequired,
+  currentUser: PropTypes.object.isRequired,
 
   actions: PropTypes.shape({
     socket: PropTypes.shape({
@@ -83,8 +80,9 @@ LiveAppContributors.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    contributors: contributorsSelector(state),
-    currentUser: currentUserSelector(state),
+    currentUser: state.live.currentUser,
+    hasPerm: selector.hasPerm(state),
+    contributors: selector.contributors(state),
   };
 }
 

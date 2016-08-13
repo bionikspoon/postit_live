@@ -9,8 +9,10 @@ import LiveNewMessage from '../../components/LiveNewMessage';
 import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
-import { sortedMessagesSelector, currentUserSelector } from '../../selectors';
+import { sortedMessages} from '../../selectors';
 import autobind from 'autobind-decorator';
+import * as selector from '../../selectors';
+
 const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
 export class LiveAppChannel extends Component {
@@ -56,7 +58,8 @@ export class LiveAppChannel extends Component {
   }
 
   render() {
-    const { channel, messages, meta, actions, currentUser } = this.props;
+    const { channel, messages, meta, actions, hasPerm } = this.props;
+    debug('hasPerm', hasPerm);
 
     return (
       <div className="LiveAppChannel">
@@ -66,11 +69,11 @@ export class LiveAppChannel extends Component {
 
           <LiveStatus channel={channel} meta={meta} />
 
-          <LiveNewMessage form="new-message" onSubmit={this.createMessage} show={currentUser.can.addMessage} />
+          <LiveNewMessage form="new-message" onSubmit={this.createMessage} show={hasPerm.addMessage} />
 
 
           {messages.map(message => (
-            <LiveMessage key={message.pk} actions={actions.socket} editable={currentUser.can.editMessage} message={message} />
+            <LiveMessage key={message.pk} actions={actions.socket} editable={hasPerm.editMessage} message={message} />
           ))}
         </LayoutRow>
 
@@ -102,22 +105,23 @@ LiveAppChannel.propTypes = {
     live: PropTypes.object.isRequired,
   }).isRequired,
 
-  currentUser: PropTypes.shape({
-    can: PropTypes.shape({
-      addMessage: PropTypes.bool.isRequired,
-      editMessage: PropTypes.bool.isRequired,
-    }).isRequired,
-  }).isRequired,
+  // currentUser: PropTypes.shape({
+  //   can: PropTypes.shape({
+  //     addMessage: PropTypes.bool.isRequired,
+  //     editMessage: PropTypes.bool.isRequired,
+  //   }).isRequired,
+  // }).isRequired,
 
 };
 
 function mapStateToProps(state) {
   return {
     meta: state.live.meta,
-    messages: sortedMessagesSelector(state),
+    messages: sortedMessages(state),
     channel: state.live.channel,
 
-    currentUser: currentUserSelector(state),
+    currentUser: state.live.currentUser,
+    hasPerm: selector.hasPerm(state),
   };
 }
 
