@@ -35,24 +35,24 @@ export class LiveAppContributors extends Component {
 
   render() {
     const { hasPerm, contributors } = this.props;
-
+    debug('contributors', contributors);
     return (
       <LayoutRow className="LiveAppContributors">
 
         <LayoutInnerRow>
           <div>
-            <h1>Contributors</h1>
+            <h1>contributors</h1>
 
             <ContributorMessage
               show={hasPerm.canContribute}
               onSubmit={this.handleDeleteContributor}
             />
 
-            {/*<ContributorList*/}
-              {/*contributors={contributors}*/}
-              {/*onUpdate={this.handleUpdateContributor}*/}
-              {/*onDelete={this.handleDeleteContributor}*/}
-            {/*/>*/}
+            <ContributorList
+              contributors={contributors}
+              onUpdate={this.handleUpdateContributor}
+              onDelete={this.handleDeleteContributor}
+            />
 
             <ContributorAdd onSave={this.handleAddContributor} />
 
@@ -85,6 +85,7 @@ function mapStateToProps(state) {
   return {
     currentUser: state.live.currentUser,
     hasPerm: selector.hasPerm(state),
+    contributors: selector.contributors(state),
   };
 }
 

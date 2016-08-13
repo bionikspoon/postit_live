@@ -21,15 +21,10 @@ export const hasPerm = createSelector(
   })
 );
 
-// const stateContributors = state => state.live.contributors;
-// export const contributorsSelector = createSelector(
-//   stateContributors,
-//   contributors => _.values(contributors).map(userFromStateUser)
-// );
-//
-// const stateCurrentUser = state => state.live.currentUser;
-// export const currentUserSelector = createSelector(stateCurrentUser, userFromStateUser);
-//
-// function userFromStateUser({ username, channel_permissions }) {
-//   return user.fromPermissionNames(username, channel_permissions);
-// }
+const stateContributors = state => state.live.contributors;
+export const contributors = createSelector(
+  stateContributors,
+  _.values
+);
+
+

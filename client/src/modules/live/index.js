@@ -110,7 +110,7 @@ export default handleActions({
       },
       contributors: {
         $merge: payload.contributors.reduce(
-          (all, user) => update(all, { [user.username]: { $set: user } }),
+          (all, user) => update(all, { [user.username]: { $set: _.pick(user, ['username', 'channel_permissions']) } }),
           {}
         ),
       },
