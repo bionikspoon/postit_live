@@ -5,6 +5,7 @@ import pickle
 from channels.binding.websockets import WebsocketBinding
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
+from django.db import transaction
 
 from postit_live.live.serializers import LiveMessageSocketSerializer, LiveChannelSocketSerializer
 from .models import LiveChannel, LiveMessage
@@ -100,22 +101,39 @@ class LiveChannelContributorBinding(LiveChannelMixin, WebsocketBinding):
         # TODO
         return True
 
-    def create(self, data):
+    def create(self, _):
+        data = self.data
         logger.debug('create data=%s', data)
         try:
             user = User.objects.get(username=data['username'])
-            self.channel.add_perms(user, data['permissions'])  # TODO get perms
+            self.channel.add_perms(user, data['channel_permissions'])
 
             logger.debug('permission granted user=%s channel=%s', user, self.channel)
         except User.DoesNotExist:
             pass
 
     def delete(self, _):
+        data = self.data
+        logger.debug('delete data=%s', data)
+
         try:
-            user = User.objects.get(**self.data)
+            user = User.objects.get(username=data['username'])
             self.channel.remove_perms(user)
 
             logger.debug('permission revoked user=%s channel=%s', user, self.channel)
+        except User.DoesNotExist:
+            pass
+
+    def update(self, *_):
+        data = self.data
+        logger.debug('update data=%s', data)
+
+        try:
+            user = User.objects.get(username=data['username'])
+            self.channel.sync_perms(user, data['channel_permissions'])
+
+            logger.debug('permission updated user=%s channel=%s', user, self.channel)
+
         except User.DoesNotExist:
             pass
 

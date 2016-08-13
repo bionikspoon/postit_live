@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db import transaction
+from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
 from haikunator import Haikunator
 from markdown import markdown
@@ -64,20 +65,30 @@ class LiveChannel(TimeStampedModel, StatusModel):
                     continue
             return slug
 
-    def add_perms(self, user, perms):
+    def add_perms(self, user, perms, commit=True):
         if 'full' in perms:
             perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
                      'change_channel_settings', 'add_channel_messages']
         [assign_perm(perm, user, self) for perm in perms]
-        self.save()
+        if commit:
+            self.save()
         return self
 
-    def remove_perms(self, user):
+    def remove_perms(self, user, commit=True):
         perms = ['change_channel_close', 'change_channel_messages', 'change_channel_contributors',
                  'change_channel_settings', 'add_channel_messages']
 
         [remove_perm(perm, user, self) for perm in perms]
-        self.save()
+        if commit:
+            self.save()
+        return self
+
+    def sync_perms(self, user, perms, commit=True):
+        self.remove_perms(user, commit=False)
+        self.add_perms(user, perms, commit=False)
+
+        if commit:
+            self.save()
         return self
 
     def __str__(self):
@@ -95,6 +106,14 @@ class LiveChannel(TimeStampedModel, StatusModel):
 
         default_permissions = ('add',)
         verbose_name = 'channel'
+
+
+class LiveChannelUserObjectPermission(UserObjectPermissionBase):
+    content_object = models.ForeignKey(LiveChannel)
+
+
+class LiveChannelGroupObjectPermission(GroupObjectPermissionBase):
+    content_object = models.ForeignKey(LiveChannel)
 
 
 class LiveMessage(TimeStampedModel, StatusModel):

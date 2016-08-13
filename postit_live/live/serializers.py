@@ -46,7 +46,6 @@ class LiveChannelSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'view_name': 'api:channel-detail', 'lookup_field': 'slug'},
             'contributors': {'fields': ('pk', 'username', 'channel_permissions')}
-
         }
 
 
