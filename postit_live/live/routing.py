@@ -3,7 +3,8 @@ import logging
 
 from channels import route, route_class
 
-from .bindings import LiveChannelBinding, LiveMessageBinding, Demultiplexer, LiveChannelContributorBinding
+from .consumers import Demultiplexer
+from .bindings import LiveChannelBinding, LiveMessageBinding, LiveChannelContributorBinding
 
 logger = logging.getLogger(__name__)
 
