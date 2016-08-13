@@ -9,7 +9,6 @@ export default function ContributorList({ contributors, onUpdate, onDelete }) {
       <h2>current contributors</h2>
 
       {contributors.map(user => {
-        debug('user', user);
         return (
           <ContributorForm
             key={user.username}
