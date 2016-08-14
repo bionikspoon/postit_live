@@ -3,6 +3,7 @@ import json
 import logging
 import pickle
 
+from channels import Channel
 from channels import Group
 from channels.generic.websockets import WebsocketDemultiplexer
 from django.contrib.auth import get_user_model
@@ -33,7 +34,13 @@ class Demultiplexer(SessionDemultiplexerMixin, WebsocketDemultiplexer):
         return ['live-%s' % slug]
 
     def connect(self, message, **kwargs):
+        Channel('consumer.Activity').send({'slug': self.kwargs['slug']})
         logger.debug('connected message=%s', message)
+
+    def disconnect(self, message, **kwargs):
+        Channel('consumer.Activity').send({'slug': self.kwargs['slug']})
+
+        logger.debug('disconnected message=%s', message)
 
     def receive(self, content, **kwargs):
         logger.debug('content received content=%s', content)
