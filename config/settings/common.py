@@ -281,9 +281,9 @@ REST_FRAMEWORK = {
 # CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 # CELERY_CACHE_BACKEND = 'default'
 CELERYBEAT_SCHEDULE = {
-    'ping-activity-every-60-seconds': {
+    'ping-activity-every-15-seconds': {
         'task': 'postit_live.live.tasks.ping_activity',
-        'schedule': timedelta(seconds=6)
+        'schedule': timedelta(seconds=15)
     }
 }
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
