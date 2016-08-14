@@ -2,9 +2,17 @@
 
 
 {% block content %}
-   <h1>PostIt Live</h1>
-   <p>follow live events as they happen</p>
-
-   <a href="{% url 'live:create_channel' %}" class="btn btn-primary btn-lg">make a new live thread</a>
-
+   <div class="jumbotron jumbotron-fluid jumbotron-home">
+      <div class="container">
+         <h1 class="display-3">PostIt Live</h1>
+         <p class="lead">follow live events as they happen</p>
+         <p class="lead">
+            <a
+               href="{% url 'live:create_channel' %}"
+               class="btn btn-primary btn-lg"
+               role="button"
+            >make a new live channel</a>
+         </p>
+      </div>
+   </div>
 {% endblock %}
