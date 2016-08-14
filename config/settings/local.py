@@ -101,5 +101,3 @@ LOGGING = {
         },
     },
 }
-
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'

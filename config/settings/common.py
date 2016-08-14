@@ -272,7 +272,8 @@ REST_FRAMEWORK = {
 
 # CELERY
 # ------------------------------------------------------------------------------
-CELERY_RESULT_BACKEND = 'djcelery.backends.cache:CacheBackend'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_CACHE_BACKEND = 'default'
 CELERYBEAT_SCHEDULE = {
     'ping-activity-every-60-seconds': {
         'task': 'postit_live.live.tasks.ping_activity',
