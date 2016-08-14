@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = (
     'crispy_forms',  # Form layouts
     'rest_framework',
     'djcelery',
+    'kombu.transport.django',
 )
 
 # Apps specific for this project go here.
@@ -50,6 +51,7 @@ LOCAL_APPS = (
     'postit_live.live.apps.LiveConfig',
     'postit_live.user.apps.UserConfig',
     'postit_live.api.apps.ApiConfig',
+    'postit_live.taskapp.celery.CeleryConfig',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -230,6 +232,8 @@ LOGIN_URL = 'user:login'
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
+
+
 # django-compressor
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ("compressor",)
@@ -272,14 +276,24 @@ REST_FRAMEWORK = {
 
 # CELERY
 # ------------------------------------------------------------------------------
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_CACHE_BACKEND = 'default'
+
+
+# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+# CELERY_CACHE_BACKEND = 'default'
 CELERYBEAT_SCHEDULE = {
     'ping-activity-every-60-seconds': {
         'task': 'postit_live.live.tasks.ping_activity',
-        'schedule': timedelta(seconds=60)
+        'schedule': timedelta(seconds=6)
     }
 }
+# if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 BROKER_URL = env('CLOUDAMQP_URL')
+# BROKER_URL = env('CELERY_BROKER_URL', default='django://')
+# if BROKER_URL == 'django://':
+#     CELERY_RESULT_BACKEND = 'redis://'
+# else:
+#     CELERY_RESULT_BACKEND = BROKER_URL
+CELERY_RESULT_BACKEND = BROKER_URL
+
 CELERY_ACCEPT_CONTENT = ['pickle']
 # Your common stuff: Below this line define 3rd party library settings
