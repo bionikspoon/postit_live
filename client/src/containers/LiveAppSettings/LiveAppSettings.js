@@ -1,3 +1,4 @@
+import styles from './LiveAppSettings.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
@@ -9,9 +10,9 @@ import LayoutInnerRow from '../../components/LayoutInnerRow';
 import autobind from 'autobind-decorator';
 import FormGroupTextarea from '../../components/FormGroupTextarea';
 import FormGroupText from '../../components/FormGroupText';
+import * as selector from '../../selectors';
 const debug = require('debug')('app:containers:LiveAppSettings');  // eslint-disable-line no-unused-vars
 const MAX_DESC_CHARS = 120;
-import * as selector from '../../selectors';
 
 export class LiveAppSettings extends Component {
 
@@ -30,7 +31,7 @@ export class LiveAppSettings extends Component {
     );
     const resourcesHelp = 'information and links that are useful at any point';
     return (
-      <LayoutRow className="LivAppSettings">
+      <LayoutRow className={styles.wrapper}>
 
         <LayoutInnerRow>
           <h1>settings</h1>
@@ -41,7 +42,7 @@ export class LiveAppSettings extends Component {
 
             <FormGroupTextarea rows="10" id="resources" label="resources" help={resourcesHelp} {...resources} />
 
-            <button className="btn btn-primary" type="submit">save settings</button>
+            <button className={styles.submitButton} type="submit">save settings</button>
           </form>
 
         </LayoutInnerRow>

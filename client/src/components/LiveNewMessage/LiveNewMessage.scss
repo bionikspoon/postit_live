@@ -1,0 +1,18 @@
+.wrapper {
+}
+
+.form {
+  composes: form from '../../_bootstrap-components.scss';
+}
+
+.clearfix {
+  composes: clearfix from '../../_bootstrap-components.scss';
+}
+
+.submit-button {
+  composes: btn btn-outline-primary pull-xs-left from '../../_bootstrap-components.scss';
+}
+
+.pull-right {
+  composes: pull-xs-right from '../../_bootstrap-components.scss';
+}

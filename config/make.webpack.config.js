@@ -121,12 +121,39 @@ function getLoaders({ ENV }) {
   switch (ENV) {
     case PRODUCTION:
       loaders.push(urlLoader, fileLoader);
-      loaders.push({ test: /\.sc?ss$/, loader: ExtractTextPlugin.extract('style', 'css!postcss!sass') });
+      loaders.push({
+        test: /\.sc?ss$/,
+        loader: ExtractTextPlugin.extract(
+          'style'
+          + '?sourceMap',
+          'css'
+          + '?modules'
+          + '&importLoaders=2'
+          + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
+          + '&camelCase'
+          + '!postcss'
+          + '!sass'
+        ),
+      });
       break;
 
     case LOCAL:
       loaders.push(urlLoader, fileLoader);
-      loaders.push({ test: /\.sc?ss$/, loader: 'style!css!postcss!sass' });
+      loaders.push({
+        test: /\.sc?ss$/,
+        loader: ''
+        + 'style'
+        + '?sourceMap'
+        + '!css'
+        + '?modules'
+        + '&importLoaders=2'
+        + '&localIdentName=[name]__[local]___[hash:base64:5]'
+        + '&camelCase'
+        + '!postcss'
+        + '?sourceMap'
+        + '!sass'
+        + '?sourceMap',
+      });
       break;
 
     case TEST:
@@ -169,7 +196,10 @@ function getPlugins({ ENV }) {
     case PRODUCTION:
       plugins.push(chunkVendor, chunkCommon, occurrenceOrder);
 
-      plugins.push(new ExtractTextPlugin('[name].[chunkhash].css'));
+      plugins.push(new ExtractTextPlugin({
+        filename: '[name].[chunkhash].css',
+        options: { allChunks: true },
+      }));
       // production bundle stats file
       plugins.push(new BundleTracker({ filename: './webpack-stats-production.json' }));
 

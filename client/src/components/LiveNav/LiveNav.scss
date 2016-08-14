@@ -1,0 +1,25 @@
+.wrapper {
+  composes: nav nav-tabs from '../../_bootstrap-components.scss';
+}
+
+.item {
+  composes: nav-item from '../../_bootstrap-components.scss';
+
+  //noinspection CssOverwrittenProperties
+  &--pull-right {
+    composes: item;
+    composes: pull-xs-right from '../../_bootstrap-components.scss';
+  }
+}
+
+.active {
+  composes: active from '../../_bootstrap-components.scss';
+}
+
+.link {
+  composes: nav-link from '../../_bootstrap-components.scss';
+}
+
+.confirm-button {
+  composes: btn btn-link from '../../_bootstrap-components.scss';
+}

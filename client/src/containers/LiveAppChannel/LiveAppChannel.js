@@ -1,3 +1,4 @@
+import styles from './LiveAppChannel.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,6 +11,7 @@ import LiveMessage from '../../components/LiveMessage';
 import LiveAside from '../../components/LiveAside';
 import LayoutRow from '../../components/LayoutRow';
 import User from '../../components/User';
+import FormGroupCheck from '../../components/FormGroupCheck';
 import autobind from 'autobind-decorator';
 import * as selector from '../../selectors';
 
@@ -27,15 +29,9 @@ export class LiveAppChannel extends Component {
     const { channel, contributors } = this.props;
 
     return (
-      <div className="LiveAppChannel--sidebar">
+      <div className={styles.sidebar}>
         <LiveAside>
-          <div className="form-check">
-            <label htmlFor="popup" id="popup-label" className="form-check-label">
-              <input type="checkbox" id="popup" className="form-check-input" aria-labelledby="popup-label" />
-
-              popup notifications
-            </label>
-          </div>
+          <FormGroupCheck id="popup" label="popup notifications" />
         </LiveAside>
 
         <LiveAside title="resources" show={!!channel.resources.length}>
@@ -57,7 +53,7 @@ export class LiveAppChannel extends Component {
         </LiveAside>
 
         <LiveAside>
-          <button className="btn btn-secondary btn-sm">report a rule violation</button>
+          <button className={styles.reportButton}>report a rule violation</button>
         </LiveAside>
       </div>
     );
@@ -67,7 +63,7 @@ export class LiveAppChannel extends Component {
     const { channel, messages, meta, actions, hasPerm } = this.props;
 
     return (
-      <div className="LiveAppChannel">
+      <div className={styles.wrapper}>
         <LayoutRow ><LiveTitle channel={channel} /></LayoutRow>
 
         <LayoutRow sidebar={this.renderSidebar()}>

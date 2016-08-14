@@ -1,13 +1,13 @@
-import './FormGroupText.scss';
+import styles from './FormGroupText.scss';
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
-const debug = require('debug')('app:components:FormGroupText');  // eslint-disable-line no-unused-vars
+const debug = require('debug')('app:components:FormGroupCheck');  // eslint-disable-line no-unused-vars
 
 export default class FormGroupText extends Component {
   renderHelp() {
     const { help } = this.props;
     return help && help.length
-      ? (<small className="form-text text-muted">{help}</small>)
+      ? (<small className={styles.helpText}>{help}</small>)
       : null;
   }
 
@@ -25,12 +25,12 @@ export default class FormGroupText extends Component {
     ]);
     props['aria-label'] = props.label || props.title || props.name;
     return (
-      <div className="form-group FormGroupText">
+      <div className={styles.wrapper}>
         {this.renderLabel()}
 
         {this.renderHelp()}
 
-        <input type="text" className="form-control" {...props} />
+        <input type="text" className={styles.control} {...props} />
 
       </div>
     );

@@ -1,0 +1,9 @@
+.wrapper {
+}
+
+.sidebar {
+}
+
+.report-button {
+  composes: btn btn-secondary btn-sm from '../../_bootstrap-components.scss';
+}

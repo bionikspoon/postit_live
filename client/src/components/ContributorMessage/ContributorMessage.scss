@@ -1,0 +1,7 @@
+.dropdown-menu {
+  composes: alert alert-warning from '../../_bootstrap-components.scss';
+}
+
+.confirm-button {
+  composes: btn btn-link from '../../_bootstrap-components.scss';
+}

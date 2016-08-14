@@ -1,3 +1,4 @@
+import styles from './LiveAppContributors.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -35,7 +36,7 @@ export class LiveAppContributors extends Component {
   render() {
     const { hasPerm, contributors, currentUser } = this.props;
     return (
-      <LayoutRow className="LiveAppContributors">
+      <LayoutRow className={styles.wrapper}>
 
         <LayoutInnerRow>
           <div>

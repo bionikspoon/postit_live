@@ -1,0 +1,16 @@
+.wrapper {
+}
+
+.alert {
+  composes: alert from '../../_bootstrap-components.scss';
+  &--success {
+    composes: alert alert-success from '../../_bootstrap-components.scss';
+  }
+  &--warning {
+    composes: alert alert-warning from '../../_bootstrap-components.scss';
+  }
+
+  &--danger {
+    composes: alert alert-danger from '../../_bootstrap-components.scss';
+  }
+}

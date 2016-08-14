@@ -1,4 +1,4 @@
-import './LiveApp.scss';
+import styles from './LiveApp.scss';
 import React, { PropTypes, Component } from 'react';
 import LiveNav from '../../components/LiveNav';
 import * as liveActions from '../../modules/live';
@@ -20,7 +20,7 @@ class LiveApp extends Component {
   render() {
     const { slug, pathname, currentUser, hasPerm } = this.props;
     return (
-      <div className="container-fluid LiveApp" role="main">
+      <div className={styles.wrapper} role="main">
         <LiveNav {...{ slug, pathname, currentUser, hasPerm }} />
 
         {this.props.children}
@@ -35,6 +35,7 @@ LiveApp.propTypes = {
   slug: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
   currentUser: PropTypes.object.isRequired,
+  hasPerm: PropTypes.object.isRequired,
   actions: PropTypes.shape({
     live: PropTypes.shape({
       fetchChannel: PropTypes.func.isRequired,

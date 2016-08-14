@@ -1,0 +1,11 @@
+.wrapper {
+  composes: form-check from '../../_bootstrap-components.scss';
+}
+
+.label {
+  composes: form-check-label from '../../_bootstrap-components.scss';
+}
+
+.input {
+  composes: form-check-input from '../../_bootstrap-components.scss';
+}

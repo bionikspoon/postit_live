@@ -1,12 +1,24 @@
+.wrapper {
+}
 
-.LiveMessage {
-  .stricken {
-    text-decoration: line-through !important;
-  }
+.body-text {
+  display:      inline-block;
+  margin-right: 5px;
+}
 
-  .body-text {
-    display:      inline-block;
-    margin-right: 5px;
-  }
+.stricken {
+  composes:        body-text;
+  text-decoration: line-through !important;
+}
 
+.visible {
+  composes: body-text;
+}
+
+.body {
+  composes: body from '../../_bootstrap-components.scss';
+}
+
+.confirm-button {
+  composes: btn btn-secondary btn-sm from '../../_bootstrap-components.scss';
 }

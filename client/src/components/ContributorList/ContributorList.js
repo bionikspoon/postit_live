@@ -1,26 +1,24 @@
-import './ContributorList.scss';
+import styles from  './ContributorList.scss';
 import React, { PropTypes, Component } from 'react';
 import ContributorForm from '../ContributorForm';
 const debug = require('debug')('app:components:ContributorList');  // eslint-disable-line no-unused-vars
 
 export default function ContributorList({ contributors, onUpdate, onDelete }) {
   return (
-    <div>
+    <div className={styles.wrapper}>
       <h2>current contributors</h2>
 
-      {contributors.map(user => {
-        return (
-          <ContributorForm
-            key={user.username}
-            formKey={user.username}
-            action="update"
-            onSubmit={onUpdate}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
-            initialValues={{ user }}
-          />
-        );
-      })}
+      {contributors.map(user => (
+        <ContributorForm
+          key={user.username}
+          formKey={user.username}
+          action="update"
+          onSubmit={onUpdate}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+          initialValues={{ user }}
+        />
+      ))}
     </div>
   );
 }

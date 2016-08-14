@@ -1,0 +1,11 @@
+.wrapper {
+  composes: form-group from '../../_bootstrap-components.scss';
+}
+
+.control {
+  composes: form-control from '../../_bootstrap-components.scss';
+}
+
+.help-text {
+  composes: form-text text-muted from '../../_bootstrap-components.scss';
+}

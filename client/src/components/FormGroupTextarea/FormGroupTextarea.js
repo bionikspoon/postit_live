@@ -1,4 +1,4 @@
-import './FormGroupTextarea.scss';
+import styles from './FormGroupTextarea.scss';
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
 const debug = require('debug')('app:components:FormGroupTextarea');  // eslint-disable-line no-unused-vars
@@ -7,7 +7,7 @@ export default class FormGroupTextarea extends Component {
   renderHelp() {
     const { help } = this.props;
     return help && help.length
-      ? (<small className="form-text text-muted">{help}</small>)
+      ? (<small className={styles.helpText}>{help}</small>)
       : null;
   }
 
@@ -25,12 +25,12 @@ export default class FormGroupTextarea extends Component {
     ]);
     props['aria-label'] = props.label || props.title || props.name;
     return (
-      <div className="form-group FormGroupTextarea">
+      <div className={styles.wrapper}>
         {this.renderLabel()}
 
         {this.renderHelp()}
 
-        <textarea className="form-control" {...props} value={props.value || ''} />
+        <textarea className={styles.control} {...props} value={props.value || ''} />
       </div>
     );
   }

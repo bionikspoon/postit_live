@@ -1,0 +1,6 @@
+.wrapper {
+  composes: row from '../../_bootstrap-components.scss';
+  &__inner {
+    composes: col-xs from '../../_bootstrap-components.scss';
+  }
+}

@@ -1,10 +1,10 @@
-import './LiveTitle.scss';
+import styles from './LiveTitle.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
 
 export default function LiveTitle({ channel: { title, description_html } }) {
   return (
-    <LayoutInnerRow className="LiveTitle">
+    <LayoutInnerRow className={styles.wrapper}>
       <h1>{title}</h1>
       <div dangerouslySetInnerHTML={{ __html: description_html }}></div>
     </LayoutInnerRow>

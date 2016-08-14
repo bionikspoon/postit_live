@@ -1,10 +1,9 @@
-import './LiveMessage.scss';
+import styles from './LiveMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
 import Confirm from '../Confirm';
 import LayoutInnerRow from '../LayoutInnerRow';
 import User from '../User';
-import classnames from 'classnames';
 
 export default class LiveMessage extends Component {
   constructor(props) {
@@ -19,12 +18,12 @@ export default class LiveMessage extends Component {
     const { message: { status } } = this.props;
     return status === 'stricken'
       ? <span>stricken</span>
-      : <Confirm onClick={this.strikeMessage} btnClass="btn btn-secondary btn-sm Confirm" value="strike" />;
+      : <Confirm onClick={this.strikeMessage} btnClass={styles.confirmButton} value="strike" />;
   }
 
   renderDeleteButton() {
     return (
-      <Confirm onClick={this.deleteMessage} btnClass="btn btn-secondary btn-sm Confirm" value="delete" />
+      <Confirm onClick={this.deleteMessage} btnClass={styles.confirmButton} value="delete" />
     );
   }
 
@@ -40,12 +39,11 @@ export default class LiveMessage extends Component {
   render() {
     const { editable, message: { created, body_html, author, status } } = this.props;
     const moment = <Moment date={created} />;
-    const spanClass = classnames('body-text', status);
 
     return (
-      <LayoutInnerRow sidebar={moment} className="LiveMessage">
-        <div className="body">
-          <span className={spanClass} dangerouslySetInnerHTML={{ __html: body_html }} />
+      <LayoutInnerRow sidebar={moment} className={styles.wrapper}>
+        <div className={styles.body}>
+          <span className={styles[status]} dangerouslySetInnerHTML={{ __html: body_html }} />
 
           <User user={author} />
         </div>
@@ -62,7 +60,7 @@ LiveMessage.propTypes = {
     created: PropTypes.string.isRequired,
     body_html: PropTypes.string.isRequired,
     author: PropTypes.object.isRequired,
-    status: PropTypes.string.isRequired,
+    status: PropTypes.oneOf(['stricken', 'visible']).isRequired,
   }).isRequired,
 
   actions: PropTypes.shape({

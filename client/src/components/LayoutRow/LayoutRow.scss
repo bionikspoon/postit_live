@@ -1,0 +1,9 @@
+.wrapper {
+  composes: row from '../../_bootstrap-components.scss';
+  &__inner {
+    composes: col-xs-12 col-md-9 from '../../_bootstrap-components.scss';
+  }
+}
+.sidebar {
+  composes: col-xs-9 col-md-3 col-md-offset-9 from '../../_bootstrap-components.scss';
+}

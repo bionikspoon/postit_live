@@ -17,7 +17,7 @@ const initialValues = {
 
 export default function ContributorAdd({ onSave }) {
   return (
-    <div>
+    <div className="ContributorAdd">
       <h2>add contributor</h2>
       <ContributorForm
         onSubmit={onSave}

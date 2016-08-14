@@ -1,3 +1,4 @@
+import styles from './ContributorForm.scss';
 import React, { Component, PropTypes } from 'react';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
@@ -37,7 +38,7 @@ class ContributorForm extends Component {
   renderUser({ showInput }) {
     const { values } = this.props;
     return (
-      <div className="col-xs-3">
+      <div className={styles.userCol}>
         {this.renderUserInput({ show: showInput })}
 
         <User user={values.user} />
@@ -61,8 +62,8 @@ class ContributorForm extends Component {
     if (!show) return null;
 
     return (
-      <div className="col-xs">
-        <Confirm value="remove" btnClass="btn btn-link" onClick={this.handleDelete} />
+      <div className={styles.removeCol}>
+        <Confirm value="remove" btnClass={styles.removeButton} onClick={this.handleDelete} />
       </div>
     );
   }
@@ -71,7 +72,7 @@ class ContributorForm extends Component {
     const { fields: { user: { channel_permissions } }, onUpdate } = this.props;
 
     return (
-      <div className="col-xs-7 text-xs-right">
+      <div className={styles.permissionsCol}>
         <FormGroupPermissions{...channel_permissions} onUpdate={onUpdate ? this.focusConfirm : null} />
       </div>
     );
@@ -82,8 +83,8 @@ class ContributorForm extends Component {
     const ref = submit => (this.submit = submit);
 
     return (
-      <div className="col-xs text-xs-right">
-        <Confirm value="add" btnClass="btn btn-secondary" align="right" ref={ref} onClick={this.handleSubmit} />
+      <div className={styles.addCol}>
+        <Confirm value="add" btnClass={styles.addButton} align="right" ref={ref} onClick={this.handleSubmit} />
       </div>
     );
   }
@@ -92,18 +93,16 @@ class ContributorForm extends Component {
     const { action } = this.props;
 
     return (
-      <form className="AddContributorForm" onSubmit={this.focusConfirm}>
-        <div className="row">
+      <form className={styles.wrapper} onSubmit={this.focusConfirm}>
 
-          {this.renderUser({ showInput: action === 'create' })}
+        {this.renderUser({ showInput: action === 'create' })}
 
-          {this.renderRemoveButton({ show: action === 'update' })}
+        {this.renderRemoveButton({ show: action === 'update' })}
 
-          {this.renderPermissions()}
+        {this.renderPermissions()}
 
-          {this.renderAddButton({ show: action === 'create' })}
+        {this.renderAddButton({ show: action === 'create' })}
 
-        </div>
       </form>
     );
   }

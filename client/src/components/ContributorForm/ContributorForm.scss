@@ -1,3 +1,27 @@
-.ContributorForm {
+.wrapper {
+  composes: row from '../../_bootstrap-components.scss';
+}
 
+.user-col {
+  composes: col-xs-3 from '../../_bootstrap-components.scss';
+}
+
+.remove-col {
+  composes: col-xs from '../../_bootstrap-components.scss';
+}
+
+.remove-button {
+  composes: btn btn-link from '../../_bootstrap-components.scss';
+}
+
+.permissions-col {
+  composes: col-xs-7 text-xs-right from '../../_bootstrap-components.scss';
+}
+
+.add-col {
+  composes: col-xs text-xs-right from '../../_bootstrap-components.scss';
+}
+
+.add-button {
+  composes: btn btn-secondary from '../../_bootstrap-components.scss';
 }

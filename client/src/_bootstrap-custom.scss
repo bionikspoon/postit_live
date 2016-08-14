@@ -1,9 +1,60 @@
+// Table of Contents
+//
+// Colors
+// Options
+// Spacing
+// Body
+// Links
+// Grid breakpoints
+// Grid containers
+// Grid columns
+// Fonts
+// Components
+// ************************************************************************* //
+// ************************************************************************* //
+
+// Colors
+// ************************************************************************* //
+
+// Options
+// ************************************************************************* //
+
 $enable-flex: true;
 $enable-rounded: false;
 $enable-shadows: true;
 $enable-gradients: true;
 $enable-transitions: true;
 $enable-hover-media-query: true;
+
+// Spacing
+// ************************************************************************* //
+
+// Body
+// ************************************************************************* //
+
+// Links
+// ************************************************************************* //
+
+// Grid breakpoints
+// ************************************************************************* //
+
+// Grid containers
+// ************************************************************************* //
+
+// Grid columns
+// ************************************************************************* //
+
+// Fonts
+// ************************************************************************* //
+$font-family-sans-serif: 'Cabin', sans-serif;
+$font-family-serif: Georgia, "Times New Roman", Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$font-family-cursive: 'Lobster', cursive;
+$font-family-base: $font-family-sans-serif;
+
+$headings-font-family: $font-family-cursive;
+
+// Components
 
 // Core variables and mixins
 @import "~bootstrap/scss/custom";
@@ -17,38 +68,5 @@ $enable-hover-media-query: true;
 // Core CSS
 @import "~bootstrap/scss/reboot";
 @import "~bootstrap/scss/type";
-@import "~bootstrap/scss/images";
 @import "~bootstrap/scss/code";
-@import "~bootstrap/scss/grid";
-@import "~bootstrap/scss/tables";
-@import "~bootstrap/scss/forms";
-@import "~bootstrap/scss/buttons";
 
-// Components
-@import "~bootstrap/scss/animation";
-@import "~bootstrap/scss/dropdown";
-@import "~bootstrap/scss/button-group";
-@import "~bootstrap/scss/input-group";
-@import "~bootstrap/scss/custom-forms";
-@import "~bootstrap/scss/nav";
-@import "~bootstrap/scss/navbar";
-@import "~bootstrap/scss/card";
-@import "~bootstrap/scss/breadcrumb";
-@import "~bootstrap/scss/pagination";
-@import "~bootstrap/scss/tags";
-@import "~bootstrap/scss/jumbotron";
-@import "~bootstrap/scss/alert";
-@import "~bootstrap/scss/progress";
-@import "~bootstrap/scss/media";
-@import "~bootstrap/scss/list-group";
-@import "~bootstrap/scss/responsive-embed";
-@import "~bootstrap/scss/close";
-
-// Components w/ JavaScript
-@import "~bootstrap/scss/modal";
-@import "~bootstrap/scss/tooltip";
-@import "~bootstrap/scss/popover";
-@import "~bootstrap/scss/carousel";
-
-// Utility classes
-@import "~bootstrap/scss/utilities";

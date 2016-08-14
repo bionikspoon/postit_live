@@ -1,4 +1,4 @@
-import './ContributorMessage.scss';
+import styles from './ContributorMessage.scss';
 import Confirm from '../Confirm';
 import React, { PropTypes, Component } from 'react';
 
@@ -8,10 +8,10 @@ export default function ContributorMessage({ show, onDelete, currentUser }) {
   const handleClick = () => onDelete({ user: currentUser });
 
   return (
-    <div className="alert alert-warning ContributorMessage">
+    <div className={styles.wrapper}>
       you are a contributor to this live channel. |&nbsp;
 
-      <Confirm value="leave" btnClass="btn btn-link" align="right" onClick={handleClick} />
+      <Confirm value="leave" btnClass={styles.confirmButton} align="right" onClick={handleClick} />
     </div>
   );
 }

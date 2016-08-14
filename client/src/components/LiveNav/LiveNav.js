@@ -1,4 +1,4 @@
-import './LiveNav.scss';
+import styles from './LiveNav.scss';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
@@ -6,7 +6,6 @@ import Confirm from '../Confirm';
 import User from '../User';
 
 const debug = require('debug')('app:containers:LiveNav');  // eslint-disable-line no-unused-vars
-
 export default class LiveNav extends Component {
   base(...paths) {
     const { slug } = this.props;
@@ -15,10 +14,10 @@ export default class LiveNav extends Component {
 
   renderChannelTab() {
     const { pathname } = this.props;
-    const baseClass = classnames('nav-link', { active: pathname === this.base() });
+    const baseClass = classnames(styles.link, { [styles.active]: pathname === this.base() });
 
     return (
-      <li className="nav-item">
+      <li className={styles.item}>
         <Link to={this.base()} className={baseClass}>channel</Link>
       </li>
     );
@@ -27,8 +26,8 @@ export default class LiveNav extends Component {
   renderContributorsTab({ show }) {
     if (!show) return null;
     return (
-      <li className="nav-item">
-        <Link to={this.base('contributors')} activeClassName="active" className="nav-link">contributors</Link>
+      <li className={styles.item}>
+        <Link to={this.base('contributors')} activeClassName={styles.active} className={styles.link}>contributors</Link>
       </li>
     );
   }
@@ -36,8 +35,8 @@ export default class LiveNav extends Component {
   renderSettingsTab({ show }) {
     if (!show) return null;
     return (
-      <li className="nav-item">
-        <Link to={this.base('settings')} activeClassName="active" className="nav-link">settings</Link>
+      <li className={styles.item}>
+        <Link to={this.base('settings')} activeClassName={styles.active} className={styles.link}>settings</Link>
       </li>
     );
   }
@@ -49,12 +48,17 @@ export default class LiveNav extends Component {
 
     return (
       <span>
-        <li className="nav-item pull-xs-right">
-          <Confirm value="logout" btnClass="btn btn-link" className="nav-link" align="right" onClick={handleClick} />
+        <li className={styles.itemPullRight}>
+          <Confirm value="logout"
+            btnClass={styles.confirmButton}
+            className={styles.link}
+            align="right"
+            onClick={handleClick}
+          />
         </li>
 
-        <li className="nav-item pull-xs-right">
-          <span className="nav-link">logged in as <User user={currentUser} /></span>
+        <li className={styles.itemPullRight}>
+          <span className={styles.link}>logged in as <User user={currentUser} /></span>
         </li>
       </span>
     );
@@ -64,8 +68,8 @@ export default class LiveNav extends Component {
     if (!show) return null;
     const loginLink = `/login/?next=${this.base()}`;
     return (
-      <li className="nav-item pull-xs-right">
-        <a href={loginLink} className="nav-link">login</a>
+      <li className={styles.itemPullRight}>
+        <a href={loginLink} className={styles.link}>login</a>
       </li>
 
     );
@@ -75,7 +79,7 @@ export default class LiveNav extends Component {
     const { hasPerm, currentUser } = this.props;
 
     return (
-      <ul className="nav nav-tabs LiveNav">
+      <ul className={styles.wrapper}>
         {this.renderChannelTab()}
 
         {this.renderSettingsTab({ show: hasPerm.editSettings })}

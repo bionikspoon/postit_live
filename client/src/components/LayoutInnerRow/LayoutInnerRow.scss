@@ -1,0 +1,10 @@
+.wrapper {
+  composes: row flex-items-xs-right from '../../_bootstrap-components.scss';
+  &__inner {
+    composes: col-xs-10 from '../../_bootstrap-components.scss';
+  }
+}
+
+.sidebar {
+  composes: col-xs-2 from '../../_bootstrap-components.scss';
+}

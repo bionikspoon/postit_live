@@ -1,8 +1,10 @@
-import './FormGroupPermissions.scss';
+import styles from './FormGroupPermissions.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
 import classnames from 'classnames';
+import FormGroupCheck from '../FormGroupCheck';
 import _ from 'lodash';
+
 const debug = require('debug')('app:components:FormGroupPermissions');  // eslint-disable-line no-unused-vars
 const PERMISSIONS = [
   { value: 'change_channel_close', label: 'close channel' },
@@ -59,26 +61,30 @@ export default class FormGroupPermissions extends Component {
     const { onUpdate, name, value } = this.props;
 
     return (
-      <div className="dropdown-menu dropdown-menu-right">
+      <div className={styles.dropdownMenu}>
 
         {PERMISSIONS.map((permission, index) => (
-          <div key={index} className="form-check">
-            <label className="form-check-label" tabIndex={index}>
-              <input
-                className="form-check-input"
-                name={`${name}[]`}
-                type="checkbox"
-                checked={value.includes(permission.value)}
-                value={permission.value}
-                onChange={this.handleChange}
-              />
+          <FormGroupCheck
+            key={index}
+            className={styles.dropdownMenuCheck}
+            id={`permissions-${permission.value}`}
+            label={permission.label}
+            name={`${name}[]`}
+            tabIndex={index}
+            checked={value.includes(permission.value)}
+            value={permission.value}
+            onChange={this.handleChange}
+          />
 
-              {permission.label}
-            </label>
-          </div>
         ))}
 
-        {onUpdate ? <button onClick={onUpdate}>save</button> : null}
+        {onUpdate
+          ? (
+          <div className={styles.dropdownMenuItem}>
+            <button className={styles.updateButton} onClick={onUpdate}>save</button>
+          </div>
+        )
+          : null}
 
       </div>
     );
@@ -87,14 +93,14 @@ export default class FormGroupPermissions extends Component {
   render() {
     // const { expanded } = this.state;
     const { onFocus, active } = this.props;
-    const divClass = classnames('dropdown', { open: active }, 'FormGroupPermissions');
+    const divClass = classnames(styles.wrapper, { [styles.wrapperOpen]: active });
     return (
       <div className={divClass} onBlur={this.handleBlur} onFocus={onFocus}>
         <div>
           {this.renderSummary()}&nbsp;
 
           (
-          <button className="btn btn-link" type="button">change</button>
+          <button className={styles.changeButton} type="button">change</button>
           )
         </div>
 

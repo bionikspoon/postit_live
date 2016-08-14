@@ -79,6 +79,7 @@ mailhog
 !client/dist/.gitkeep
 client/dist/*
 webpack-stats.json
+webpack-stats.analyze.json
 webpack-stats-production.json
 
 shell.ipynb

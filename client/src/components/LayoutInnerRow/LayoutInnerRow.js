@@ -1,4 +1,4 @@
-import './LayoutInnerRow.scss';
+import styles from './LayoutInnerRow.scss';
 import React, { PropTypes, Component, Children } from 'react';
 import classnames from 'classnames';
 
@@ -7,7 +7,7 @@ export default class LayoutInnerRow extends Component {
     const { sidebar } = this.props;
     if (!sidebar) return null;
     return (
-      <div className="col-xs-2">
+      <div className={styles.sidebar}>
         {sidebar}
       </div>
     );
@@ -15,12 +15,12 @@ export default class LayoutInnerRow extends Component {
 
   render() {
     const { children, className } = this.props;
-    const wrapClass = classnames('row flex-items-xs-right LayoutInnerRow', className);
+    const wrapClass = classnames(styles.wrapper, className);
     return (
       <div className={wrapClass}>
         {this.renderSidebar()}
 
-        <div className="col-xs-10">
+        <div className={styles.wrapperInner}>
           {Children.map(children, child => child)}
         </div>
       </div>

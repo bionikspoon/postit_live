@@ -1,13 +1,33 @@
-.FormGroupPermissions {
-  label {
+.wrapper {
+  composes: dropdown from '../../_bootstrap-components.scss';
+  &__open {
+    composes: open from '../../_bootstrap-components.scss';
+  }
+}
+
+.change-button {
+  composes: btn btn-link from '../../_bootstrap-components.scss';
+}
+
+.update-button {
+  composes: btn btn-secondary btn-sm from '../../_bootstrap-components.scss';
+}
+
+.dropdown-menu {
+  composes: dropdown-menu dropdown-menu-right from '../../_bootstrap-components.scss';
+  > div > label, &__item {
     width:          100%;
     padding-bottom: .25rem;
     padding-top:    .25rem;
-    padding-right:  .75rem;
+    padding-right:  .50rem;
     padding-left:   1.75rem;
   }
+  &__item {
+    padding-left: .50rem;
+  }
 
-  .form-check {
+  &__check {
     margin-bottom: 0;
   }
 }
+

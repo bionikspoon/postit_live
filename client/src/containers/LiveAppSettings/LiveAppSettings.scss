@@ -1,0 +1,6 @@
+.wrapper {
+}
+
+.submit-button {
+  composes: btn btn-primary from '../../_bootstrap-components.scss';
+}

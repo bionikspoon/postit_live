@@ -1,4 +1,4 @@
-import './Moment.scss';
+import styles from './Moment.scss';
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
 
@@ -32,7 +32,7 @@ export default class Moment extends Component {
   render() {
     const { title, iso, fromNow } = this.state;
     return (
-      <time dateTime={iso} title={title} className="Moment">{fromNow}</time>
+      <time dateTime={iso} title={title} className={styles.wrapper}>{fromNow}</time>
     );
   }
 }

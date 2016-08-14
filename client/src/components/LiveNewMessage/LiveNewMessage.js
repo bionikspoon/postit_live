@@ -1,4 +1,4 @@
-import './LiveNewMessage.scss';
+import styles from './LiveNewMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
 import { reduxForm } from 'redux-form';
@@ -18,18 +18,18 @@ class LiveNewMessage extends Component {
     const { show, submitting, fields: { body } } = this.props;
     if (!show) return null;
     return (
-      <LayoutInnerRow className="LiveNewMessage">
-        <form className="form" onSubmit={this.handleSubmit}>
+      <LayoutInnerRow className={styles.wrapper}>
+        <form className={styles.form} onSubmit={this.handleSubmit}>
           <FormGroupTextarea {...body} id="new-message-body" title="message body" rows="5" />
-          <div className="clearfix">
+          <div className={styles.clearfix}>
             <button
-              className="btn btn-outline-primary pull-xs-left"
+              className={styles.submitButton}
               disabled={submitting}
               type="submit"
             >
               make update
             </button>
-            <small className="pull-xs-right">
+            <small className={styles.pullRight}>
               <a href="#" role="button">contenty policy</a> <a href="#" role="button">formatting help</a>
             </small>
           </div>

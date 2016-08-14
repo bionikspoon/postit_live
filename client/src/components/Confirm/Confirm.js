@@ -1,8 +1,9 @@
-import './Confirm.scss';
+import styles from './Confirm.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
 import classnames from 'classnames';
 const debug = require('debug')('app:components:Confirm');  // eslint-disable-line no-unused-vars
+
 export default class Confirm extends Component {
   constructor(props) {
     super(props);
@@ -47,18 +48,17 @@ export default class Confirm extends Component {
     this.setTimeout(() => (currentTarget.contains(document.activeElement) ? null : this.collapse(event)), 0);
   }
 
-  renderConfirm({ show }) {
+  renderConfirmDropdown({ show }) {
     const { btnClass, align } = this.props;
     if (!show) return null;
     const divClass = classnames(
-      'dropdown-menu',
-      { 'dropdown-menu-left': align === 'left', 'dropdown-menu-right': align === 'right' },
-      'Confirm__dropdown'
+      styles.dropdown,
+      { [styles.dropdownLeft]: align === 'left', [styles.dropdownRight]: align === 'right' }
     );
     const ref = yes => (this.yes = yes);
     return (
       <div className={divClass}>
-        <span className="dropdown-item">
+        <span className={styles.dropdownItem}>
           are you sure?&nbsp;
           <button type="button" onClick={this.handleClick} ref={ref} className={btnClass}>yes</button>
           &nbsp;/&nbsp;
@@ -71,13 +71,13 @@ export default class Confirm extends Component {
   render() {
     const { value, btnClass, className } = this.props;
     const { expanded } = this.state;
-    const divClass = classnames('dropdown', { open: expanded }, 'Confirm');
+    const divClass = classnames(styles.wrapper, { [styles.wrapperOpen]: expanded });
     const buttonClass = classnames(btnClass, className);
     return (
       <div className={divClass} onBlur={this.handleBlur}>
         <button type="button" onClick={this.expand} className={buttonClass}>{value}</button>
 
-        {this.renderConfirm({ show: expanded })}
+        {this.renderConfirmDropdown({ show: expanded })}
       </div>
     );
   }
