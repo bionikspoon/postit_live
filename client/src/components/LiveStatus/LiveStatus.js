@@ -7,26 +7,19 @@ import _ from 'lodash';
 
 const styles = {
   wrapper: 'LiveStatus',
-  alert: 'LiveStatus__alert',
-  alertSuccess: 'LiveStatus__alert LiveStatus__alert--success',
-  alertWarning: 'LiveStatus__alert LiveStatus__alert--warning',
-  alertDanger: 'LiveStatus__alert LiveStatus__alert--danger',
-};
-
-const ALERT_CLASS = {
-  [connTypes.CONNECTION_OPENED]: styles.alertSuccess,
-  [connTypes.CONNECTION_RECONNECTING]: styles.alertWarning,
-  [connTypes.CONNECTION_CLOSED]: styles.alertDanger,
+  message: 'LiveStatus__message',
+  [connTypes.CONNECTION_OPENED]: 'LiveStatus__message LiveStatus__message--success',
+  [connTypes.CONNECTION_RECONNECTING]: 'LiveStatus__message LiveStatus__message--warning',
+  [connTypes.CONNECTION_CLOSED]: 'LiveStatus__message LiveStatus__message--danger',
 };
 
 export default class LiveStatus extends Component {
   renderOpened() {
     const { channel, meta } = this.props;
-    const alertClass = ALERT_CLASS[meta.connectionStatus];
 
     return (
       <LayoutInnerRow className={styles.wrapper}>
-        <div className={alertClass}>live ~{channel.subscribers} viewers</div>
+        <div className={styles[meta.connectionStatus]}>live ~{channel.subscribers} viewers</div>
       </LayoutInnerRow>
     );
   }
@@ -34,7 +27,7 @@ export default class LiveStatus extends Component {
   renderClosed() {
     return (
       <LayoutInnerRow className={styles.wrapper}>
-        <div className={styles.alert}>This channel is closed.</div>
+        <div className={styles.message}>This channel is closed.</div>
       </LayoutInnerRow>
     );
   }
