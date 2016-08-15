@@ -1,4 +1,4 @@
-import styles from './LiveAppContributors.scss';
+import './LiveAppContributors.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,6 +13,10 @@ import autobind from 'autobind-decorator';
 import * as selector from '../../selectors';
 
 const debug = require('debug')('app:containers:LiveAppContributors');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'LiveAppContributors',
+};
 
 export class LiveAppContributors extends Component {
   @autobind

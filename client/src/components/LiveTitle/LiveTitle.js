@@ -1,6 +1,10 @@
-import styles from './LiveTitle.scss';
+import './LiveTitle.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
+
+const styles = {
+  wrapper: 'LiveTitle',
+};
 
 export default function LiveTitle({ channel: { title, description_html } }) {
   return (

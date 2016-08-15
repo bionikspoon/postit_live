@@ -1,11 +1,11 @@
-.wrapper {
-  composes: form-check from '../../_bootstrap-components.scss';
-}
+@import "../../components";
 
-.label {
-  composes: form-check-label from '../../_bootstrap-components.scss';
-}
-
-.input {
-  composes: form-check-input from '../../_bootstrap-components.scss';
+.FormGroupCheck {
+  @extend .form-check;
+  &__label {
+    @extend .form-check-label;
+  }
+  &__input {
+    @extend .form-check-input;
+  }
 }

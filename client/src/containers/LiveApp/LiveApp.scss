@@ -1,3 +1,5 @@
-.wrapper {
-  composes: container-fluid from '../../_bootstrap-components.scss';
+@import "../../components";
+
+.LiveApp {
+  @extend .container-fluid;
 }

@@ -1,39 +1,33 @@
-//@import "../../bootstrap-custom";
+@import "../../components";
 
-.wrapper {
+.Confirm {
   display:  inline-block;
   position: relative;
 
   &--open {
-    > .dropdown {
+    > .Confirm__dropdown {
       display: block !important;
     }
     > a {
       outline: 0;
     }
   }
-}
 
-.dropdown {
-  composes: dropdown-menu from '../../_bootstrap-components.scss';
-  //@extend .dropdown-menu;
-  padding:  0;
+  &__dropdown {
+    @extend .dropdown-menu;
+    padding: 0;
 
-  &--right {
-    composes: dropdown-menu-right from '../../_bootstrap-components.scss';
+    &--right {
+      @extend .dropdown-menu-right;
+    }
 
-    //@extend .dropdown-menu-right;
+    &--left {
+      @extend .dropdown-menu-left;
+    }
+
+    &__item {
+      @extend .dropdown-item;
+    }
+
   }
-
-  &--left {
-    composes: dropdown-menu-left from '../../_bootstrap-components.scss';
-
-    //@extend .dropdown-menu-left;
-  }
-
-  &__item {
-    composes: dropdown-item from '../../_bootstrap-components.scss';
-    //@extend .dropdown-item;
-  }
-
 }

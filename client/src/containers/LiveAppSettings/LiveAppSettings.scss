@@ -1,6 +1,9 @@
-.wrapper {
-}
+@import "../../components";
 
-.submit-button {
-  composes: btn btn-primary from '../../_bootstrap-components.scss';
+.LiveAppSettings {
+
+  &__update-button {
+    @extend .btn;
+    @extend .btn-primary;
+  }
 }

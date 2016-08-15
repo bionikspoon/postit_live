@@ -1,11 +1,14 @@
-.wrapper {
-  composes: form-group from '../../_bootstrap-components.scss';
-}
+@import "../../components";
 
-.control {
-  composes: form-control from '../../_bootstrap-components.scss';
-}
+.FormGroupTextarea {
+  @extend .form-group;
 
-.help-text {
-  composes: form-text text-muted from '../../_bootstrap-components.scss';
+  &__control {
+    @extend .form-control;
+  }
+
+  &__help-text {
+    @extend .form-text;
+    @extend .text-muted;
+  }
 }

@@ -1,7 +1,11 @@
-import styles from  './ContributorList.scss';
+import './ContributorList.scss';
 import React, { PropTypes, Component } from 'react';
 import ContributorForm from '../ContributorForm';
 const debug = require('debug')('app:components:ContributorList');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'ContributorList',
+};
 
 export default function ContributorList({ contributors, onUpdate, onDelete }) {
   return (

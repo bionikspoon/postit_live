@@ -1,6 +1,12 @@
-import styles from './LayoutInnerRow.scss';
+import './LayoutInnerRow.scss';
 import React, { PropTypes, Component, Children } from 'react';
 import classnames from 'classnames';
+
+const styles = {
+  wrapper: 'LayoutInnerRow',
+  sidebar: 'LayoutInnerRow__sidebar',
+  inner: 'LayoutInnerRow__inner',
+};
 
 export default class LayoutInnerRow extends Component {
   renderSidebar() {
@@ -20,7 +26,7 @@ export default class LayoutInnerRow extends Component {
       <div className={wrapClass}>
         {this.renderSidebar()}
 
-        <div className={styles.wrapperInner}>
+        <div className={styles.inner}>
           {Children.map(children, child => child)}
         </div>
       </div>

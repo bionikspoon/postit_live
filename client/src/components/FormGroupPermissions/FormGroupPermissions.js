@@ -1,4 +1,4 @@
-import styles from './FormGroupPermissions.scss';
+import './FormGroupPermissions.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
 import classnames from 'classnames';
@@ -6,6 +6,16 @@ import FormGroupCheck from '../FormGroupCheck';
 import _ from 'lodash';
 
 const debug = require('debug')('app:components:FormGroupPermissions');  // eslint-disable-line no-unused-vars
+const styles = {
+  wrapper: 'FormGroupPermissions',
+  open: 'FormGroupPermissions--open',
+  dropdown: 'FormGroupPermissions__dropdown',
+  dropdownCheck: 'FormGroupPermissions__dropdown__check',
+  dropdownItem: 'FormGroupPermissions__dropdown__item',
+  updateButton: 'FormGroupPermissions__update-button',
+  changeButton: 'FormGroupPermissions__change-button',
+};
+
 const PERMISSIONS = [
   { value: 'change_channel_close', label: 'close channel' },
   { value: 'change_channel_contributors', label: 'edit contributors' },
@@ -61,12 +71,12 @@ export default class FormGroupPermissions extends Component {
     const { onUpdate, name, value } = this.props;
 
     return (
-      <div className={styles.dropdownMenu}>
+      <div className={styles.dropdown}>
 
         {PERMISSIONS.map((permission, index) => (
           <FormGroupCheck
             key={index}
-            className={styles.dropdownMenuCheck}
+            className={styles.dropdownCheck}
             id={`permissions-${permission.value}`}
             label={permission.label}
             name={`${name}[]`}
@@ -80,7 +90,7 @@ export default class FormGroupPermissions extends Component {
 
         {onUpdate
           ? (
-          <div className={styles.dropdownMenuItem}>
+          <div className={styles.dropdownItem}>
             <button className={styles.updateButton} onClick={onUpdate}>save</button>
           </div>
         )
@@ -93,7 +103,7 @@ export default class FormGroupPermissions extends Component {
   render() {
     // const { expanded } = this.state;
     const { onFocus, active } = this.props;
-    const divClass = classnames(styles.wrapper, { [styles.wrapperOpen]: active });
+    const divClass = classnames(styles.wrapper, { [styles.open]: active });
     return (
       <div className={divClass} onBlur={this.handleBlur} onFocus={onFocus}>
         <div>

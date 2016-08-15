@@ -1,7 +1,21 @@
-.dropdown-menu {
-  composes: alert alert-warning from '../../_bootstrap-components.scss';
+@import "../../components";
+
+.ContributorMessage {
+  @extend .alert;
+  @extend .alert-warning;
+
+  &__confirm-button {
+    @extend .btn;
+    @extend .btn-link;
+  }
 }
 
-.confirm-button {
-  composes: btn btn-link from '../../_bootstrap-components.scss';
-}
+//:local {
+//  .dropdown-menu {
+//    composes: alert alert-warning from '../../_components.scss';
+//  }
+//
+//  .confirm-button {
+//    composes: btn btn-link from '../../_components.scss';
+//  }
+//}

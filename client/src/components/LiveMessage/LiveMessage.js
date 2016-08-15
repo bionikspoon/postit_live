@@ -1,10 +1,18 @@
-import styles from './LiveMessage.scss';
+import './LiveMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import Moment from '../Moment';
 import Confirm from '../Confirm';
 import LayoutInnerRow from '../LayoutInnerRow';
 import User from '../User';
 
+const styles = {
+  wrapper: 'LiveMessage',
+  body: 'LiveMessage__body',
+  strikeButton: 'LiveMessage__strike-button',
+  deleteButton: 'LiveMessage__delete-button',
+  visible: 'LiveMessage__status LiveMessage__status--visible',
+  stricken: 'LiveMessage__status LiveMessage__status--stricken',
+};
 export default class LiveMessage extends Component {
   constructor(props) {
     super(props);
@@ -18,12 +26,12 @@ export default class LiveMessage extends Component {
     const { message: { status } } = this.props;
     return status === 'stricken'
       ? <span>stricken</span>
-      : <Confirm onClick={this.strikeMessage} btnClass={styles.confirmButton} value="strike" />;
+      : <Confirm onClick={this.strikeMessage} btnClass={styles.strikeButton} value="strike" />;
   }
 
   renderDeleteButton() {
     return (
-      <Confirm onClick={this.deleteMessage} btnClass={styles.confirmButton} value="delete" />
+      <Confirm onClick={this.deleteMessage} btnClass={styles.deleteButton} value="delete" />
     );
   }
 

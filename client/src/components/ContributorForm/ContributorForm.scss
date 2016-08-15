@@ -1,27 +1,38 @@
-.wrapper {
-  composes: row from '../../_bootstrap-components.scss';
-}
+@import "../../components";
 
-.user-col {
-  composes: col-xs-3 from '../../_bootstrap-components.scss';
-}
+.ContributorForm {
+  @extend .row;
 
-.remove-col {
-  composes: col-xs from '../../_bootstrap-components.scss';
-}
+  &__user-col {
+    @extend .col-xs-3;
+  }
 
-.remove-button {
-  composes: btn btn-link from '../../_bootstrap-components.scss';
-}
+  &__remove-col {
+    @extend .col-xs;
+  }
 
-.permissions-col {
-  composes: col-xs-7 text-xs-right from '../../_bootstrap-components.scss';
-}
 
-.add-col {
-  composes: col-xs text-xs-right from '../../_bootstrap-components.scss';
-}
+  &__permissions-col {
+    @extend .col-xs-7;
+    @extend .text-xs-right;
+  }
 
-.add-button {
-  composes: btn btn-secondary from '../../_bootstrap-components.scss';
+  &__add-col {
+    @extend .col-xs;
+    @extend .text-xs-right;
+  }
+
+  &__button {
+    @extend .btn;
+
+    &--add {
+      @extend .btn-secondary;
+    }
+
+    &--remove {
+      @extend .btn-link;
+
+    }
+  }
+
 }

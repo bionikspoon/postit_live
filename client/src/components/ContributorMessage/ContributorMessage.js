@@ -1,6 +1,11 @@
-import styles from './ContributorMessage.scss';
+import './ContributorMessage.scss';
 import Confirm from '../Confirm';
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
+
+const styles = {
+  wrapper: 'ContributorMessage',
+  confirmButton: 'ContributorMessage__confirm-button',
+};
 
 export default function ContributorMessage({ show, onDelete, currentUser }) {
   if (!show) return null;

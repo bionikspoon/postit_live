@@ -1,7 +1,13 @@
-import styles from './FormGroupTextarea.scss';
+import './FormGroupTextarea.scss';
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
 const debug = require('debug')('app:components:FormGroupTextarea');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'FormGroupTextarea',
+  control: 'FormGroupTextarea__control',
+  helpText: 'FormGroupTextarea__help-text',
+};
 
 export default class FormGroupTextarea extends Component {
   renderHelp() {

@@ -1,6 +1,10 @@
-import styles from './Moment.scss';
+import './Moment.scss';
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
+
+const styles = {
+  wrapper: 'Moment',
+};
 
 export default class Moment extends Component {
   constructor(props) {

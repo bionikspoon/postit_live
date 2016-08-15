@@ -5,7 +5,6 @@ const ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugi
 const BundleTracker = require('webpack-bundle-tracker');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-
 const npmPackage = require('../package.json');
 
 const PRODUCTION = 'production';
@@ -124,15 +123,22 @@ function getLoaders({ ENV }) {
       loaders.push({
         test: /\.sc?ss$/,
         loader: ExtractTextPlugin.extract(
-          'style'
+          ''
+          + 'style'
           + '?sourceMap',
-          'css'
-          + '?modules'
-          + '&importLoaders=2'
-          + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-          + '&camelCase'
-          + '!postcss'
-          + '!sass'
+          ''
+          + 'css'
+          + '?sourceMap'
+          + '!'
+          + 'postcss'
+          + '?sourceMap'
+          + '!'
+          + 'resolve-url'
+          + '?sourceMap'
+          + '!'
+          + 'sass'
+          + '?sourceMap'
+          + '&outputStyle=expanded'
         ),
       });
       break;
@@ -144,15 +150,19 @@ function getLoaders({ ENV }) {
         loader: ''
         + 'style'
         + '?sourceMap'
-        + '!css'
-        + '?modules'
-        + '&importLoaders=2'
-        + '&localIdentName=[name]__[local]___[hash:base64:5]'
-        + '&camelCase'
-        + '!postcss'
+        + '!'
+        + 'css'
         + '?sourceMap'
-        + '!sass'
-        + '?sourceMap',
+        + '!'
+        + 'postcss'
+        + '?sourceMap'
+        + '!'
+        + 'resolve-url'
+        + '?sourceMap'
+        + '!'
+        + 'sass'
+        + '?sourceMap'
+        + '&outputStyle=expanded',
       });
       break;
 
@@ -196,10 +206,7 @@ function getPlugins({ ENV }) {
     case PRODUCTION:
       plugins.push(chunkVendor, chunkCommon, occurrenceOrder);
 
-      plugins.push(new ExtractTextPlugin({
-        filename: '[name].[chunkhash].css',
-        options: { allChunks: true },
-      }));
+      plugins.push(new ExtractTextPlugin('[name].[chunkhash].css'));
       // production bundle stats file
       plugins.push(new BundleTracker({ filename: './webpack-stats-production.json' }));
 

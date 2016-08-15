@@ -1,4 +1,4 @@
-import styles from './LiveAppSettings.scss';
+import './LiveAppSettings.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
@@ -14,8 +14,12 @@ import * as selector from '../../selectors';
 const debug = require('debug')('app:containers:LiveAppSettings');  // eslint-disable-line no-unused-vars
 const MAX_DESC_CHARS = 120;
 
-export class LiveAppSettings extends Component {
+const styles = {
+  wrapper: 'LiveAppSettings',
+  updateButton: 'LiveAppSettings__update-button',
+};
 
+export class LiveAppSettings extends Component {
   @autobind
   handleSubmit(data) {
     const { slug, actions } = this.props;
@@ -42,7 +46,7 @@ export class LiveAppSettings extends Component {
 
             <FormGroupTextarea rows="10" id="resources" label="resources" help={resourcesHelp} {...resources} />
 
-            <button className={styles.submitButton} type="submit">save settings</button>
+            <button className={styles.updateButton} type="submit">save settings</button>
           </form>
 
         </LayoutInnerRow>

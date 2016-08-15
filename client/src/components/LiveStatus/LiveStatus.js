@@ -1,9 +1,17 @@
-import styles from './LiveStatus.scss';
+import './LiveStatus.scss';
 import React, { PropTypes, Component } from 'react';
 import * as chanTypes from '../../constants/channelStatus';
 import * as connTypes from '../../constants/connectionStatus';
 import LayoutInnerRow from '../LayoutInnerRow';
 import _ from 'lodash';
+
+const styles = {
+  wrapper: 'LiveStatus',
+  alert: 'LiveStatus__alert',
+  alertSuccess: 'LiveStatus__alert LiveStatus__alert--success',
+  alertWarning: 'LiveStatus__alert LiveStatus__alert--warning',
+  alertDanger: 'LiveStatus__alert LiveStatus__alert--danger',
+};
 
 const ALERT_CLASS = {
   [connTypes.CONNECTION_OPENED]: styles.alertSuccess,

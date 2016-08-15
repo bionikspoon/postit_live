@@ -1,10 +1,14 @@
-import styles from './LiveApp.scss';
+import './LiveApp.scss';
 import React, { PropTypes, Component } from 'react';
 import LiveNav from '../../components/LiveNav';
 import * as liveActions from '../../modules/live';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as selector from '../../selectors';
+
+const styles = {
+  wrapper: 'LiveApp',
+};
 
 class LiveApp extends Component {
   componentDidMount() {

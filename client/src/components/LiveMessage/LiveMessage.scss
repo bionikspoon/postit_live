@@ -1,24 +1,60 @@
-.wrapper {
+@import "../../components";
+
+%button {
+  @extend .btn;
+  @extend .btn-secondary;
+  @extend .btn-sm;
 }
 
-.body-text {
-  display:      inline-block;
-  margin-right: 5px;
+.LiveMessage {
+  &__body {
+    //@extend .body;
+  }
+
+  &__strike-button {
+    @extend %button;
+  }
+
+  &__delete-button {
+    @extend %button;
+  }
+
+  &__status {
+    display:      inline-block;
+    margin-right: 5px;
+
+    &--stricken {
+      text-decoration: line-through !important;
+    }
+
+    &--visible {
+    }
+  }
 }
 
-.stricken {
-  composes:        body-text;
-  text-decoration: line-through !important;
-}
-
-.visible {
-  composes: body-text;
-}
-
-.body {
-  composes: body from '../../_bootstrap-components.scss';
-}
-
-.confirm-button {
-  composes: btn btn-secondary btn-sm from '../../_bootstrap-components.scss';
-}
+//:local {
+//  .wrapper {
+//  }
+//
+//  .body-text {
+//    display:      inline-block;
+//    margin-right: 5px;
+//  }
+//
+//  .stricken {
+//    composes:        body-text;
+//    text-decoration: line-through !important;
+//  }
+//
+//  .visible {
+//    composes: body-text;
+//  }
+//
+//  .body {
+//    composes: body from '../../_components.scss';
+//  }
+//
+//  .confirm-button {
+//    composes: btn btn-secondary btn-sm from '../../_components.scss';
+//  }
+//}

@@ -1,5 +1,30 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin:400,400i,700,700i|Lobster');
-@import "bootstrap-custom";
+@import "components";
+
+.home {
+  @extend .jumbotron;
+  @extend .jumbotron-fluid;
+  text-align: center;
+
+  &__container {
+    @extend .container;
+  }
+
+  &__title {
+    @extend .display-3;
+  }
+
+  &__text {
+    @extend .lead;
+  }
+
+  &__action {
+    @extend .btn;
+    @extend .btn-outline-primary;
+    @extend .btn-lg;
+  }
+}
+
 //// Alert colors
 //
 //$white: #ffffff;
@@ -136,3 +161,4 @@
 [hidden][style="display: block;"] {
   display: block !important;
 }
+

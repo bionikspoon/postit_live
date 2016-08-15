@@ -1,16 +1,19 @@
-.wrapper {
-}
+@import "../../components";
 
-.alert {
-  composes: alert from '../../_bootstrap-components.scss';
-  &--success {
-    composes: alert alert-success from '../../_bootstrap-components.scss';
-  }
-  &--warning {
-    composes: alert alert-warning from '../../_bootstrap-components.scss';
-  }
+.LiveStatus {
+  &__message {
+    @extend .alert;
 
-  &--danger {
-    composes: alert alert-danger from '../../_bootstrap-components.scss';
+    &--success {
+      @extend .alert-success;
+    }
+
+    &--warning {
+      @extend .alert-warning;
+    }
+
+    &--danger {
+      @extend .alert-danger;
+    }
   }
 }

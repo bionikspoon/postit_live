@@ -1,10 +1,27 @@
-.wrapper {
-  composes: row flex-items-xs-right from '../../_bootstrap-components.scss';
+@import "../../components";
+
+.LayoutInnerRow {
+  @extend .row;
+  @extend .flex-items-xs-right;
+
   &__inner {
-    composes: col-xs-10 from '../../_bootstrap-components.scss';
+    @extend .col-xs-10;
+  }
+
+  &__sidebar {
+    @extend .col-xs-2;
   }
 }
 
-.sidebar {
-  composes: col-xs-2 from '../../_bootstrap-components.scss';
-}
+//:local {
+//  .wrapper {
+//    composes: row flex-items-xs-right from '../../_components.scss';
+//    &__inner {
+//      composes: col-xs-10 from '../../_components.scss';
+//    }
+//  }
+//
+//  .sidebar {
+//    composes: col-xs-2 from '../../_components.scss';
+//  }
+//}

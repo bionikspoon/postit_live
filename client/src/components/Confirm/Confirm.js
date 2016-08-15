@@ -1,9 +1,17 @@
-import styles from './Confirm.scss';
+import './Confirm.scss';
 import React, { PropTypes, Component } from 'react';
 import autobind from 'autobind-decorator';
 import classnames from 'classnames';
 const debug = require('debug')('app:components:Confirm');  // eslint-disable-line no-unused-vars
 
+const styles = {
+  wrapper: 'Confirm',
+  open: 'Confirm--open',
+  dropdown: 'Confirm__dropdown',
+  dropdownLeft: 'Confirm__dropdown--left',
+  dropdownRight: 'Confirm__dropdown--right',
+  dropdownItem: 'Confirm__dropdown__item',
+};
 export default class Confirm extends Component {
   constructor(props) {
     super(props);
@@ -71,7 +79,7 @@ export default class Confirm extends Component {
   render() {
     const { value, btnClass, className } = this.props;
     const { expanded } = this.state;
-    const divClass = classnames(styles.wrapper, { [styles.wrapperOpen]: expanded });
+    const divClass = classnames(styles.wrapper, { [styles.open]: expanded });
     const buttonClass = classnames(btnClass, className);
     return (
       <div className={divClass} onBlur={this.handleBlur}>

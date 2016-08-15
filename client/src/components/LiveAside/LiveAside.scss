@@ -1,6 +1,19 @@
-.wrapper {
-  composes: row from '../../_bootstrap-components.scss';
+@import "../../components";
+
+.LiveAside {
+  @extend .row;
+
   &__inner {
-    composes: col-xs from '../../_bootstrap-components.scss';
+    @extend .col-xs;
   }
+
 }
+
+//:local {
+//  .wrapper {
+//    composes: row from '../../_components.scss';
+//    &__inner {
+//      composes: col-xs from '../../_components.scss';
+//    }
+//  }
+//}

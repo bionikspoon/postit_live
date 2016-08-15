@@ -1,4 +1,4 @@
-import styles from './ContributorForm.scss';
+import './ContributorForm.scss';
 import React, { Component, PropTypes } from 'react';
 import Confirm from '../../components/Confirm';
 import User from '../../components/User';
@@ -7,6 +7,15 @@ import FormGroupPermissions from '../../components/FormGroupPermissions';
 import { reduxForm, propTypes } from 'redux-form';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:components:ContributorForm');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'ContributorForm',
+  removeCol: 'ContributorForm__remove-col',
+  removeButton: 'ContributorForm__button ContributorForm__button--remove',
+  permissionsCol: 'ContributorForm__permissions-col',
+  addCol: 'ContributorForm__add-col',
+  addButton: 'ContributorForm__button ContributorForm__button--add',
+};
 
 class ContributorForm extends Component {
   @autobind

@@ -1,7 +1,13 @@
-import styles from './FormGroupText.scss';
+import './FormGroupText.scss';
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
 const debug = require('debug')('app:components:FormGroupCheck');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'FormGroupText',
+  control: 'FormGroupText__control',
+  helpText: 'FormGroupText__help-text',
+};
 
 export default class FormGroupText extends Component {
   renderHelp() {

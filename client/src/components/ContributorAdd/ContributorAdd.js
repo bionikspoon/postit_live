@@ -2,6 +2,10 @@ import './ContributorAdd.scss';
 import React, { PropTypes, Component } from 'react';
 import ContributorForm from '../ContributorForm';
 const debug = require('debug')('app:components:ContributorAdd');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'ContributorAdd',
+};
 const initialValues = {
   user: {
     username: '',
@@ -17,7 +21,7 @@ const initialValues = {
 
 export default function ContributorAdd({ onSave }) {
   return (
-    <div className="ContributorAdd">
+    <div className={styles.wrapper}>
       <h2>add contributor</h2>
       <ContributorForm
         onSubmit={onSave}

@@ -1,4 +1,4 @@
-import styles from './LiveNav.scss';
+import './LiveNav.scss';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
@@ -6,6 +6,16 @@ import Confirm from '../Confirm';
 import User from '../User';
 
 const debug = require('debug')('app:containers:LiveNav');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'LiveNav',
+  link: 'LiveNav__link',
+  active: 'LiveNav__link--active',
+  item: 'LiveNav__item',
+  itemPullRight: 'LiveNav__item LiveNav__item--pull-right',
+  confirmButton: 'LiveNav__confirm-button',
+};
+
 export default class LiveNav extends Component {
   base(...paths) {
     const { slug } = this.props;
@@ -49,7 +59,8 @@ export default class LiveNav extends Component {
     return (
       <span>
         <li className={styles.itemPullRight}>
-          <Confirm value="logout"
+          <Confirm
+            value="logout"
             btnClass={styles.confirmButton}
             className={styles.link}
             align="right"

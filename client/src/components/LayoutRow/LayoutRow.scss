@@ -1,9 +1,17 @@
-.wrapper {
-  composes: row from '../../_bootstrap-components.scss';
+@import "../../components";
+
+.LayoutRow {
+  @extend .row;
+
   &__inner {
-    composes: col-xs-12 col-md-9 from '../../_bootstrap-components.scss';
+    @extend .col-xs-12;
+    @extend .col-md-9;
   }
-}
-.sidebar {
-  composes: col-xs-9 col-md-3 col-md-offset-9 from '../../_bootstrap-components.scss';
+
+  &__sidebar {
+    @extend .col-xs-9;
+    @extend .col-md-3;
+    //@extend .col-md-offset-9;
+  }
+
 }

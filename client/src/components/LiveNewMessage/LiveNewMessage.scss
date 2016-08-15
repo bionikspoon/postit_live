@@ -1,18 +1,21 @@
-.wrapper {
-}
+@import "../../components";
 
-.form {
-  composes: form from '../../_bootstrap-components.scss';
-}
+.LiveNewMessage {
+  &__form {
+    //@extend .form;
+  }
 
-.clearfix {
-  composes: clearfix from '../../_bootstrap-components.scss';
-}
+  &__cleafix {
+    @extend .clearfix;
+  }
 
-.submit-button {
-  composes: btn btn-outline-primary pull-xs-left from '../../_bootstrap-components.scss';
-}
+  &__update-button {
+    @extend .btn;
+    @extend .btn-outline-primary;
+    @extend .pull-xs-left;
+  }
 
-.pull-right {
-  composes: pull-xs-right from '../../_bootstrap-components.scss';
+  &__pull-right {
+    @extend .pull-xs-right;
+  }
 }

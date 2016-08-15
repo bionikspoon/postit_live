@@ -1,4 +1,4 @@
-import styles from './LiveAppChannel.scss';
+import './LiveAppChannel.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,6 +17,12 @@ import * as selector from '../../selectors';
 
 const debug = require('debug')('app:containers:LiveAppChannel');  // eslint-disable-line no-unused-vars
 
+const styles = {
+  wrapper: 'LiveAppChannel',
+  sidebar: 'LiveAppChannel__sidebar',
+  reportButton: 'LiveAppChannel__report-button',
+};
+
 export class LiveAppChannel extends Component {
   @autobind
   createMessage({ body }) {
@@ -30,9 +36,7 @@ export class LiveAppChannel extends Component {
 
     return (
       <div className={styles.sidebar}>
-        <LiveAside>
-          <FormGroupCheck id="popup" label="popup notifications" />
-        </LiveAside>
+        <LiveAside><FormGroupCheck id="popup" label="popup notifications" /></LiveAside>
 
         <LiveAside title="resources" show={!!channel.resources.length}>
           <div dangerouslySetInnerHTML={{ __html: channel.resources_html }} />

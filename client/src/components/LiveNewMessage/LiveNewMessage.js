@@ -1,10 +1,18 @@
-import styles from './LiveNewMessage.scss';
+import './LiveNewMessage.scss';
 import React, { PropTypes, Component } from 'react';
 import LayoutInnerRow from '../LayoutInnerRow';
 import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
 import FormGroupTextarea from '../FormGroupTextarea';
 const debug = require('debug')('app:components:LiveNewMessage');  // eslint-disable-line no-unused-vars
+
+const styles = {
+  wrapper: 'LiveNewMessage',
+  form: 'LiveNewMessage__form',
+  clearfix: 'LiveNewMessage__clearfix',
+  updateButton: 'LiveNewMessage__update-button',
+  pullRight: 'LiveNewMessage__pull-right',
+};
 
 class LiveNewMessage extends Component {
   @autobind
@@ -23,7 +31,7 @@ class LiveNewMessage extends Component {
           <FormGroupTextarea {...body} id="new-message-body" title="message body" rows="5" />
           <div className={styles.clearfix}>
             <button
-              className={styles.submitButton}
+              className={styles.updateButton}
               disabled={submitting}
               type="submit"
             >
