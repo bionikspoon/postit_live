@@ -4,6 +4,11 @@
   @extend .nav;
   @extend .nav-tabs;
 
+  &__container {
+    @extend .container-fluid;
+    list-style: none;
+  }
+
   &__item {
     @extend .nav-item;
 
@@ -12,44 +17,27 @@
     }
   }
 
-  &__link {
+  & &__link {
     @extend .nav-link;
 
     &--active {
       @extend .active;
+    }
+    &--title {
+      margin:         0;
+      font-size:      2em;
+      padding-top:    0;
+      padding-bottom: 0;
+    }
+    &--text {
+      border-style: none;
+
     }
   }
 
   &__confirm-button {
     @extend .btn;
     @extend .btn-link;
+    line-height: 1.5;
   }
 }
-
-//:local {
-//  .wrapper {
-//    composes: nav nav-tabs from '../../_components.scss';
-//  }
-//
-//  .item {
-//    composes: nav-item from '../../_components.scss';
-//
-//    //noinspection CssOverwrittenProperties
-//    &--pull-right {
-//      composes: item;
-//      composes: pull-xs-right from '../../_components.scss';
-//    }
-//  }
-//
-//  .active {
-//    composes: active from '../../_components.scss';
-//  }
-//
-//  .link {
-//    composes: nav-link from '../../_components.scss';
-//  }
-//
-//  .confirm-button {
-//    composes: btn btn-link from '../../_components.scss';
-//  }
-//}

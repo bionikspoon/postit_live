@@ -9,7 +9,10 @@ const debug = require('debug')('app:containers:LiveNav');  // eslint-disable-lin
 
 const styles = {
   wrapper: 'LiveNav',
+  container: 'LiveNav__container',
   link: 'LiveNav__link',
+  linkText: 'LiveNav__link LiveNav__link--text',
+  linkTitle: 'LiveNav__link LiveNav__link--title LiveNav__link--text',
   active: 'LiveNav__link--active',
   item: 'LiveNav__item',
   itemPullRight: 'LiveNav__item LiveNav__item--pull-right',
@@ -69,7 +72,7 @@ export default class LiveNav extends Component {
         </li>
 
         <li className={styles.itemPullRight}>
-          <span className={styles.link}>logged in as <User user={currentUser} /></span>
+          <span className={styles.linkText}>logged in as <User user={currentUser} /></span>
         </li>
       </span>
     );
@@ -90,17 +93,23 @@ export default class LiveNav extends Component {
     const { hasPerm, currentUser } = this.props;
 
     return (
-      <ul className={styles.wrapper}>
-        {this.renderChannelTab()}
+      <nav className={styles.wrapper} role="navigation">
+        <ul className={styles.container}>
+          <li className={styles.item}>
+            <h1 className={styles.linkTitle}>PostIt Live</h1>
+          </li>
+          {this.renderChannelTab()}
 
-        {this.renderSettingsTab({ show: hasPerm.editSettings })}
+          {this.renderSettingsTab({ show: hasPerm.editSettings })}
 
-        {this.renderContributorsTab({ show: hasPerm.editContributors })}
+          {this.renderContributorsTab({ show: hasPerm.editContributors })}
 
-        {this.renderLogout({ show: !!currentUser.username.length })}
+          {this.renderLogout({ show: !!currentUser.username.length })}
 
-        {this.renderLogin({ show: !currentUser.username.length })}
-      </ul>
+          {this.renderLogin({ show: !currentUser.username.length })}
+        </ul>
+      </nav>
+
     );
   }
 }

@@ -1,6 +1,8 @@
 @import "../../components";
 
 .LiveNewMessage {
+  margin-bottom: $spacer-y;
+
   &__form {
     //@extend .form;
   }

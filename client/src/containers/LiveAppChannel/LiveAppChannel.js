@@ -47,13 +47,13 @@ export class LiveAppChannel extends Component {
         </LiveAside>
 
         <LiveAside title="updated by">
-          <ul>
+          <div style={{ display: 'inline' }}>
             {contributors.map(contributor => (
-              <li key={contributor.username}>
+              <p key={contributor.username}>
                 <User user={contributor} />
-              </li>
+              </p>
             ))}
-          </ul>
+          </div>
         </LiveAside>
 
         <LiveAside>

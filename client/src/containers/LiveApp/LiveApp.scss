@@ -1,5 +1,7 @@
 @import "../../components";
 
 .LiveApp {
-  @extend .container-fluid;
+  &__container {
+    @extend .container-fluid;
+  }
 }

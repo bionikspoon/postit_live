@@ -30,7 +30,8 @@ export default class Confirm extends Component {
   }
 
   @autobind
-  expand() {
+  expand(event) {
+    if (event) event.preventDefault();
     this.setState({ expanded: true });
     this.setTimeout(() => this.yes.focus(), 0);
   }
@@ -39,12 +40,16 @@ export default class Confirm extends Component {
   focus(...args) { return this.expand(...args); }
 
   @autobind
-  collapse() {
+  collapse(event) {
+    if (event) event.preventDefault();
+
     this.setState({ expanded: false });
   }
 
   @autobind
   handleClick(event) {
+    if (event) event.preventDefault();
+
     const { onClick } = this.props;
     this.collapse();
     onClick(event);
@@ -52,6 +57,7 @@ export default class Confirm extends Component {
 
   @autobind
   handleBlur(event) {
+    event.persist();
     const { currentTarget } = event;
     this.setTimeout(() => (currentTarget.contains(document.activeElement) ? null : this.collapse(event)), 0);
   }
@@ -68,9 +74,9 @@ export default class Confirm extends Component {
       <div className={divClass}>
         <span className={styles.dropdownItem}>
           are you sure?&nbsp;
-          <button type="button" onClick={this.handleClick} ref={ref} className={btnClass}>yes</button>
+          <a href="#" role="button" onClick={this.handleClick} ref={ref} className={btnClass}>yes</a>
           &nbsp;/&nbsp;
-          <button type="button" onClick={this.collapse} className={btnClass}>no</button>
+          <a href="#" role="button" onClick={this.collapse} className={btnClass}>no</a>
         </span>
       </div>
     );
@@ -83,7 +89,7 @@ export default class Confirm extends Component {
     const buttonClass = classnames(btnClass, className);
     return (
       <div className={divClass} onBlur={this.handleBlur}>
-        <button type="button" onClick={this.expand} className={buttonClass}>{value}</button>
+        <a href="#" role="button" onClick={this.expand} className={buttonClass}>{value}</a>
 
         {this.renderConfirmDropdown({ show: expanded })}
       </div>

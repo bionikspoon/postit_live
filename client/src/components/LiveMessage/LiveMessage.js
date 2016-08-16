@@ -7,11 +7,11 @@ import User from '../User';
 
 const styles = {
   wrapper: 'LiveMessage',
-  body: 'LiveMessage__body',
+  buttons: 'LiveMessage__buttons',
   strikeButton: 'LiveMessage__strike-button',
   deleteButton: 'LiveMessage__delete-button',
-  visible: 'LiveMessage__status LiveMessage__status--visible',
-  stricken: 'LiveMessage__status LiveMessage__status--stricken',
+  visible: 'LiveMessage__content LiveMessage__status LiveMessage__status--visible',
+  stricken: 'LiveMessage__content LiveMessage__status LiveMessage__status--stricken',
 };
 export default class LiveMessage extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ export default class LiveMessage extends Component {
 
   renderStrikeButton() {
     const { message: { status } } = this.props;
+
     return status === 'stricken'
       ? <span>stricken</span>
       : <Confirm onClick={this.strikeMessage} btnClass={styles.strikeButton} value="strike" />;
@@ -35,10 +36,10 @@ export default class LiveMessage extends Component {
     );
   }
 
-  renderButtons({ editable }) {
-    if (!editable) return null;
+  renderButtons({ show }) {
+    if (!show) return null;
     return (
-      <div className="buttonrow">
+      <div className={styles.buttons}>
         {this.renderStrikeButton()} {this.renderDeleteButton()}
       </div>
     );
@@ -50,12 +51,11 @@ export default class LiveMessage extends Component {
 
     return (
       <LayoutInnerRow sidebar={moment} className={styles.wrapper}>
-        <div className={styles.body}>
-          <span className={styles[status]} dangerouslySetInnerHTML={{ __html: body_html }} />
+          <div className={styles[status]} dangerouslySetInnerHTML={{ __html: body_html }} />
 
           <User user={author} />
-        </div>
-        {this.renderButtons({ editable })}
+
+          {this.renderButtons({ show: editable })}
       </LayoutInnerRow>
     );
   }

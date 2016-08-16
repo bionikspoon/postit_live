@@ -4,12 +4,13 @@ import Confirm from '../../components/Confirm';
 import User from '../../components/User';
 import FormGroupText from '../../components/FormGroupText';
 import FormGroupPermissions from '../../components/FormGroupPermissions';
-import { reduxForm, propTypes } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import autobind from 'autobind-decorator';
 const debug = require('debug')('app:components:ContributorForm');  // eslint-disable-line no-unused-vars
 
 const styles = {
   wrapper: 'ContributorForm',
+  userCol: 'ContributorForm__user-col',
   removeCol: 'ContributorForm__remove-col',
   removeButton: 'ContributorForm__button ContributorForm__button--remove',
   permissionsCol: 'ContributorForm__permissions-col',
@@ -48,9 +49,9 @@ class ContributorForm extends Component {
     const { values } = this.props;
     return (
       <div className={styles.userCol}>
-        {this.renderUserInput({ show: showInput })}
-
         <User user={values.user} />
+
+        {this.renderUserInput({ show: showInput })}
       </div>
     );
   }

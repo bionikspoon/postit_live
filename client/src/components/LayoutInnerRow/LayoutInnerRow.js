@@ -10,7 +10,7 @@ const styles = {
 
 export default class LayoutInnerRow extends Component {
   renderSidebar() {
-    const { sidebar } = this.props;
+    const { sidebar, className } = this.props;
     if (!sidebar) return null;
     return (
       <div className={styles.sidebar}>
@@ -21,12 +21,12 @@ export default class LayoutInnerRow extends Component {
 
   render() {
     const { children, className } = this.props;
-    const wrapClass = classnames(styles.wrapper, className);
+    const innerClass = classnames(styles.inner, className);
     return (
-      <div className={wrapClass}>
+      <div className={styles.wrapper}>
         {this.renderSidebar()}
 
-        <div className={styles.inner}>
+        <div className={innerClass}>
           {Children.map(children, child => child)}
         </div>
       </div>

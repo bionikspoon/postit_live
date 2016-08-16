@@ -1,14 +1,18 @@
 @import "../../components";
 
 %button {
-  @extend .btn;
-  @extend .btn-secondary;
-  @extend .btn-sm;
+  @include hover {
+    text-decoration: none;
+  }
 }
 
 .LiveMessage {
-  &__body {
-    //@extend .body;
+  @extend .card;
+  @extend .card-block;
+
+  &__buttons {
+    display:    none;
+    margin-top: $spacer-y;
   }
 
   &__strike-button {
@@ -20,8 +24,7 @@
   }
 
   &__status {
-    display:      inline-block;
-    margin-right: 5px;
+    display: inline;
 
     &--stricken {
       text-decoration: line-through !important;
@@ -30,31 +33,28 @@
     &--visible {
     }
   }
-}
 
-//:local {
-//  .wrapper {
-//  }
-//
-//  .body-text {
-//    display:      inline-block;
-//    margin-right: 5px;
-//  }
-//
-//  .stricken {
-//    composes:        body-text;
-//    text-decoration: line-through !important;
-//  }
-//
-//  .visible {
-//    composes: body-text;
-//  }
-//
-//  .body {
-//    composes: body from '../../_components.scss';
-//  }
-//
-//  .confirm-button {
-//    composes: btn btn-secondary btn-sm from '../../_components.scss';
-//  }
-//}
+  &__content {
+    p, ol, ul, dl {
+      margin-bottom: .25rem;
+      @extend .card-text;
+    }
+    p:last-of-type {
+      display:      inline-block;
+      margin-right: $spacer-x;
+    }
+  }
+
+  &:hover .LiveMessage__buttons {
+    display: block;
+    .Confirm {
+      @include hover {
+        text-decoration: none;
+      }
+
+      + .Confirm {
+        margin-left: $card-spacer-x;
+      }
+    }
+  }
+}

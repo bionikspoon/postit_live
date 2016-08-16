@@ -8,6 +8,7 @@ import * as selector from '../../selectors';
 
 const styles = {
   wrapper: 'LiveApp',
+  container: 'LiveApp__container',
 };
 
 class LiveApp extends Component {
@@ -26,8 +27,9 @@ class LiveApp extends Component {
     return (
       <div className={styles.wrapper} role="main">
         <LiveNav {...{ slug, pathname, currentUser, hasPerm }} />
-
-        {this.props.children}
+        <div className={styles.container}>
+          {this.props.children}
+        </div>
       </div>
     );
   }
