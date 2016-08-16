@@ -44,7 +44,7 @@ export class LiveAppContributors extends Component {
 
         <LayoutInnerRow>
           <div>
-            <h1>contributors</h1>
+            <h1>Contributors</h1>
 
             <ContributorMessage
               show={hasPerm.canContribute}

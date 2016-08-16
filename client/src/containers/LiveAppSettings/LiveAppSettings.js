@@ -38,7 +38,7 @@ export class LiveAppSettings extends Component {
       <LayoutRow className={styles.wrapper}>
 
         <LayoutInnerRow>
-          <h1>settings</h1>
+          <h1>Settings</h1>
           <form onSubmit={handleSubmit(this.handleSubmit)}>
             <FormGroupText id="title" label="title" {...title} />
 
